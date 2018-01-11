@@ -73,7 +73,7 @@ var docDefinition2 = {
 
   content: [
     {
-      margin: [0, 0, 0, 0],
+      margin: [0, 5, 0, 0],
       canvas: [
         {
           type: "line",
@@ -85,23 +85,106 @@ var docDefinition2 = {
         }
       ]
     },
-    /*{
-      text: {
-        text: "\n\n\n",
-        fontSize: 10
-      }
-    },*/
     {
-      image:
-        "/home/roman/git-projects/immo-pdf-generation/rest-api/assets/images/sampleImage.jpg",
-      fit: [200, 200]
-    },
-    {
+      margin: [0, 20, 0, 0],
       table: {
-        width: ["*"],
+        widths: "*",
+
         body: [
-          ["Column 1", "Column 2", "Column 3"],
-          ["One value goes here", "Another one here", "OK?"]
+          [
+            {
+              table: {
+                widths: ["60%", "40%"],
+                body: [
+                  [
+                    {
+                      image:
+                        "/home/roman/git-projects/immo-pdf-generation/rest-api/assets/images/sampleImage.jpg",
+                      fit: [200, 200]
+                    },
+                    {
+                      text: lorem,
+                      fontSize: 10,
+                      alignment: "justify"
+                    }
+                  ]
+                ]
+              },
+              layout: {
+                hLineWidth: function(i, node) {
+                  return 1;
+                },
+                vLineWidth: function(i, node) {
+                  return 1;
+                },
+                hLineColor: function(i, node) {
+                  return "black";
+                },
+                vLineColor: function(i, node) {
+                  return "black";
+                },
+                paddingLeft: function(i, node) {
+                  return 0;
+                },
+                paddingRight: function(i, node) {
+                  return 0;
+                },
+                paddingTop: function(i, node) {
+                  return 0;
+                },
+                paddingBottom: function(i, node) {
+                  return 0;
+                }
+              }
+            }
+          ],
+          [
+            {
+              table: {
+                widths: ["50%", "50%"],
+                body: [
+                  [
+                    {
+                      image:
+                        "/home/roman/git-projects/immo-pdf-generation/rest-api/assets/images/sampleImage.jpg",
+                      fit: [200, 200]
+                    },
+                    {
+                      text: lorem,
+                      fontSize: 10,
+                      alignment: "justify"
+                    }
+                  ]
+                ]
+              },
+              layout: {
+                hLineWidth: function(i, node) {
+                  return 0.5;
+                },
+                vLineWidth: function(i, node) {
+                  return 1;
+                },
+                hLineColor: function(i, node) {
+                  return "black";
+                },
+                vLineColor: function(i, node) {
+                  return "black";
+                },
+                paddingLeft: function(i, node) {
+                  return 0;
+                },
+                paddingRight: function(i, node) {
+                  return 0;
+                },
+                paddingTop: function(i, node) {
+                  return 0;
+                },
+                paddingBottom: function(i, node) {
+                  return 0;
+                }
+              }
+            }
+          ]
         ]
       },
 
@@ -113,24 +196,24 @@ var docDefinition2 = {
           return 0;
         },
         hLineColor: function(i, node) {
-          return "white";
+          return "black";
         },
         vLineColor: function(i, node) {
-          return "white";
+          return "black";
+        },
+        paddingLeft: function(i, node) {
+          return 0;
+        },
+        paddingRight: function(i, node) {
+          return 0;
+        },
+        paddingTop: function(i, node) {
+          return 0;
+        },
+        paddingBottom: function(i, node) {
+          return 0;
         }
       }
-    },
-    {
-      canvas: [
-        {
-          type: "line",
-          x1: 0,
-          y1: 0,
-          x2: 595 - 2 * 40,
-          y2: 0,
-          lineWidth: 0.5
-        }
-      ]
     }
   ],
 
