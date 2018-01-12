@@ -100,12 +100,22 @@ var docDefinition2 = {
                     {
                       image:
                         "/home/roman/git-projects/immo-pdf-generation/rest-api/assets/images/sampleImage.jpg",
-                      fit: [200, 200]
+                      fit: [250, 200]
                     },
                     {
-                      text: lorem,
-                      fontSize: 10,
-                      alignment: "justify"
+                      table: {
+                        widths: ["50%", "50%"],
+                        body: [
+                          [
+                            { text: "Text", fontSize: 10 },
+                            {
+                              text:
+                                "Text Text Text Text Text Text Text Text Text",
+                              fontSize: 10
+                            }
+                          ]
+                        ]
+                      }
                     }
                   ]
                 ]
@@ -147,12 +157,13 @@ var docDefinition2 = {
                     {
                       image:
                         "/home/roman/git-projects/immo-pdf-generation/rest-api/assets/images/sampleImage.jpg",
-                      fit: [200, 200]
+                      fit: [250, 200]
                     },
                     {
-                      text: lorem,
-                      fontSize: 10,
-                      alignment: "justify"
+                      image:
+                        "/home/roman/git-projects/immo-pdf-generation/rest-api/assets/images/sampleImage.jpg",
+                      fit: [250, 200],
+                      alignment: "right"
                     }
                   ]
                 ]
