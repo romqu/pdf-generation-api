@@ -28,6 +28,13 @@ var docDefinition2 = {
     author: "author",
     creationDate: "1"
   },
+  watermark: {
+    text: "7nerds",
+    color: "blue",
+    opacity: 0.00000001,
+    bold: true,
+    italics: false
+  },
   header: [
     {
       columns: [
@@ -66,6 +73,12 @@ var docDefinition2 = {
       margin: [0, 20, 0, 0],
       table: {
         widths: "*",
+        body: [["Wohnzimmer 1"]]
+      }
+    },
+    {
+      table: {
+        widths: "*",
 
         body: [
           [
@@ -85,7 +98,7 @@ var docDefinition2 = {
                           widths: ["50%", "50%"],
                           body: [
                             [
-                              { text: "Text", fontSize: 10 },
+                              { text: "Text:", fontSize: 10, bold: true },
                               {
                                 text:
                                   "Text Text Text Text Text Text Text Text Text",
@@ -100,7 +113,7 @@ var docDefinition2 = {
                           widths: ["50%", "50%"],
                           body: [
                             [
-                              { text: "Text", fontSize: 10 },
+                              { text: "Text:", fontSize: 10, bold: true },
                               {
                                 text:
                                   "Text Text Text Text Text Text Text Text Text",
@@ -115,7 +128,7 @@ var docDefinition2 = {
                           widths: ["50%", "50%"],
                           body: [
                             [
-                              { text: "Text", fontSize: 10 },
+                              { text: "Text:", fontSize: 10, bold: true },
                               {
                                 text:
                                   "Text Text Text Text Text Text Text Text Text",
