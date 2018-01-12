@@ -20,29 +20,6 @@ var PdfPrinter = require("pdfmake");
 var printer = new PdfPrinter(fonts);
 var fs = require("fs");
 
-var docDefinition = {
-  content: [
-    {
-      text: {
-        text: "LEFT",
-        fontSize: 10,
-        alignment: "left"
-      },
-
-      text: {
-        text: "RIGHT",
-        fontSize: 10,
-        alignment: "right"
-      }
-    },
-    {
-      canvas: [
-        { type: "line", x1: 0, y1: 5, x2: 595 - 2 * 40, y2: 5, lineWidth: 1 }
-      ]
-    }
-  ]
-};
-
 var docDefinition2 = {
   pageSize: "A4",
   pageMargins: [40, 60, 40, 40],
@@ -102,21 +79,53 @@ var docDefinition2 = {
                         "/home/roman/git-projects/immo-pdf-generation/rest-api/assets/images/sampleImage.jpg",
                       fit: [250, 200]
                     },
-                    {
-                      table: {
-                        widths: ["50%", "50%"],
-                        body: [
-                          [
-                            { text: "Text", fontSize: 10 },
-                            {
-                              text:
-                                "Text Text Text Text Text Text Text Text Text",
-                              fontSize: 10
-                            }
+                    [
+                      {
+                        table: {
+                          widths: ["50%", "50%"],
+                          body: [
+                            [
+                              { text: "Text", fontSize: 10 },
+                              {
+                                text:
+                                  "Text Text Text Text Text Text Text Text Text",
+                                fontSize: 10
+                              }
+                            ]
                           ]
-                        ]
+                        }
+                      },
+                      {
+                        table: {
+                          widths: ["50%", "50%"],
+                          body: [
+                            [
+                              { text: "Text", fontSize: 10 },
+                              {
+                                text:
+                                  "Text Text Text Text Text Text Text Text Text",
+                                fontSize: 10
+                              }
+                            ]
+                          ]
+                        }
+                      },
+                      {
+                        table: {
+                          widths: ["50%", "50%"],
+                          body: [
+                            [
+                              { text: "Text", fontSize: 10 },
+                              {
+                                text:
+                                  "Text Text Text Text Text Text Text Text Text",
+                                fontSize: 10
+                              }
+                            ]
+                          ]
+                        }
                       }
-                    }
+                    ]
                   ]
                 ]
               },
@@ -232,7 +241,7 @@ var docDefinition2 = {
     return {
       alignment: "center",
       text: currentPage.toString() + " von " + pageCount,
-      fontSize: 8,
+      fontSize: 9,
       margin: [0, 20, 0, 0]
     };
   }
