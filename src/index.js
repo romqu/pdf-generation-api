@@ -1,5 +1,11 @@
 "use strict";
 
+const Line = require("./line");
+const Margin = require("./margin");
+
+const PdfPrinter = require("pdfmake");
+const fs = require("fs");
+
 var fonts = {
   Roboto: {
     normal:
@@ -13,12 +19,217 @@ var fonts = {
   }
 };
 
+const printer = new PdfPrinter(fonts);
+
 const lorem =
   "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
 
-var PdfPrinter = require("pdfmake");
-var printer = new PdfPrinter(fonts);
-var fs = require("fs");
+// Docucment Infos
+// -------------------------------------------
+const docPageSize = "A4";
+const docFontSize = "10";
+const docPageMargins = [40, 60, 40, 40];
+const docMarginLeftFirstHeadline = 10;
+
+const docMetaData = {
+  title: "title",
+  author: "author",
+  creationDate: "1"
+};
+
+// margin: [left, top, right, bottom]
+const docHeader = {
+  columns: [
+    {
+      text: "\nLeft",
+      alignment: "left",
+      fontSize: docFontSize,
+
+      margin: [40, 20, 0, 0]
+    },
+    {
+      text: "\nImage",
+      alignment: "center",
+      fontSize: docFontSize,
+      margin: [0, 20, 0, 0]
+    },
+    {
+      text: "\nRight",
+      alignment: "right",
+      fontSize: docFontSize,
+      margin: [0, 20, 40, 0]
+    }
+  ]
+};
+
+const docLineHFull = {
+  canvas: [
+    {
+      type: "line",
+      x1: 0,
+      y1: 0,
+      x2: 595 - 2 * 40,
+      y2: 0,
+      lineWidth: 0.5
+    }
+  ]
+};
+
+const docLineV = {
+  canvas: [
+    {
+      type: "line",
+      x1: 0,
+      y1: 0,
+      x2: 0,
+      y2: 10,
+      lineWidth: 0.6
+    }
+  ]
+};
+
+const docFirstHeadline = [
+  {
+    margin: [docMarginLeftFirstHeadline, 20, 0, 0],
+    text: [
+      { text: "1. ", fontSize: docFontSize },
+      { text: "Etage | ", fontSize: docFontSize },
+      { text: "WE-01", fontSize: docFontSize }
+    ]
+  },
+
+  new Line({
+    type: "line",
+    x1: 0,
+    y1: 0,
+    x2: (595 - 2 * 40 - docMarginLeftFirstHeadline) / 2,
+    y2: 0,
+    lineWidth: 0.5,
+    margin: new Margin({ left: 10, top: 1, right: 0, bottom: 0 })
+  })
+];
+
+console.log(
+  new Line({
+    type: "line",
+    x1: 0,
+    y1: 0,
+    x2: 595 - 2 * 40,
+    y2: 0,
+    lineWidth: 1,
+    margin: new Margin({ left: 10, top: 5, right: 0, bottom: 0 })
+  })
+);
+
+const doc = {
+  pageSize: docPageSize,
+  pageMargins: docPageMargins,
+
+  info: {
+    title: docMetaData.title,
+    author: docMetaData.author,
+    creationDate: docMetaData.creationDate
+  },
+
+  header: [docHeader],
+
+  content: [docLineHFull, docFirstHeadline]
+};
+
+var docDefinition = {
+  content: [
+    {
+      table: {
+        widths: "*",
+        body: [
+          [
+            {
+              text: "Room"
+            }
+          ],
+          [
+            {
+              table: {
+                widths: ["50%", "50%"],
+                body: [
+                  [
+                    {
+                      text: "Image"
+                    },
+                    [
+                      {
+                        table: {
+                          widths: ["50%", "50%"],
+                          body: [
+                            [
+                              {
+                                text: "Text:"
+                              },
+                              {
+                                text: "Text"
+                              }
+                            ]
+                          ]
+                        }
+                      },
+                      {
+                        table: {
+                          widths: ["50%", "50%"],
+                          body: [
+                            [
+                              {
+                                text: "Text:"
+                              },
+                              {
+                                text: "Text"
+                              }
+                            ]
+                          ]
+                        }
+                      },
+                      {
+                        table: {
+                          widths: ["50%", "50%"],
+                          body: [
+                            [
+                              {
+                                text: "Text:"
+                              },
+                              {
+                                text: "Text"
+                              }
+                            ]
+                          ]
+                        }
+                      }
+                    ]
+                  ]
+                ]
+              }
+            }
+          ],
+          [
+            {
+              table: {
+                widths: ["50%", "50%"],
+                body: [
+                  [
+                    {
+                      text: "Image"
+                    },
+                    {
+                      text: "Image"
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        ]
+      }
+    }
+  ]
+};
 
 var docDefinition2 = {
   pageSize: "A4",
@@ -428,7 +639,7 @@ var docDefinition3 = {
   }
 };
 
-var pdfDoc = printer.createPdfKitDocument(docDefinition2);
+var pdfDoc = printer.createPdfKitDocument(doc);
 
 pdfDoc.pipe(
   fs.createWriteStream(
@@ -437,3 +648,15 @@ pdfDoc.pipe(
 );
 
 pdfDoc.end();
+
+function deepCopy(oldObj) {
+  var newObj = oldObj;
+  if (oldObj && typeof oldObj === "object") {
+    newObj =
+      Object.prototype.toString.call(oldObj) === "[object Array]" ? [] : {};
+    for (var i in oldObj) {
+      newObj[i] = deepCopy(oldObj[i]);
+    }
+  }
+  return newObj;
+}
