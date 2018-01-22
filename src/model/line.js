@@ -1,5 +1,5 @@
 class Line {
-  constructor({ type, x1, y1, x2, y2, lineWidth, margin }) {
+  constructor({ type = "line", x1, y1, x2, y2, lineWidth, margin }) {
     return {
       margin,
       canvas: [

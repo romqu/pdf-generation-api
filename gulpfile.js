@@ -17,7 +17,7 @@ gulp.task("watch", () => {
 
 gulp.task("watch2", () => {
   nodemon({
-    script: "src/index.js"
+    script: "src/server.js"
   });
   gulp.watch("pdfs/**/*.pdf", gulpShell.task("reload-firefox-tab"));
 });

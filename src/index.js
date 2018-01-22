@@ -31,6 +31,33 @@ const docFontSize = "10";
 const docPageMargins = [40, 60, 40, 40];
 const docMarginLeftFirstHeadline = 10;
 
+const docCustomTableLayout = {
+  hLineWidth: function(i, node) {
+    return 0;
+  },
+  vLineWidth: function(i, node) {
+    return 0;
+  },
+  hLineColor: function(i, node) {
+    return "black";
+  },
+  vLineColor: function(i, node) {
+    return "black";
+  },
+  paddingLeft: function(i, node) {
+    return 0;
+  },
+  paddingRight: function(i, node) {
+    return 0;
+  },
+  paddingTop: function(i, node) {
+    return 0;
+  },
+  paddingBottom: function(i, node) {
+    return 0;
+  }
+};
+
 const docMetaData = {
   title: "title",
   author: "author",
@@ -38,29 +65,53 @@ const docMetaData = {
 };
 
 // margin: [left, top, right, bottom]
-const docHeader = {
-  columns: [
-    {
-      text: "\nLeft",
-      alignment: "left",
-      fontSize: docFontSize,
-
-      margin: [40, 20, 0, 0]
+const docHeader = [
+  {
+    margin: [40, 20, 40, 0],
+    table: {
+      widths: ["40%", "20%", "40%"],
+      body: [
+        [
+          {
+            table: {
+              widths: ["20%", "80%"],
+              body: [
+                [
+                  {
+                    text: "Projekt:"
+                  },
+                  {
+                    margin: [0, 0, 10, 0],
+                    text: [
+                      {
+                        text: "Musterstraße 1,"
+                      },
+                      {
+                        text: "\nMusterland"
+                      }
+                    ]
+                  }
+                ]
+              ]
+            },
+            layout: docCustomTableLayout
+          },
+          {
+            image:
+              "/home/roman/git-projects/immo-pdf-generation/rest-api/assets/images/creavisio.jpg",
+            alignment: "center",
+            fit: [100, 70]
+          },
+          {
+            text: "Datum: 1.1.1111",
+            alignment: "right"
+          }
+        ]
+      ]
     },
-    {
-      text: "\nImage",
-      alignment: "center",
-      fontSize: docFontSize,
-      margin: [0, 20, 0, 0]
-    },
-    {
-      text: "\nRight",
-      alignment: "right",
-      fontSize: docFontSize,
-      margin: [0, 20, 40, 0]
-    }
-  ]
-};
+    layout: docCustomTableLayout
+  }
+];
 
 const docLineHFull = {
   canvas: [
@@ -92,9 +143,9 @@ const docFirstHeadline = [
   {
     margin: [docMarginLeftFirstHeadline, 20, 0, 0],
     text: [
-      { text: "1. ", fontSize: docFontSize },
-      { text: "Etage | ", fontSize: docFontSize },
-      { text: "WE-01", fontSize: docFontSize }
+      { text: "", fontSize: docFontSize },
+      { text: "EG | ", fontSize: docFontSize, bold: true },
+      { text: "WE-01", fontSize: docFontSize, bold: true }
     ]
   },
 
@@ -109,21 +160,13 @@ const docFirstHeadline = [
   })
 ];
 
-console.log(
-  new Line({
-    type: "line",
-    x1: 0,
-    y1: 0,
-    x2: 595 - 2 * 40,
-    y2: 0,
-    lineWidth: 1,
-    margin: new Margin({ left: 10, top: 5, right: 0, bottom: 0 })
-  })
-);
-
 const doc = {
   pageSize: docPageSize,
   pageMargins: docPageMargins,
+
+  defaultStyle: {
+    fontSize: 11
+  },
 
   info: {
     title: docMetaData.title,
@@ -131,9 +174,186 @@ const doc = {
     creationDate: docMetaData.creationDate
   },
 
-  header: [docHeader],
+  header: () => {
+    return docHeader;
+  },
 
-  content: [docLineHFull, docFirstHeadline]
+  footer: function(currentPage, pageCount) {
+    return {
+      alignment: "center",
+      text: currentPage.toString() + " von " + pageCount,
+      fontSize: 9,
+      margin: [0, 20, 0, 0]
+    };
+  },
+
+  content: [
+    docLineHFull,
+    docFirstHeadline,
+    [
+      {
+        margin: [20, 10, 0, 0],
+        text: [
+          { text: "", fontSize: docFontSize },
+          { text: "Wohnzimmer 1", fontSize: docFontSize, bold: true }
+        ]
+      },
+
+      new Line({
+        type: "line",
+        x1: 0,
+        y1: 0,
+        x2: (595 - 2 * 40 - 27.5) / 2.25,
+        y2: 0,
+        lineWidth: 0.5,
+        margin: new Margin({ left: 20, top: 1, right: 0, bottom: 0 })
+      }),
+      {
+        margin: [20, 5, (595 - 2 * 40 - 25) / 2, 0],
+        table: {
+          widths: ["100%"],
+          body: [
+            [
+              {
+                text:
+                  "Hier erfolgt die Beschreibung der Lage des Raumes. Bswp.: Nach Eingang links, neben der Küche.",
+                fontSize: docFontSize
+              }
+            ]
+          ]
+        },
+        layout: docCustomTableLayout
+      },
+      {
+        margin: [20, 10, 0, 0],
+        text: "Mangel 1",
+        fontSize: docFontSize,
+        bold: true
+      },
+      new Line({
+        type: "line",
+        x1: 0,
+        y1: 0,
+        x2: (595 - 2 * 40 - 27.5) / 2.5,
+        y2: 0,
+        lineWidth: 0.5,
+        margin: new Margin({ left: 20, top: 1, right: 0, bottom: 0 })
+      }),
+      {
+        margin: [20, 7.5, 0, 0],
+        table: {
+          widths: "*",
+          body: [
+            [
+              {
+                table: {
+                  widths: ["50%", "50%"],
+                  body: [
+                    [
+                      {
+                        image:
+                          "/home/roman/git-projects/immo-pdf-generation/rest-api/assets/images/mangel-border.jpg",
+                        fit: [240, 200]
+                      },
+                      [
+                        {
+                          table: {
+                            widths: ["35%", "65%"],
+                            body: [
+                              [
+                                {
+                                  text: "Beschreibung:",
+                                  fontSize: docFontSize,
+                                  bold: true
+                                },
+                                {
+                                  margin: [5, 0, 0, 0],
+                                  text: "Hier die Beschreibung des Mangels",
+                                  fontSize: docFontSize
+                                }
+                              ]
+                            ]
+                          },
+                          layout: docCustomTableLayout
+                        },
+                        {
+                          margin: [0, 15, 0, 0],
+                          table: {
+                            widths: ["35%", "65%"],
+                            body: [
+                              [
+                                {
+                                  text: "Verantwortlicher:",
+                                  fontSize: docFontSize,
+                                  bold: true
+                                },
+                                {
+                                  margin: [5, 0, 0, 0],
+                                  text: "Bernd",
+                                  fontSize: docFontSize
+                                }
+                              ]
+                            ]
+                          },
+                          layout: docCustomTableLayout
+                        },
+                        {
+                          margin: [0, 15, 0, 0],
+                          table: {
+                            widths: ["35%", "65%"],
+                            body: [
+                              [
+                                {
+                                  text: "Erledigt bis:",
+                                  alignment: "justify",
+                                  fontSize: docFontSize,
+                                  bold: true
+                                },
+                                {
+                                  margin: [5, 0, 0, 0],
+                                  text: ""
+                                }
+                              ]
+                            ]
+                          },
+                          layout: docCustomTableLayout
+                        }
+                      ]
+                    ]
+                  ]
+                },
+                layout: docCustomTableLayout
+              }
+            ],
+            [
+              {
+                margin: [0, 7, 0, 0],
+                table: {
+                  widths: ["50%", "50%"],
+                  body: [
+                    [
+                      {
+                        image:
+                          "/home/roman/git-projects/immo-pdf-generation/rest-api/assets/images/mangel-border.jpg",
+                        fit: [240, 200]
+                      },
+                      {
+                        image:
+                          "/home/roman/git-projects/immo-pdf-generation/rest-api/assets/images/mangel-border.jpg",
+                        fit: [240, 200]
+                      }
+                    ]
+                  ]
+                },
+                layout: docCustomTableLayout
+              }
+            ]
+          ]
+        },
+        layout: docCustomTableLayout
+      }
+    ]
+  ]
 };
 
 var docDefinition = {
