@@ -1,7 +1,10 @@
 class Text {
-  constructor({ margin }) {
+  constructor({ margin, text, fontSize, isBold = false }) {
     return {
-      margin
+      margin,
+      text: text,
+      fontSize: fontSize,
+      bold: isBold
     };
   }
 }

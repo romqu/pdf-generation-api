@@ -1,7 +1,12 @@
 class Table {
-  constructor({ margin }) {
+  constructor({ margin, widths, body, layout = {} }) {
     return {
-      margin
+      margin: margin,
+      table: {
+        widths: widths,
+        body: [body]
+      },
+      layout: layout
     };
   }
 }
