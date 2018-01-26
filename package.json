@@ -2,25 +2,33 @@
   "name": "rest-api",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@git.kroon.fi:10022/creavisio/pdf-rest-api.git"
+  },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "pdfmake": "^0.1.35"
   },
   "devDependencies": {
-    "eslint-config-standard": "^11.0.0-beta.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-node": "^5.2.1",
-    "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "execa": "^0.9.0",
+    "@types/node": "latest",
+    "@types/pino": "latest",
     "gulp": "^4.0.0",
     "gulp-shell": "^0.6.5",
-    "gulp-watch": "^5.0.0",
-    "nodemon": "^1.14.11"
+    "nodemon": "latest",
+    "pino": "latest",
+    "prettier": "latest",
+    "reflect-metadata": "latest",
+    "ts-node": "latest",
+    "tslint": "latest",
+    "tslint-config-prettier": "latest",
+    "tslint-immutable": "latest",
+    "typescript": "^2.6.2"
   }
 }

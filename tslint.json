@@ -1,0 +1,13 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended",
+    "tslint-immutable",
+    "tslint-config-prettier"
+  ],
+  "jsRules": {},
+  "rules": {
+    "typedef": [true, "call-signature", "parameter", "arrow-call-signature"]
+  },
+  "rulesDirectory": []
+}
