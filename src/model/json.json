@@ -11,7 +11,7 @@
       "name": "EG",
       "livingUnits": [
         {
-          "ivingUnitNumber": "01",
+          "livingUnitNumber": "01",
 
           "rooms": [
             {
@@ -40,4 +40,4 @@
       ]
     }
   ]
-};
+}
