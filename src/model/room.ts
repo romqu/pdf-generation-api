@@ -9,4 +9,20 @@ export class Room {
       readonly defects: Defect[];
     }
   ) {}
+
+  public get name(): string {
+    return this.params.name;
+  }
+
+  public get number(): number {
+    return this.params.number;
+  }
+
+  public get description(): string {
+    return this.params.description;
+  }
+
+  public get defects(): Defect[] {
+    return this.params.defects;
+  }
 }

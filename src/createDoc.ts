@@ -1,10 +1,13 @@
+import pino = require("pino");
+
 import { Defect } from "./model/defect";
+import { DefectList } from "./model/defectList";
 import { Floor } from "./model/floor";
 import { Image } from "./model/image";
 import { LivingUnit } from "./model/livingUnit";
 import { Room } from "./model/room";
 
-class CreateDoc {
+export class CreateDoc {
   constructor(
     private readonly params: {
       readonly imageBasePath: string;
@@ -12,6 +15,23 @@ class CreateDoc {
   ) {}
 
   public execute(): void {
+    const pretty = pino.pretty();
+
+    pretty.pipe(process.stdout);
+
+    const log = pino(
+      {
+        // name: "app",
+        safe: true,
+        timestamp: false
+      },
+      pretty
+    );
+
+    const defectList: DefectList = this.createTestData();
+  }
+
+  private createTestData(): DefectList {
     const imageList: Image[] = [];
     const defectList: Defect[] = [];
     const roomList: Room[] = [];
@@ -46,5 +66,21 @@ class CreateDoc {
         rooms: roomList
       })
     );
+
+    floorList.push(
+      new Floor({
+        name: "EG",
+        livingUnits: livingUnitList
+      })
+    );
+
+    return new DefectList({
+      date: "01.11.1111",
+      creatorName: "Erni",
+      streetName: "Staße",
+      houseNumber: 1,
+      additional: "a",
+      floors: floorList
+    });
   }
 }

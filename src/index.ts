@@ -1,12 +1,5 @@
-import * as fs from "fs";
-import PdfPrinter = require("pdfmake");
-import pino = require("pino");
-import { Image } from "./model/pdfmake/image";
-import { Line } from "./model/pdfmake/line";
-import { Margin } from "./model/pdfmake/margin";
-import { Table } from "./model/pdfmake/table";
+import { CreateDoc } from "./createDoc";
 import { TableLayout } from "./model/pdfmake/tableLayout";
-import { Text } from "./model/pdfmake/text";
 
 const fonts = {
   Roboto: {
@@ -44,19 +37,13 @@ const docTableLayout: TableLayout = new TableLayout({
   }
 });
 
-const pdfPrinter = new PdfPrinter(fonts);
-const pretty = pino.pretty();
+const createDoc: CreateDoc = new CreateDoc({
+  imageBasePath: ""
+});
 
-pretty.pipe(process.stdout);
+createDoc.execute();
 
-const log = pino(
-  {
-    // name: "app",
-    safe: true,
-    timestamp: false
-  },
-  pretty
-);
+/*const pdfPrinter = new PdfPrinter(fonts);
 
 const doc = {
   content: [
@@ -84,4 +71,4 @@ const pdfDoc = pdfPrinter.createPdfKitDocument(doc);
 
 pdfDoc.pipe(fs.createWriteStream("./pdfs/prototype.pdf"));
 
-pdfDoc.end();
+pdfDoc.end();*/

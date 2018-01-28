@@ -11,4 +11,8 @@ export class LivingUnit {
   public get number(): number {
     return this.params.number;
   }
+
+  public get rooms(): Room[] {
+    return this.params.rooms;
+  }
 }
