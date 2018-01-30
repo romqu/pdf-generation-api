@@ -1,11 +1,11 @@
-import { Margin } from "./margin";
+import { DocMargin } from "./docMargin";
 
-export class Image {
+export class DocImage {
   public docDefiniton: object;
 
   constructor(
     private readonly params: {
-      readonly margin: Margin;
+      readonly margin: DocMargin;
       readonly imageUrl: string;
       readonly fit: any;
     }

@@ -1,4 +1,4 @@
-export class Margin {
+export class DocMargin {
   constructor(
     private readonly params: {
       readonly left: number;

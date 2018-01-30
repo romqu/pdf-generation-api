@@ -1,6 +1,6 @@
-import { Margin } from "./margin";
+import { DocMargin } from "./docMargin";
 
-export class Line {
+export class DocLine {
   constructor(
     private readonly params: {
       readonly x1: number;
@@ -8,13 +8,13 @@ export class Line {
       readonly x2: number;
       readonly y2: number;
       readonly lineWidth: number;
-      readonly margin: Margin;
+      readonly docMargin: DocMargin;
     }
   ) {}
 
   public get docDefinition(): object {
     return {
-      margin: this.params.margin.docDefinition,
+      margin: this.params.docMargin.docDefinition,
       canvas: [
         {
           type: "line",

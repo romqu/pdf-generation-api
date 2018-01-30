@@ -1,9 +1,9 @@
-import { Margin } from "./margin";
+import { DocMargin } from "./docMargin";
 
-export class Text {
+export class DocText {
   constructor(
     private readonly params: {
-      readonly margin: Margin;
+      readonly docMargin: DocMargin;
       readonly text: string;
       readonly fontSize: number;
       readonly isBold: boolean;
@@ -12,7 +12,7 @@ export class Text {
 
   public get docDefinition(): object {
     return {
-      margin: this.params.margin.docDefinition,
+      margin: this.params.docMargin.docDefinition,
       text: this.params.text,
       fontSize: this.params.fontSize,
       bold: this.params.isBold

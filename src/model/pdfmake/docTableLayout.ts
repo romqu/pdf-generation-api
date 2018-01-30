@@ -1,4 +1,4 @@
-export class TableLayout {
+export class DocTableLayout {
   constructor(
     private readonly params: {
       readonly hLineWidth: (i: number, node: object) => number;

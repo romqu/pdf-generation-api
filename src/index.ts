@@ -1,5 +1,11 @@
+import fs = require("fs");
+import PdfPrinter = require("pdfmake");
+
 import { CreateDoc } from "./createDoc";
-import { TableLayout } from "./model/pdfmake/tableLayout";
+import { DocMargin } from "./model/pdfmake/docMargin";
+import { DocTable } from "./model/pdfmake/docTable";
+import { DocTableLayout } from "./model/pdfmake/docTableLayout";
+import { DocText } from "./model/pdfmake/docText";
 
 const fonts = {
   Roboto: {
@@ -10,7 +16,7 @@ const fonts = {
   }
 };
 
-const docTableLayout: TableLayout = new TableLayout({
+const docTableLayout: DocTableLayout = new DocTableLayout({
   hLineWidth: (i: number, node: object): number => {
     return 0.1;
   },
@@ -38,37 +44,32 @@ const docTableLayout: TableLayout = new TableLayout({
 });
 
 const createDoc: CreateDoc = new CreateDoc({
-  imageBasePath: ""
+  imageBasePath: "./assets/images/"
 });
 
-createDoc.execute();
-
-/*const pdfPrinter = new PdfPrinter(fonts);
+const pdfPrinter = new PdfPrinter(fonts);
 
 const doc = {
   content: [
-    new Table({
-      margin: new Margin({ left: 0, top: 0, right: 0, bottom: 0 }),
+    createDoc.execute()
+    /*new DocTable({
+      docMargin: new DocMargin({ left: 0, top: 0, right: 0, bottom: 0 }),
       widths: "*",
       body: [
-        new Text({
-          margin: new Margin({ left: 0, top: 0, right: 0, bottom: 0 }),
+        new DocText({
+          docMargin: new DocMargin({ left: 0, top: 0, right: 0, bottom: 0 }),
           text: "A",
           fontSize: 10,
           isBold: false
         }).docDefinition
       ],
-      layout: docTableLayout
-    }).docDefinition
+      docLayout: docTableLayout
+    }).docDefinition*/
   ]
-};
-
-const b = (a: number): number => {
-  return 2;
 };
 
 const pdfDoc = pdfPrinter.createPdfKitDocument(doc);
 
 pdfDoc.pipe(fs.createWriteStream("./pdfs/prototype.pdf"));
 
-pdfDoc.end();*/
+pdfDoc.end();

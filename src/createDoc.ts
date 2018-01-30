@@ -5,6 +5,8 @@ import { DefectList } from "./model/defectList";
 import { Floor } from "./model/floor";
 import { Image } from "./model/image";
 import { LivingUnit } from "./model/livingUnit";
+import { DocImage } from "./model/pdfmake/docImage";
+import { DocMargin } from "./model/pdfmake/docMargin";
 import { Room } from "./model/room";
 
 export class CreateDoc {
@@ -14,7 +16,7 @@ export class CreateDoc {
     }
   ) {}
 
-  public execute(): void {
+  public execute(): object[] {
     const pretty = pino.pretty();
 
     pretty.pipe(process.stdout);
@@ -28,7 +30,40 @@ export class CreateDoc {
       pretty
     );
 
-    const defectList: DefectList = this.createTestData();
+    const defects: DefectList = this.createTestData();
+
+    return this.createDoc({ defectList: defects });
+  }
+
+  private createDoc(params: { defectList: DefectList }): object[] {
+    const defectList: DefectList = params.defectList;
+    const docImageList: DocImage[] = [];
+    const doc: object[] = [];
+
+    for (const floor of defectList.floors) {
+      for (const livingUnit of floor.livingUnits) {
+        for (const room of livingUnit.rooms) {
+          for (const defect of room.defects) {
+            for (const image of defect.images) {
+              doc.push(
+                new DocImage({
+                  margin: new DocMargin({
+                    left: 0,
+                    top: 0,
+                    right: 0,
+                    bottom: 0
+                  }),
+                  imageUrl: this.params.imageBasePath + image.name,
+                  fit: [100, 100]
+                }).docDefinition
+              );
+            }
+          }
+        }
+      }
+    }
+
+    return doc;
   }
 
   private createTestData(): DefectList {
