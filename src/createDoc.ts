@@ -13,6 +13,39 @@ import { DocText } from "./model/pdfmake/docText";
 import { Room } from "./model/room";
 
 export class CreateDoc {
+  private readonly defaultDocMargin: DocMargin = new DocMargin({
+    left: 2,
+    top: 2,
+    right: 2,
+    bottom: 2
+  });
+
+  private readonly docTableLayout: DocTableLayout = new DocTableLayout({
+    hLineWidth: (i: number, node: object): number => {
+      return 0.1;
+    },
+    vLineWidth: (i: number, node: object): number => {
+      return 0.1;
+    },
+    hLineColor: (i: number, node: object): string => {
+      return "black";
+    },
+    vLineColor: (i: number, node: object): string => {
+      return "black";
+    },
+    paddingLeft: (i: number, node: object): number => {
+      return 0;
+    },
+    paddingRight: (i: number, node: object): number => {
+      return 0;
+    },
+    paddingTop: (i: number, node: object): number => {
+      return 0;
+    },
+    paddingBottom: (i: number, node: object): number => {
+      return 0;
+    }
+  });
   constructor(
     private readonly params: {
       readonly imageBasePath: string;
@@ -39,88 +72,53 @@ export class CreateDoc {
   }
 
   private createDoc(params: { defectList: DefectList }): object[] {
-    const defaultDocMargin: DocMargin = new DocMargin({
-      left: 2,
-      top: 2,
-      right: 2,
-      bottom: 2
-    });
-
-    const docTableLayout: DocTableLayout = new DocTableLayout({
-      hLineWidth: (i: number, node: object): number => {
-        return 0.1;
-      },
-      vLineWidth: (i: number, node: object): number => {
-        return 0.1;
-      },
-      hLineColor: (i: number, node: object): string => {
-        return "black";
-      },
-      vLineColor: (i: number, node: object): string => {
-        return "black";
-      },
-      paddingLeft: (i: number, node: object): number => {
-        return 0;
-      },
-      paddingRight: (i: number, node: object): number => {
-        return 0;
-      },
-      paddingTop: (i: number, node: object): number => {
-        return 0;
-      },
-      paddingBottom: (i: number, node: object): number => {
-        return 0;
-      }
-    });
-
-    const defectList: DefectList = params.defectList;
-
     const doc: object[] = [];
 
-    for (const floor of defectList.floors) {
+    for (const floor of params.defectList.floors) {
       for (const livingUnit of floor.livingUnits) {
         for (const room of livingUnit.rooms) {
           for (const defect of room.defects) {
-            const docTableText: DocTable = new DocTable({
-              docMargin: defaultDocMargin,
-              widths: ["50%", "50%"],
-              body: [
-                new DocText({
-                  docMargin: defaultDocMargin,
-                  text: "A",
-                  fontSize: 10,
-                  isBold: false
-                }).docDefinition,
-                new DocText({
-                  docMargin: defaultDocMargin,
-                  text: "A",
-                  fontSize: 10,
-                  isBold: false
-                }).docDefinition
-              ],
-              docLayout: docTableLayout
+            // Table with two tables with text
+            const docTableText: object[] = this.createDocTableText({
+              defectP: defect
             });
 
             for (let i = 0; i < defect.images.length; i++) {
               if (i === 0) {
                 const table: DocTable = new DocTable({
-                  docMargin: defaultDocMargin,
+                  docMargin: this.defaultDocMargin,
                   widths: ["50%", "50%"],
                   body: [
                     new DocImage({
-                      margin: defaultDocMargin,
+                      margin: this.defaultDocMargin,
                       imageUrl:
                         this.params.imageBasePath + defect.images[i].name,
                       fit: [200, 200]
                     }).docDefinition,
-                    docTableText.docDefinition
+                    docTableText
                   ],
-                  docLayout: docTableLayout
+                  docLayout: this.docTableLayout
                 });
 
                 doc.push(table.docDefinition);
-              } else if (i === defect.images.length - 1) {
-                //
+              } else if (
+                i === defect.images.length - 1 &&
+                defect.images.length > 1
+              ) {
+                const table: DocTable = new DocTable({
+                  docMargin: this.defaultDocMargin,
+                  widths: ["50%", "50%"],
+                  body: [
+                    new DocImage({
+                      margin: this.defaultDocMargin,
+                      imageUrl:
+                        this.params.imageBasePath + defect.images[i].name,
+                      fit: [200, 200]
+                    }).docDefinition
+                  ],
+                  docLayout: this.docTableLayout
+                });
+                doc.push(table.docDefinition);
               }
             }
           }
@@ -131,6 +129,79 @@ export class CreateDoc {
     return doc;
   }
 
+  private createDocTableText(params: { defectP: Defect }): object[] {
+    const docTableText: object[] = [];
+
+    docTableText.push(
+      new DocTable({
+        docMargin: this.defaultDocMargin,
+        widths: ["35%", "65%"],
+        body: [
+          new DocText({
+            docMargin: this.defaultDocMargin,
+            text: "Beschreibung:",
+            fontSize: 10,
+            isBold: false
+          }).docDefinition,
+          new DocText({
+            docMargin: this.defaultDocMargin,
+            text: params.defectP.description,
+            fontSize: 10,
+            isBold: false
+          }).docDefinition
+        ],
+        docLayout: this.docTableLayout
+      }).docDefinition
+    );
+
+    docTableText.push(
+      new DocTable({
+        docMargin: this.defaultDocMargin,
+        widths: ["35%", "65%"],
+        body: [
+          new DocText({
+            docMargin: this.defaultDocMargin,
+            text: "Verantwortlicher:",
+            fontSize: 10,
+            isBold: false
+          }).docDefinition,
+          new DocText({
+            docMargin: this.defaultDocMargin,
+            text: params.defectP.personInCharge,
+            fontSize: 10,
+            isBold: false
+          }).docDefinition
+        ],
+        docLayout: this.docTableLayout
+      }).docDefinition
+    );
+
+    docTableText.push(
+      new DocTable({
+        docMargin: this.defaultDocMargin,
+        widths: ["35%", "65%"],
+        body: [
+          new DocText({
+            docMargin: this.defaultDocMargin,
+            text: "Erledigt bis:",
+            fontSize: 10,
+            isBold: false
+          }).docDefinition,
+          new DocText({
+            docMargin: this.defaultDocMargin,
+            text: params.defectP.doneTill,
+            fontSize: 10,
+            isBold: false
+          }).docDefinition
+        ],
+        docLayout: this.docTableLayout
+      }).docDefinition
+    );
+
+    return docTableText;
+  }
+
+  // Test data
   private createTestData(): DefectList {
     const imageList: Image[] = [];
     const defectList: Defect[] = [];
@@ -183,4 +254,25 @@ export class CreateDoc {
       floors: floorList
     });
   }
+
+  /*private createTableDocText(paramss: {
+    leftText: string;
+    rightText: string;
+  }): DocText[] {
+    const docTextList: DocText[] = [];
+
+    docTextList.push(createDocText({ text: paramss.leftText }));
+    docTextList.push(createDocText({ text: paramss.rightText }));
+
+    return docTextList;
+  }
+
+  private createDocText(paramss: { text: string }): DocText {
+    return new DocText({
+      docMargin: defaultDocMargin,
+      text: paramss.text,
+      fontSize: 10,
+      isBold: false
+    });
+  }*/
 }
