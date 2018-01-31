@@ -7,6 +7,9 @@ import { Image } from "./model/image";
 import { LivingUnit } from "./model/livingUnit";
 import { DocImage } from "./model/pdfmake/docImage";
 import { DocMargin } from "./model/pdfmake/docMargin";
+import { DocTable } from "./model/pdfmake/docTable";
+import { DocTableLayout } from "./model/pdfmake/docTableLayout";
+import { DocText } from "./model/pdfmake/docText";
 import { Room } from "./model/room";
 
 export class CreateDoc {
@@ -36,27 +39,89 @@ export class CreateDoc {
   }
 
   private createDoc(params: { defectList: DefectList }): object[] {
+    const defaultDocMargin: DocMargin = new DocMargin({
+      left: 2,
+      top: 2,
+      right: 2,
+      bottom: 2
+    });
+
+    const docTableLayout: DocTableLayout = new DocTableLayout({
+      hLineWidth: (i: number, node: object): number => {
+        return 0.1;
+      },
+      vLineWidth: (i: number, node: object): number => {
+        return 0.1;
+      },
+      hLineColor: (i: number, node: object): string => {
+        return "black";
+      },
+      vLineColor: (i: number, node: object): string => {
+        return "black";
+      },
+      paddingLeft: (i: number, node: object): number => {
+        return 0;
+      },
+      paddingRight: (i: number, node: object): number => {
+        return 0;
+      },
+      paddingTop: (i: number, node: object): number => {
+        return 0;
+      },
+      paddingBottom: (i: number, node: object): number => {
+        return 0;
+      }
+    });
+
     const defectList: DefectList = params.defectList;
-    const docImageList: DocImage[] = [];
+
     const doc: object[] = [];
 
     for (const floor of defectList.floors) {
       for (const livingUnit of floor.livingUnits) {
         for (const room of livingUnit.rooms) {
           for (const defect of room.defects) {
-            for (const image of defect.images) {
-              doc.push(
-                new DocImage({
-                  margin: new DocMargin({
-                    left: 0,
-                    top: 0,
-                    right: 0,
-                    bottom: 0
-                  }),
-                  imageUrl: this.params.imageBasePath + image.name,
-                  fit: [100, 100]
+            const docTableText: DocTable = new DocTable({
+              docMargin: defaultDocMargin,
+              widths: ["50%", "50%"],
+              body: [
+                new DocText({
+                  docMargin: defaultDocMargin,
+                  text: "A",
+                  fontSize: 10,
+                  isBold: false
+                }).docDefinition,
+                new DocText({
+                  docMargin: defaultDocMargin,
+                  text: "A",
+                  fontSize: 10,
+                  isBold: false
                 }).docDefinition
-              );
+              ],
+              docLayout: docTableLayout
+            });
+
+            for (let i = 0; i < defect.images.length; i++) {
+              if (i === 0) {
+                const table: DocTable = new DocTable({
+                  docMargin: defaultDocMargin,
+                  widths: ["50%", "50%"],
+                  body: [
+                    new DocImage({
+                      margin: defaultDocMargin,
+                      imageUrl:
+                        this.params.imageBasePath + defect.images[i].name,
+                      fit: [200, 200]
+                    }).docDefinition,
+                    docTableText.docDefinition
+                  ],
+                  docLayout: docTableLayout
+                });
+
+                doc.push(table.docDefinition);
+              } else if (i === defect.images.length - 1) {
+                //
+              }
             }
           }
         }
