@@ -11,6 +11,7 @@ import { DocTable } from "./model/pdfmake/docTable";
 import { DocTableLayout } from "./model/pdfmake/docTableLayout";
 import { DocText } from "./model/pdfmake/docText";
 import { Room } from "./model/room";
+import { DocTableBody } from "./model/pdfmake/docTableBody";
 
 export class CreateDoc {
   private readonly defaultDocMargin: DocMargin = new DocMargin({
@@ -74,54 +75,44 @@ export class CreateDoc {
   private createDoc(params: { defectList: DefectList }): object[] {
     const doc: object[] = [];
 
-    for (const floor of params.defectList.floors) {
-      for (const livingUnit of floor.livingUnits) {
-        for (const room of livingUnit.rooms) {
-          for (const defect of room.defects) {
-            // Table with two tables with text
-            const docTableText: object[] = this.createDocTableText({
-              defectP: defect
-            });
+    for (const defect of params.defectList.floors[0].livingUnits[0].rooms[0]
+      .defects) {
+      const docTableText: object[] = this.createDocTableText({
+        defectP: defect
+      });
 
-            for (let i = 0; i < defect.images.length; i++) {
-              if (i === 0) {
-                const table: DocTable = new DocTable({
-                  docMargin: this.defaultDocMargin,
-                  widths: ["50%", "50%"],
-                  body: [
-                    new DocImage({
-                      margin: this.defaultDocMargin,
-                      imageUrl:
-                        this.params.imageBasePath + defect.images[i].name,
-                      fit: [200, 200]
-                    }).docDefinition,
-                    docTableText
-                  ],
-                  docLayout: this.docTableLayout
-                });
+      for (let i = 0; i < defect.images.length; i++) {
+        if (i === 0) {
+          const table: DocTable = new DocTable({
+            docMargin: this.defaultDocMargin,
+            widths: ["50%", "50%"],
+            body: [
+              new DocImage({
+                margin: this.defaultDocMargin,
+                imageUrl: this.params.imageBasePath + defect.images[i].name,
+                fit: [200, 200]
+              }).docDefinition,
+              docTableText
+            ],
+            docLayout: this.docTableLayout
+          });
 
-                doc.push(table.docDefinition);
-              } else if (
-                i === defect.images.length - 1 &&
-                defect.images.length > 1
-              ) {
-                const table: DocTable = new DocTable({
-                  docMargin: this.defaultDocMargin,
-                  widths: ["50%", "50%"],
-                  body: [
-                    new DocImage({
-                      margin: this.defaultDocMargin,
-                      imageUrl:
-                        this.params.imageBasePath + defect.images[i].name,
-                      fit: [200, 200]
-                    }).docDefinition
-                  ],
-                  docLayout: this.docTableLayout
-                });
-                doc.push(table.docDefinition);
-              }
-            }
-          }
+          doc.push(table.docDefinition);
+        } else {
+          const table: DocTable = new DocTable({
+            docMargin: this.defaultDocMargin,
+            widths: ["50%", "50%"],
+            body: [
+              new DocImage({
+                margin: this.defaultDocMargin,
+                imageUrl: this.params.imageBasePath + defect.images[i].name,
+                fit: [200, 200]
+              }).docDefinition,
+              {}
+            ],
+            docLayout: this.docTableLayout
+          });
+          doc.push(table.docDefinition);
         }
       }
     }
@@ -129,6 +120,7 @@ export class CreateDoc {
     return doc;
   }
 
+  // TODO - Automate it...
   private createDocTableText(params: { defectP: Defect }): object[] {
     const docTableText: object[] = [];
 

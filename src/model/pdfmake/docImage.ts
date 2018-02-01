@@ -1,8 +1,6 @@
 import { DocMargin } from "./docMargin";
 
 export class DocImage {
-  public docDefiniton: object;
-
   constructor(
     private readonly params: {
       readonly margin: DocMargin;

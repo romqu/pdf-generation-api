@@ -10,7 +10,7 @@ export class DocTable {
     private readonly params: {
       readonly docMargin: DocMargin;
       readonly widths: any;
-      readonly body: any;
+      readonly body: object[];
       readonly docLayout: DocTableLayout;
     }
   ) {}
@@ -25,4 +25,8 @@ export class DocTable {
       layout: this.params.docLayout.docDefinition
     };
   }
+
+  /*public appendToBody(params: {object: object}): DocTable {
+
+  }*/
 }
