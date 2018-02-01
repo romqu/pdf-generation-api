@@ -1,16 +1,17 @@
 export class DocTableBody {
   constructor(private readonly params: { body: object[] }) {}
 
-  public get docDefinition(): object {
-    return this.params;
+  public get docDefinition(): object[] {
+    return this.params.body;
   }
 
   public append(params: { body: object }): DocTableBody {
-    if(params.body === {}){
-      return new DocTableBody({ body: [this.params] });
-    }else{
-      return new DocTableBody({{body: this.params}})
+    if (this.params.body.length === 0) {
+      return new DocTableBody({ body: [params.body] });
+    } else {
+      return new DocTableBody({
+        body: [...this.params.body, params.body]
+      });
     }
-    
   }
 }
