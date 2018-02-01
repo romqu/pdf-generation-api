@@ -74,7 +74,7 @@ export class CreateDoc {
 
   private createDoc(params: { defectList: DefectList }): object[] {
     const doc: object[] = [];
-    let body: DocTableBody = new DocTableBody({ body: [] });
+    let docTableBodyImage: DocTableBody = new DocTableBody({ body: [] });
 
     for (const defect of params.defectList.floors[0].livingUnits[0].rooms[0]
       .defects) {
@@ -98,30 +98,15 @@ export class CreateDoc {
             docLayout: this.docTableLayout
           });
 
-          // doc.push(table.docDefinition);
+          doc.push(table.docDefinition);
         } else {
-          body = body.append({
+          docTableBodyImage = docTableBodyImage.append({
             body: new DocImage({
               margin: this.defaultDocMargin,
               imageUrl: this.params.imageBasePath + defect.images[i].name,
               fit: [200, 200]
             }).docDefinition
           });
-
-          const table: DocTable = new DocTable({
-            docMargin: this.defaultDocMargin,
-            widths: ["50%", "50%"],
-            body: [
-              new DocImage({
-                margin: this.defaultDocMargin,
-                imageUrl: this.params.imageBasePath + defect.images[i].name,
-                fit: [200, 200]
-              }).docDefinition,
-              {}
-            ],
-            docLayout: this.docTableLayout
-          });
-          // doc.push(table.docDefinition);
         }
       }
     }
@@ -130,7 +115,7 @@ export class CreateDoc {
       new DocTable({
         docMargin: this.defaultDocMargin,
         widths: ["50%", "50%"],
-        body: [body.docDefinition],
+        body: docTableBodyImage.docDefinition,
         docLayout: this.docTableLayout
       }).docDefinition
     );
