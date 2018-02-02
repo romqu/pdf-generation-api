@@ -6,6 +6,8 @@ import { DocMargin } from "./model/pdfmake/docMargin";
 import { DocTable } from "./model/pdfmake/docTable";
 import { DocTableLayout } from "./model/pdfmake/docTableLayout";
 import { DocText } from "./model/pdfmake/docText";
+import { DocTableBody } from "./model/pdfmake/docTableBody";
+import { logger } from "./logger";
 
 const fonts = {
   Roboto: {
@@ -49,24 +51,48 @@ const createDoc: CreateDoc = new CreateDoc({
 
 const pdfPrinter = new PdfPrinter(fonts);
 
-const doc = {
-  content: [
-    createDoc.execute()
-    /*new DocTable({
-      docMargin: new DocMargin({ left: 0, top: 0, right: 0, bottom: 0 }),
-      widths: "*",
-      body: [
+const contents = new DocTable({
+  docMargin: new DocMargin({ left: 0, top: 0, right: 0, bottom: 0 }),
+  widths: "*",
+  body: new DocTableBody({
+    body: [
+      new DocText({
+        docMargin: new DocMargin({ left: 0, top: 0, right: 0, bottom: 0 }),
+        text: "A",
+        fontSize: 10,
+        isBold: false
+      }).docDefinition
+    ]
+  }).append({
+    body: [
+      [
+        new DocText({
+          docMargin: new DocMargin({ left: 0, top: 0, right: 0, bottom: 0 }),
+          text: "A",
+          fontSize: 10,
+          isBold: false
+        }).docDefinition,
         new DocText({
           docMargin: new DocMargin({ left: 0, top: 0, right: 0, bottom: 0 }),
           text: "A",
           fontSize: 10,
           isBold: false
         }).docDefinition
-      ],
-      docLayout: docTableLayout
-    }).docDefinition*/
-  ]
+      ]
+    ]
+  }),
+
+  docLayout: docTableLayout
+}).docDefinition;
+
+const doc = {
+  content:
+    // createDoc.execute()
+
+    [contents]
 };
+
+// logger.info(doc);
 
 const pdfDoc = pdfPrinter.createPdfKitDocument(doc);
 

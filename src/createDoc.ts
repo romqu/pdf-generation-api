@@ -1,18 +1,17 @@
-import pino = require("pino");
-
+import { logger } from "./logger";
 import { Defect } from "./model/defect";
 import { DefectList } from "./model/defectList";
 import { Floor } from "./model/floor";
 import { Image } from "./model/image";
 import { LivingUnit } from "./model/livingUnit";
 import { DocImage } from "./model/pdfmake/docImage";
+import { DocLine } from "./model/pdfmake/docLine";
 import { DocMargin } from "./model/pdfmake/docMargin";
 import { DocTable } from "./model/pdfmake/docTable";
 import { DocTableBody } from "./model/pdfmake/docTableBody";
 import { DocTableLayout } from "./model/pdfmake/docTableLayout";
 import { DocText } from "./model/pdfmake/docText";
 import { Room } from "./model/room";
-import { DocLine } from "./model/pdfmake/docLine";
 
 export class CreateDoc {
   private readonly defaultDocMargin: DocMargin = new DocMargin({
@@ -55,19 +54,6 @@ export class CreateDoc {
   ) {}
 
   public execute(): object[] {
-    const pretty = pino.pretty();
-
-    pretty.pipe(process.stdout);
-
-    const log = pino(
-      {
-        // name: "app",
-        safe: true,
-        timestamp: false
-      },
-      pretty
-    );
-
     const defects: DefectList = this.createTestData();
 
     return this.createDoc({ defectList: defects });
@@ -80,32 +66,32 @@ export class CreateDoc {
 
     for (const defect of params.defectList.floors[0].livingUnits[0].rooms[0]
       .defects) {
+      // 1 - Defect Headline with seperate line
+      docTableBodyDefect = docTableBodyDefect.append({
+        body: [
+          new DocText({
+            docMargin: this.defaultDocMargin,
+            text: "Mangel 1",
+            fontSize: 10,
+            isBold: false
+          }).docDefinition,
+          new DocLine({
+            x1: 0,
+            y1: 0,
+            x2: (595 - 2 * 40 - 27.5) / 2.5,
+            y2: 0,
+            lineWidth: 0.5,
+            docMargin: new DocMargin({ left: 20, top: 1, right: 0, bottom: 0 })
+          }).docDefinition
+        ]
+      });
+
+      // 2 - Table textfield
       const docTableText: object[] = this.createDocTableText({
         defectP: defect
       });
 
-      docTableBodyDefect = docTableBodyDefect.append({
-        body: new DocText({
-          docMargin: this.defaultDocMargin,
-          text: "Mangel 1",
-          fontSize: 10,
-          isBold: false
-        }).docDefinition
-      });
-
-      docTableBodyDefect = docTableBodyDefect.append({
-        body: new DocLine({
-          x1: 0,
-          y1: 0,
-          x2: (595 - 2 * 40 - 27.5) / 2.5,
-          y2: 0,
-          lineWidth: 0.5,
-          docMargin: new DocMargin({ left: 20, top: 1, right: 0, bottom: 0 })
-        }).docDefinition
-      });
-
-      doc.push(docTableBodyDefect.docDefinition);
-
+      // 3 - images
       for (let i = 0; i < defect.images.length; i++) {
         if (i === 0) {
           const table: DocTable = new DocTable({
@@ -199,20 +185,47 @@ export class CreateDoc {
       new DocTable({
         docMargin: this.defaultDocMargin,
         widths: ["35%", "65%"],
-        body: [
-          new DocText({
-            docMargin: this.defaultDocMargin,
-            text: "Erledigt bis:",
-            fontSize: 10,
-            isBold: false
-          }).docDefinition,
-          new DocText({
-            docMargin: this.defaultDocMargin,
-            text: params.defectP.doneTill,
-            fontSize: 10,
-            isBold: false
-          }).docDefinition
-        ],
+        body: new DocTableBody({
+          body: [
+            new DocText({
+              docMargin: this.defaultDocMargin,
+              text: "Erledigt bis:",
+              fontSize: 10,
+              isBold: false
+            }).docDefinition,
+            new DocText({
+              docMargin: this.defaultDocMargin,
+              text: params.defectP.doneTill,
+              fontSize: 10,
+              isBold: false
+            }).docDefinition
+          ]
+        }),
+
+        docLayout: this.docTableLayout
+      }).docDefinition
+    );
+
+    logger.info(
+      new DocTable({
+        docMargin: this.defaultDocMargin,
+        widths: ["35%", "65%"],
+        body: new DocTableBody({
+          body: [
+            new DocText({
+              docMargin: this.defaultDocMargin,
+              text: "Erledigt bis:",
+              fontSize: 10,
+              isBold: false
+            }).docDefinition,
+            new DocText({
+              docMargin: this.defaultDocMargin,
+              text: params.defectP.doneTill,
+              fontSize: 10,
+              isBold: false
+            }).docDefinition
+          ]
+        }),
         docLayout: this.docTableLayout
       }).docDefinition
     );

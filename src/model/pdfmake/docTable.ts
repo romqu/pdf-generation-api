@@ -1,16 +1,13 @@
 import { DocMargin } from "./docMargin";
+import { DocTableBody } from "./docTableBody";
 import { DocTableLayout } from "./docTableLayout";
-
-export interface IDocBaseModel {
-  doc(): object;
-}
 
 export class DocTable {
   constructor(
     private readonly params: {
       readonly docMargin: DocMargin;
       readonly widths: any;
-      readonly body: object[];
+      readonly body: DocTableBody;
       readonly docLayout: DocTableLayout;
     }
   ) {}
@@ -20,13 +17,9 @@ export class DocTable {
       margin: this.params.docMargin.docDefinition,
       table: {
         widths: this.params.widths,
-        body: [this.params.body]
+        body: this.params.body.docDefinition
       },
       layout: this.params.docLayout.docDefinition
     };
   }
-
-  /*public appendToBody(params: {object: object}): DocTable {
-
-  }*/
 }
