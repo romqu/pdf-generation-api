@@ -12,6 +12,7 @@ import { DocTableBody } from "./model/pdfmake/docTableBody";
 import { DocTableLayout } from "./model/pdfmake/docTableLayout";
 import { DocText } from "./model/pdfmake/docText";
 import { Room } from "./model/room";
+import { DocLine } from "./model/pdfmake/docLine";
 
 export class CreateDoc {
   private readonly defaultDocMargin: DocMargin = new DocMargin({
@@ -75,12 +76,35 @@ export class CreateDoc {
   private createDoc(params: { defectList: DefectList }): object[] {
     const doc: object[] = [];
     let docTableBodyImage: DocTableBody = new DocTableBody({ body: [] });
+    let docTableBodyDefect: DocTableBody = new DocTableBody({ body: [] });
 
     for (const defect of params.defectList.floors[0].livingUnits[0].rooms[0]
       .defects) {
       const docTableText: object[] = this.createDocTableText({
         defectP: defect
       });
+
+      docTableBodyDefect = docTableBodyDefect.append({
+        body: new DocText({
+          docMargin: this.defaultDocMargin,
+          text: "Mangel 1",
+          fontSize: 10,
+          isBold: false
+        }).docDefinition
+      });
+
+      docTableBodyDefect = docTableBodyDefect.append({
+        body: new DocLine({
+          x1: 0,
+          y1: 0,
+          x2: (595 - 2 * 40 - 27.5) / 2.5,
+          y2: 0,
+          lineWidth: 0.5,
+          docMargin: new DocMargin({ left: 20, top: 1, right: 0, bottom: 0 })
+        }).docDefinition
+      });
+
+      doc.push(docTableBodyDefect.docDefinition);
 
       for (let i = 0; i < defect.images.length; i++) {
         if (i === 0) {
