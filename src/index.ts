@@ -2,12 +2,13 @@ import fs = require("fs");
 import PdfPrinter = require("pdfmake");
 
 import { CreateDoc } from "./createDoc";
+import { logger } from "./logger";
 import { DocMargin } from "./model/pdfmake/docMargin";
 import { DocTable } from "./model/pdfmake/docTable";
+import { DocTableBodyRow } from "./model/pdfmake/docTableBodyRow";
+import { DocTableBodyT } from "./model/pdfmake/docTableBodyT";
 import { DocTableLayout } from "./model/pdfmake/docTableLayout";
 import { DocText } from "./model/pdfmake/docText";
-import { DocTableBody } from "./model/pdfmake/docTableBody";
-import { logger } from "./logger";
 
 const fonts = {
   Roboto: {
@@ -51,45 +52,83 @@ const createDoc: CreateDoc = new CreateDoc({
 
 const pdfPrinter = new PdfPrinter(fonts);
 
-const contents = new DocTable({
+const def = new DocTable({
   docMargin: new DocMargin({ left: 0, top: 0, right: 0, bottom: 0 }),
   widths: "*",
-  body: new DocTableBody({
-    body: [
-      new DocText({
-        docMargin: new DocMargin({ left: 0, top: 0, right: 0, bottom: 0 }),
-        text: "A",
-        fontSize: 10,
-        isBold: false
-      }).docDefinition
-    ]
-  }).append({
-    body: [
-      [
-        new DocText({
-          docMargin: new DocMargin({ left: 0, top: 0, right: 0, bottom: 0 }),
-          text: "A",
-          fontSize: 10,
-          isBold: false
-        }).docDefinition,
-        new DocText({
-          docMargin: new DocMargin({ left: 0, top: 0, right: 0, bottom: 0 }),
-          text: "A",
-          fontSize: 10,
-          isBold: false
-        }).docDefinition
-      ]
+  body: new DocTableBodyT({
+    numberOfColumns: 2,
+    numberOfRows: 2,
+    rows: [
+      new DocTableBodyRow({
+        docModels: [
+          new DocText({
+            docMargin: new DocMargin({
+              left: 0,
+              top: 0,
+              right: 0,
+              bottom: 0
+            }),
+            text: [
+              new DocText({
+                docMargin: new DocMargin({
+                  left: 0,
+                  top: 0,
+                  right: 0,
+                  bottom: 0
+                }),
+                text: "Text1",
+                fontSize: 30,
+                isBold: false
+              }),
+              new DocText({
+                docMargin: new DocMargin({
+                  left: 0,
+                  top: 0,
+                  right: 0,
+                  bottom: 0
+                }),
+                text: "Text2",
+                fontSize: 10,
+                isBold: false
+              })
+            ]
+          }),
+          new DocText({
+            docMargin: new DocMargin({
+              left: 0,
+              top: 0,
+              right: 0,
+              bottom: 0
+            }),
+            text: "Text",
+            fontSize: 10,
+            isBold: false
+          }),
+          new DocText({
+            docMargin: new DocMargin({
+              left: 0,
+              top: 0,
+              right: 0,
+              bottom: 0
+            }),
+            text: "Text",
+            fontSize: 10,
+            isBold: false
+          })
+        ]
+      })
     ]
   }),
-
   docLayout: docTableLayout
-}).docDefinition;
+}).docDefinition();
+
+logger.info(def);
 
 const doc = {
   content:
     // createDoc.execute()
 
-    [contents]
+    [def]
 };
 
 // logger.info(doc);

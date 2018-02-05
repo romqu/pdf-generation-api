@@ -1,4 +1,5 @@
-export class DocMargin {
+import { IDocModel } from "./docModel";
+export class DocMargin implements IDocModel {
   constructor(
     private readonly params: {
       readonly left: number;
@@ -8,7 +9,7 @@ export class DocMargin {
     }
   ) {}
 
-  public get docDefinition(): object {
+  public docDefinition(): object {
     return [
       this.params.left,
       this.params.top,

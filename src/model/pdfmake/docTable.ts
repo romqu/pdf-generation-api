@@ -1,25 +1,26 @@
 import { DocMargin } from "./docMargin";
-import { DocTableBody } from "./docTableBody";
+import { IDocModel } from "./docModel";
+import { DocTableBodyT } from "./docTableBodyT";
 import { DocTableLayout } from "./docTableLayout";
 
-export class DocTable {
+export class DocTable implements IDocModel {
   constructor(
     private readonly params: {
       readonly docMargin: DocMargin;
       readonly widths: any;
-      readonly body: DocTableBody;
+      readonly body: DocTableBodyT;
       readonly docLayout: DocTableLayout;
     }
   ) {}
 
-  public get docDefinition(): object {
+  public docDefinition(): object {
     return {
-      margin: this.params.docMargin.docDefinition,
+      margin: this.params.docMargin.docDefinition(),
       table: {
         widths: this.params.widths,
-        body: this.params.body.docDefinition
+        body: this.params.body.docDefinition()
       },
-      layout: this.params.docLayout.docDefinition
+      layout: this.params.docLayout.docDefinition()
     };
   }
 }

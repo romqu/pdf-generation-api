@@ -1,4 +1,5 @@
-export class DocTableLayout {
+import { IDocModel } from "./docModel";
+export class DocTableLayout implements IDocModel {
   constructor(
     private readonly params: {
       readonly hLineWidth: (i: number, node: object) => number;
@@ -12,7 +13,7 @@ export class DocTableLayout {
     }
   ) {}
 
-  public get docDefinition(): object {
+  public docDefinition(): object {
     return {
       hLineWidth: this.params.hLineWidth,
       vLineWidth: this.params.vLineWidth,
