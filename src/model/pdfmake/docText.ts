@@ -3,14 +3,23 @@ import { DocMargin } from "./docMargin";
 import { IDocModel } from "./docModel";
 
 export class DocText implements IDocModel {
-  constructor(
-    private readonly params: {
-      readonly docMargin: DocMargin;
-      readonly text: string | DocText[];
-      readonly fontSize?: number;
-      readonly isBold?: boolean;
-    }
-  ) {}
+  private readonly params: IDocTextParams;
+
+  constructor(obj: IDocTextParamsI = {} as IDocTextParamsI) {
+    const {
+      docMargin = new DocMargin({
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0
+      }),
+      text = "",
+      fontSize = 10,
+      isBold = false
+    } = obj;
+
+    this.params = { docMargin, text, fontSize, isBold };
+  }
 
   public docDefinition(): object {
     const textList: any[] = [];
@@ -32,4 +41,18 @@ export class DocText implements IDocModel {
       bold: this.params.isBold
     };
   }
+}
+
+interface IDocTextParamsI {
+  readonly docMargin?: DocMargin;
+  readonly text?: string | DocText[];
+  readonly fontSize?: number;
+  readonly isBold?: boolean;
+}
+
+interface IDocTextParams {
+  readonly docMargin: DocMargin;
+  readonly text: string | DocText[];
+  readonly fontSize: number;
+  readonly isBold: boolean;
 }

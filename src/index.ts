@@ -53,7 +53,7 @@ const createDoc: CreateDoc = new CreateDoc({
 const pdfPrinter = new PdfPrinter(fonts);
 
 const def = new DocTable({
-  docMargin: new DocMargin({ left: 0, top: 0, right: 0, bottom: 0 }),
+  docMargin: new DocMargin(),
   widths: "*",
   body: new DocTableBodyT({
     numberOfColumns: 2,
@@ -62,31 +62,16 @@ const def = new DocTable({
       new DocTableBodyRow({
         docModels: [
           new DocText({
-            docMargin: new DocMargin({
-              left: 0,
-              top: 0,
-              right: 0,
-              bottom: 0
-            }),
+            docMargin: new DocMargin(),
             text: [
               new DocText({
-                docMargin: new DocMargin({
-                  left: 0,
-                  top: 0,
-                  right: 0,
-                  bottom: 0
-                }),
+                docMargin: new DocMargin(),
                 text: "Text1",
-                fontSize: 30,
+                fontSize: 10,
                 isBold: false
               }),
               new DocText({
-                docMargin: new DocMargin({
-                  left: 0,
-                  top: 0,
-                  right: 0,
-                  bottom: 0
-                }),
+                docMargin: new DocMargin(),
                 text: "Text2",
                 fontSize: 10,
                 isBold: false
@@ -94,23 +79,13 @@ const def = new DocTable({
             ]
           }),
           new DocText({
-            docMargin: new DocMargin({
-              left: 0,
-              top: 0,
-              right: 0,
-              bottom: 0
-            }),
+            docMargin: new DocMargin(),
             text: "Text",
             fontSize: 10,
             isBold: false
           }),
           new DocText({
-            docMargin: new DocMargin({
-              left: 0,
-              top: 0,
-              right: 0,
-              bottom: 0
-            }),
+            docMargin: new DocMargin(),
             text: "Text",
             fontSize: 10,
             isBold: false

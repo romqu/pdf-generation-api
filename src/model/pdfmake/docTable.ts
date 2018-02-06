@@ -4,14 +4,13 @@ import { DocTableBodyT } from "./docTableBodyT";
 import { DocTableLayout } from "./docTableLayout";
 
 export class DocTable implements IDocModel {
-  constructor(
-    private readonly params: {
-      readonly docMargin: DocMargin;
-      readonly widths: any;
-      readonly body: DocTableBodyT;
-      readonly docLayout: DocTableLayout;
-    }
-  ) {}
+  private readonly params: IDocTableParams;
+
+  constructor(obj: IDocTableParamsI = {} as IDocTableParamsI) {
+    const { docMargin = new DocMargin(), widths = "*", body, docLayout } = obj;
+
+    this.params = { docMargin, widths, body, docLayout };
+  }
 
   public docDefinition(): object {
     return {
@@ -23,4 +22,18 @@ export class DocTable implements IDocModel {
       layout: this.params.docLayout.docDefinition()
     };
   }
+}
+
+interface IDocTableParams {
+  readonly docMargin: DocMargin;
+  readonly widths: any;
+  readonly body: DocTableBodyT;
+  readonly docLayout: DocTableLayout;
+}
+
+interface IDocTableParamsI {
+  readonly docMargin?: DocMargin;
+  readonly widths: any;
+  readonly body: DocTableBodyT;
+  readonly docLayout: DocTableLayout;
 }

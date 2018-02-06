@@ -286,25 +286,4 @@ export class CreateDoc {
       floors: floorList
     });
   }
-
-  /*private createTableDocText(paramss: {
-    leftText: string;
-    rightText: string;
-  }): DocText[] {
-    const docTextList: DocText[] = [];
-
-    docTextList.push(createDocText({ text: paramss.leftText }));
-    docTextList.push(createDocText({ text: paramss.rightText }));
-
-    return docTextList;
-  }
-
-  private createDocText(paramss: { text: string }): DocText {
-    return new DocText({
-      docMargin: defaultDocMargin,
-      text: paramss.text,
-      fontSize: 10,
-      isBold: false
-    });
-  }*/
 }

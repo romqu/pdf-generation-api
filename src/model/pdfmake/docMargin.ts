@@ -1,13 +1,12 @@
 import { IDocModel } from "./docModel";
 export class DocMargin implements IDocModel {
-  constructor(
-    private readonly params: {
-      readonly left: number;
-      readonly top: number;
-      readonly right: number;
-      readonly bottom: number;
-    }
-  ) {}
+  private readonly params: IDocMarginParams;
+
+  constructor(readonly obj: IDocMarginParamsI = {} as IDocMarginParamsI) {
+    const { left = 0, top = 0, right = 0, bottom = 0 } = obj;
+
+    this.params = { left, top, right, bottom };
+  }
 
   public docDefinition(): object {
     return [
@@ -17,4 +16,18 @@ export class DocMargin implements IDocModel {
       this.params.bottom
     ];
   }
+}
+
+interface IDocMarginParams {
+  readonly left: number;
+  readonly top: number;
+  readonly right: number;
+  readonly bottom: number;
+}
+
+interface IDocMarginParamsI {
+  readonly left?: number;
+  readonly top?: number;
+  readonly right?: number;
+  readonly bottom?: number;
 }
