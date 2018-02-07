@@ -3,10 +3,12 @@ import { DefectList } from "./model/defectList";
 import { Floor } from "./model/floor";
 import { Image } from "./model/image";
 import { LivingUnit } from "./model/livingUnit";
+import { DocImage } from "./model/pdfmake/docImage";
 import { DocMargin } from "./model/pdfmake/docMargin";
 import { DocTable } from "./model/pdfmake/docTable";
 import { DocTableBody } from "./model/pdfmake/docTableBody";
 import { DocTableBodyRow } from "./model/pdfmake/docTableBodyRow";
+import { DocTableBodyRowEntry } from "./model/pdfmake/docTableBodyRowEntry";
 import { DocTableLayout } from "./model/pdfmake/docTableLayout";
 import { DocText } from "./model/pdfmake/docText";
 import { Room } from "./model/room";
@@ -59,166 +61,172 @@ export class CreateDoc {
 
   private createDoc(params: { defectList: DefectList }): object[] {
     const doc: object[] = [];
-    // let docTableBodyImage: DocTableBody = new DocTableBody({ body: [] });
-    // let docTableBodyDefect: DocTableBody = new DocTableBody({ body: [] });
+
+    const defectFirstImageTableBody: DocTableBody = new DocTableBody();
+    const defectFirstImageTableRow: DocTableBodyRow = new DocTableBodyRow();
+
+    const defectSecondImageTableBody: DocTableBody = new DocTableBody();
+    const defectSecondImageRow: DocTableBodyRow = new DocTableBodyRow();
 
     for (const defect of params.defectList.floors[0].livingUnits[0].rooms[0]
       .defects) {
       // 2 - Table textfield
-      const docTableText: object[] = this.createDocTableText({
-        defectP: defect
-      });
-
-      // 1 - Defect Headline with seperate line
-      /*docTableBodyDefect = docTableBodyDefect.append({
-        body: [
-          new DocText({
-            docMargin: this.defaultDocMargin,
-            text: "Mangel 1"
-          }).docDefinition,
-          new DocLine({
-            x1: 0,
-            y1: 0,
-            x2: (595 - 2 * 40 - 27.5) / 2.5,
-            y2: 0,
-            lineWidth: 0.5,
-            docMargin: new DocMargin({ left: 20, top: 1 })
-          }).docDefinition
-        ]
-      });
-
-      
+      const defectTextTableRowEntry: DocTableBodyRowEntry = this.createDefectTextTables(
+        {
+          defectP: defect
+        }
+      );
 
       // 3 - images
       for (let i = 0; i < defect.images.length; i++) {
         if (i === 0) {
-          const table: DocTable = new DocTable({
-            docMargin: this.defaultDocMargin,
-            widths: ["50%", "50%"],
-            body: [
-              new DocImage({
-                margin: this.defaultDocMargin,
-                imageUrl: this.params.imageBasePath + defect.images[i].name,
-                fit: [200, 200]
-              }).docDefinition,
-              docTableText
-            ],
-            docLayout: this.docTableLayout
-          });
-
-          doc.push(table.docDefinition);
+          defectFirstImageTableRow.addEntry(
+            new DocTableBodyRowEntry({
+              docModels: [
+                new DocImage({
+                  margin: this.defaultDocMargin,
+                  imageUrl: this.params.imageBasePath + defect.images[i].name,
+                  fit: [230, 200]
+                })
+              ]
+            })
+          );
         } else {
-          docTableBodyImage = docTableBodyImage.append({
-            body: new DocImage({
-              margin: this.defaultDocMargin,
-              imageUrl: this.params.imageBasePath + defect.images[i].name,
-              fit: [200, 200]
-            }).docDefinition
-          });
+          defectSecondImageRow.addEntry(
+            new DocTableBodyRowEntry({
+              docModels: [
+                new DocImage({
+                  margin: this.defaultDocMargin,
+                  imageUrl: this.params.imageBasePath + defect.images[i].name,
+                  fit: [230, 200]
+                })
+              ]
+            })
+          );
         }
-      }*/
+      }
 
-      doc.push(docTableText);
+      defectFirstImageTableRow.addEntry(defectTextTableRowEntry);
+
+      defectFirstImageTableBody.addRow(defectFirstImageTableRow);
+      defectSecondImageTableBody.addRow(defectSecondImageRow);
     }
+
+    doc.push(
+      new DocTable({
+        body: defectFirstImageTableBody,
+        docLayout: this.docTableLayout
+      }).docDefinition(),
+      new DocTable({
+        body: defectSecondImageTableBody,
+        docLayout: this.docTableLayout
+      }).docDefinition()
+    );
 
     return doc;
   }
 
   // TODO - Automate it...
-  private createDocTableText(params: { defectP: Defect }): object[] {
-    const docTableText: object[] = [];
+  private createDefectTextTables(params: {
+    defectP: Defect;
+  }): DocTableBodyRowEntry {
+    const docTableList: DocTable[] = [];
 
-    docTableText.push(
+    const entry: DocTableBodyRowEntry = new DocTableBodyRowEntry();
+
+    docTableList.push(
       new DocTable({
-        docMargin: new DocMargin(),
-        widths: "*",
         body: new DocTableBody({
-          numberOfColumns: 2,
-          numberOfRows: 1,
           rows: [
             new DocTableBodyRow({
-              docModels: [
-                new DocText({
-                  docMargin: new DocMargin(),
-                  text: "Beschreibung:",
-                  fontSize: 10,
-                  isBold: false
+              entries: [
+                new DocTableBodyRowEntry({
+                  docModels: [
+                    new DocText({
+                      docMargin: new DocMargin(),
+                      text: "Beschreibung:"
+                    })
+                  ]
                 }),
-                new DocText({
-                  docMargin: new DocMargin(),
-                  text: "Beschreibung:",
-                  fontSize: 10,
-                  isBold: false
+                new DocTableBodyRowEntry({
+                  docModels: [
+                    new DocText({
+                      docMargin: new DocMargin(),
+                      text: "Beschreibung:"
+                    })
+                  ]
                 })
               ]
             })
           ]
         }),
         docLayout: this.docTableLayout
-      }).docDefinition()
+      })
     );
 
-    docTableText.push(
+    docTableList.push(
       new DocTable({
-        docMargin: new DocMargin(),
-        widths: "*",
         body: new DocTableBody({
-          numberOfColumns: 2,
-          numberOfRows: 1,
           rows: [
             new DocTableBodyRow({
-              docModels: [
-                new DocText({
-                  docMargin: new DocMargin(),
-                  text: "Beschreibung:",
-                  fontSize: 10,
-                  isBold: false
+              entries: [
+                new DocTableBodyRowEntry({
+                  docModels: [
+                    new DocText({
+                      docMargin: new DocMargin(),
+                      text: "Beschreibung:"
+                    })
+                  ]
                 }),
-                new DocText({
-                  docMargin: new DocMargin(),
-                  text: "Beschreibung:",
-                  fontSize: 10,
-                  isBold: false
+                new DocTableBodyRowEntry({
+                  docModels: [
+                    new DocText({
+                      docMargin: new DocMargin(),
+                      text: "Beschreibung:"
+                    })
+                  ]
                 })
               ]
             })
           ]
         }),
         docLayout: this.docTableLayout
-      }).docDefinition()
+      })
     );
 
-    docTableText.push(
+    docTableList.push(
       new DocTable({
-        docMargin: new DocMargin(),
-        widths: "*",
         body: new DocTableBody({
-          numberOfColumns: 2,
-          numberOfRows: 1,
           rows: [
             new DocTableBodyRow({
-              docModels: [
-                new DocText({
-                  docMargin: new DocMargin(),
-                  text: "Beschreibung:",
-                  fontSize: 10,
-                  isBold: false
+              entries: [
+                new DocTableBodyRowEntry({
+                  docModels: [
+                    new DocText({
+                      docMargin: new DocMargin(),
+                      text: "Beschreibung:"
+                    })
+                  ]
                 }),
-                new DocText({
-                  docMargin: new DocMargin(),
-                  text: "Beschreibung:",
-                  fontSize: 10,
-                  isBold: false
+                new DocTableBodyRowEntry({
+                  docModels: [
+                    new DocText({
+                      docMargin: new DocMargin(),
+                      text: "Beschreibung:"
+                    })
+                  ]
                 })
               ]
             })
           ]
         }),
         docLayout: this.docTableLayout
-      }).docDefinition()
+      })
     );
 
-    return docTableText;
+    entry.addDocModelList(docTableList);
+
+    return entry;
   }
 
   // Test data

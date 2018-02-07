@@ -7,13 +7,8 @@ export class DocText implements IDocModel {
 
   constructor(obj: IDocTextParamsI = {} as IDocTextParamsI) {
     const {
-      docMargin = new DocMargin({
-        left: 0,
-        top: 0,
-        right: 0,
-        bottom: 0
-      }),
-      text = "",
+      docMargin = new DocMargin(),
+      text = "Text",
       fontSize = 10,
       isBold = false
     } = obj;

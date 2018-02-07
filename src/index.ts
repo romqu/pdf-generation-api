@@ -2,11 +2,10 @@ import fs = require("fs");
 import PdfPrinter = require("pdfmake");
 
 import { CreateDoc } from "./createDoc";
-import { logger } from "./logger";
-import { DocMargin } from "./model/pdfmake/docMargin";
 import { DocTable } from "./model/pdfmake/docTable";
 import { DocTableBody } from "./model/pdfmake/docTableBody";
 import { DocTableBodyRow } from "./model/pdfmake/docTableBodyRow";
+import { DocTableBodyRowEntry } from "./model/pdfmake/docTableBodyRowEntry";
 import { DocTableLayout } from "./model/pdfmake/docTableLayout";
 import { DocText } from "./model/pdfmake/docText";
 
@@ -52,40 +51,38 @@ const createDoc: CreateDoc = new CreateDoc({
 
 const pdfPrinter = new PdfPrinter(fonts);
 
+const a = new DocTableBodyRow({
+  entries: [
+    new DocTableBodyRowEntry({
+      docModels: [
+        new DocText({
+          text: "Beschreibung:"
+        })
+      ]
+    }),
+    new DocTableBodyRowEntry({
+      docModels: [
+        new DocText({
+          text: "Beschreibung:"
+        })
+      ]
+    })
+  ]
+});
+
 const def = new DocTable({
-  docMargin: new DocMargin(),
-  widths: "*",
   body: new DocTableBody({
-    numberOfColumns: 2,
-    numberOfRows: 1,
-    rows: [
-      new DocTableBodyRow({
-        docModels: [
-          new DocText({
-            docMargin: new DocMargin(),
-            text: "Beschreibung:",
-            fontSize: 10,
-            isBold: false
-          }),
-          new DocText({
-            docMargin: new DocMargin(),
-            text: "Beschreibung:",
-            fontSize: 10,
-            isBold: false
-          })
-        ]
-      })
-    ]
+    rows: [a]
   }),
   docLayout: docTableLayout
 }).docDefinition();
 
-logger.info(def);
+// logger.info(def);
 
 const doc = {
   content: createDoc.execute()
 
-  // [def]
+  // content: [def]
 };
 
 // logger.info(doc);

@@ -1,6 +1,7 @@
 import { DocMargin } from "./docMargin";
+import { IDocModel } from "./docModel";
 
-export class DocImage {
+export class DocImage implements IDocModel {
   constructor(
     private readonly params: {
       readonly margin: DocMargin;
@@ -9,7 +10,7 @@ export class DocImage {
     }
   ) {}
 
-  public get docDefinition(): object {
+  public docDefinition(): object {
     return {
       margin: this.params.margin.docDefinition,
       image: this.params.imageUrl,

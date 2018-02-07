@@ -33,7 +33,7 @@ interface IDocTableParams {
 
 interface IDocTableParamsI {
   readonly docMargin?: DocMargin;
-  readonly widths: any;
+  readonly widths?: any;
   readonly body: DocTableBody;
   readonly docLayout: DocTableLayout;
 }
