@@ -1,14 +1,12 @@
-import { logger } from "./logger";
 import { Defect } from "./model/defect";
 import { DefectList } from "./model/defectList";
 import { Floor } from "./model/floor";
 import { Image } from "./model/image";
 import { LivingUnit } from "./model/livingUnit";
-import { DocImage } from "./model/pdfmake/docImage";
-import { DocLine } from "./model/pdfmake/docLine";
 import { DocMargin } from "./model/pdfmake/docMargin";
 import { DocTable } from "./model/pdfmake/docTable";
 import { DocTableBody } from "./model/pdfmake/docTableBody";
+import { DocTableBodyRow } from "./model/pdfmake/docTableBodyRow";
 import { DocTableLayout } from "./model/pdfmake/docTableLayout";
 import { DocText } from "./model/pdfmake/docText";
 import { Room } from "./model/room";
@@ -61,19 +59,22 @@ export class CreateDoc {
 
   private createDoc(params: { defectList: DefectList }): object[] {
     const doc: object[] = [];
-    let docTableBodyImage: DocTableBody = new DocTableBody({ body: [] });
-    let docTableBodyDefect: DocTableBody = new DocTableBody({ body: [] });
+    // let docTableBodyImage: DocTableBody = new DocTableBody({ body: [] });
+    // let docTableBodyDefect: DocTableBody = new DocTableBody({ body: [] });
 
     for (const defect of params.defectList.floors[0].livingUnits[0].rooms[0]
       .defects) {
+      // 2 - Table textfield
+      const docTableText: object[] = this.createDocTableText({
+        defectP: defect
+      });
+
       // 1 - Defect Headline with seperate line
-      docTableBodyDefect = docTableBodyDefect.append({
+      /*docTableBodyDefect = docTableBodyDefect.append({
         body: [
           new DocText({
             docMargin: this.defaultDocMargin,
-            text: "Mangel 1",
-            fontSize: 10,
-            isBold: false
+            text: "Mangel 1"
           }).docDefinition,
           new DocLine({
             x1: 0,
@@ -81,15 +82,12 @@ export class CreateDoc {
             x2: (595 - 2 * 40 - 27.5) / 2.5,
             y2: 0,
             lineWidth: 0.5,
-            docMargin: new DocMargin({ left: 20, top: 1, right: 0, bottom: 0 })
+            docMargin: new DocMargin({ left: 20, top: 1 })
           }).docDefinition
         ]
       });
 
-      // 2 - Table textfield
-      const docTableText: object[] = this.createDocTableText({
-        defectP: defect
-      });
+      
 
       // 3 - images
       for (let i = 0; i < defect.images.length; i++) {
@@ -118,17 +116,10 @@ export class CreateDoc {
             }).docDefinition
           });
         }
-      }
-    }
+      }*/
 
-    doc.push(
-      new DocTable({
-        docMargin: this.defaultDocMargin,
-        widths: ["50%", "50%"],
-        body: docTableBodyImage.docDefinition,
-        docLayout: this.docTableLayout
-      }).docDefinition
-    );
+      doc.push(docTableText);
+    }
 
     return doc;
   }
@@ -139,95 +130,92 @@ export class CreateDoc {
 
     docTableText.push(
       new DocTable({
-        docMargin: this.defaultDocMargin,
-        widths: ["35%", "65%"],
-        body: [
-          new DocText({
-            docMargin: this.defaultDocMargin,
-            text: "Beschreibung:",
-            fontSize: 10,
-            isBold: false
-          }).docDefinition,
-          new DocText({
-            docMargin: this.defaultDocMargin,
-            text: params.defectP.description,
-            fontSize: 10,
-            isBold: false
-          }).docDefinition
-        ],
+        docMargin: new DocMargin(),
+        widths: "*",
+        body: new DocTableBody({
+          numberOfColumns: 2,
+          numberOfRows: 1,
+          rows: [
+            new DocTableBodyRow({
+              docModels: [
+                new DocText({
+                  docMargin: new DocMargin(),
+                  text: "Beschreibung:",
+                  fontSize: 10,
+                  isBold: false
+                }),
+                new DocText({
+                  docMargin: new DocMargin(),
+                  text: "Beschreibung:",
+                  fontSize: 10,
+                  isBold: false
+                })
+              ]
+            })
+          ]
+        }),
         docLayout: this.docTableLayout
-      }).docDefinition
+      }).docDefinition()
     );
 
     docTableText.push(
       new DocTable({
-        docMargin: this.defaultDocMargin,
-        widths: ["35%", "65%"],
-        body: [
-          new DocText({
-            docMargin: this.defaultDocMargin,
-            text: "Verantwortlicher:",
-            fontSize: 10,
-            isBold: false
-          }).docDefinition,
-          new DocText({
-            docMargin: this.defaultDocMargin,
-            text: params.defectP.personInCharge,
-            fontSize: 10,
-            isBold: false
-          }).docDefinition
-        ],
+        docMargin: new DocMargin(),
+        widths: "*",
+        body: new DocTableBody({
+          numberOfColumns: 2,
+          numberOfRows: 1,
+          rows: [
+            new DocTableBodyRow({
+              docModels: [
+                new DocText({
+                  docMargin: new DocMargin(),
+                  text: "Beschreibung:",
+                  fontSize: 10,
+                  isBold: false
+                }),
+                new DocText({
+                  docMargin: new DocMargin(),
+                  text: "Beschreibung:",
+                  fontSize: 10,
+                  isBold: false
+                })
+              ]
+            })
+          ]
+        }),
         docLayout: this.docTableLayout
-      }).docDefinition
+      }).docDefinition()
     );
 
     docTableText.push(
       new DocTable({
-        docMargin: this.defaultDocMargin,
-        widths: ["35%", "65%"],
+        docMargin: new DocMargin(),
+        widths: "*",
         body: new DocTableBody({
-          body: [
-            new DocText({
-              docMargin: this.defaultDocMargin,
-              text: "Erledigt bis:",
-              fontSize: 10,
-              isBold: false
-            }).docDefinition,
-            new DocText({
-              docMargin: this.defaultDocMargin,
-              text: params.defectP.doneTill,
-              fontSize: 10,
-              isBold: false
-            }).docDefinition
-          ]
-        }),
-
-        docLayout: this.docTableLayout
-      }).docDefinition
-    );
-
-    logger.info(
-      new DocTable({
-        docMargin: this.defaultDocMargin,
-        widths: ["35%", "65%"],
-        body: new DocTableBody({
-          body: [
-            new DocText({
-              docMargin: this.defaultDocMargin,
-              text: "Erledigt bis:",
-              fontSize: 10,
-              isBold: false
-            }).docDefinition,
-            new DocText({
-              docMargin: this.defaultDocMargin,
-              text: params.defectP.doneTill,
-              fontSize: 10,
-              isBold: false
-            }).docDefinition
+          numberOfColumns: 2,
+          numberOfRows: 1,
+          rows: [
+            new DocTableBodyRow({
+              docModels: [
+                new DocText({
+                  docMargin: new DocMargin(),
+                  text: "Beschreibung:",
+                  fontSize: 10,
+                  isBold: false
+                }),
+                new DocText({
+                  docMargin: new DocMargin(),
+                  text: "Beschreibung:",
+                  fontSize: 10,
+                  isBold: false
+                })
+              ]
+            })
           ]
         }),
         docLayout: this.docTableLayout
-      }).docDefinition
+      }).docDefinition()
     );
 
     return docTableText;

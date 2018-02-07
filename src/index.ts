@@ -5,8 +5,8 @@ import { CreateDoc } from "./createDoc";
 import { logger } from "./logger";
 import { DocMargin } from "./model/pdfmake/docMargin";
 import { DocTable } from "./model/pdfmake/docTable";
+import { DocTableBody } from "./model/pdfmake/docTableBody";
 import { DocTableBodyRow } from "./model/pdfmake/docTableBodyRow";
-import { DocTableBodyT } from "./model/pdfmake/docTableBodyT";
 import { DocTableLayout } from "./model/pdfmake/docTableLayout";
 import { DocText } from "./model/pdfmake/docText";
 
@@ -55,38 +55,21 @@ const pdfPrinter = new PdfPrinter(fonts);
 const def = new DocTable({
   docMargin: new DocMargin(),
   widths: "*",
-  body: new DocTableBodyT({
+  body: new DocTableBody({
     numberOfColumns: 2,
-    numberOfRows: 2,
+    numberOfRows: 1,
     rows: [
       new DocTableBodyRow({
         docModels: [
           new DocText({
             docMargin: new DocMargin(),
-            text: [
-              new DocText({
-                docMargin: new DocMargin(),
-                text: "Text1",
-                fontSize: 10,
-                isBold: false
-              }),
-              new DocText({
-                docMargin: new DocMargin(),
-                text: "Text2",
-                fontSize: 10,
-                isBold: false
-              })
-            ]
-          }),
-          new DocText({
-            docMargin: new DocMargin(),
-            text: "Text",
+            text: "Beschreibung:",
             fontSize: 10,
             isBold: false
           }),
           new DocText({
             docMargin: new DocMargin(),
-            text: "Text",
+            text: "Beschreibung:",
             fontSize: 10,
             isBold: false
           })
@@ -100,10 +83,9 @@ const def = new DocTable({
 logger.info(def);
 
 const doc = {
-  content:
-    // createDoc.execute()
+  content: createDoc.execute()
 
-    [def]
+  // [def]
 };
 
 // logger.info(doc);

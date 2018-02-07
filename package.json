@@ -17,17 +17,17 @@
     "pdfmake": "^0.1.35"
   },
   "devDependencies": {
-    "@types/node": "^9.4.0",
+    "@types/node": "^9.4.1",
     "@types/pino": "latest",
     "gulp": "^4.0.0",
     "gulp-shell": "^0.6.5",
-    "nodemon": "latest",
-    "pino": "latest",
+    "nodemon": "^1.14.12",
+    "pino": "^4.10.4",
     "prettier": "latest",
     "reflect-metadata": "latest",
     "ts-node": "latest",
     "tslint": "latest",
-    "tslint-config-prettier": "latest",
+    "tslint-config-prettier": "^1.7.0",
     "tslint-immutable": "latest",
     "typescript": "^2.7.1"
   }

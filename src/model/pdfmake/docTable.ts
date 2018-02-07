@@ -1,6 +1,6 @@
 import { DocMargin } from "./docMargin";
 import { IDocModel } from "./docModel";
-import { DocTableBodyT } from "./docTableBodyT";
+import { DocTableBody } from "./docTableBody";
 import { DocTableLayout } from "./docTableLayout";
 
 export class DocTable implements IDocModel {
@@ -27,13 +27,13 @@ export class DocTable implements IDocModel {
 interface IDocTableParams {
   readonly docMargin: DocMargin;
   readonly widths: any;
-  readonly body: DocTableBodyT;
+  readonly body: DocTableBody;
   readonly docLayout: DocTableLayout;
 }
 
 interface IDocTableParamsI {
   readonly docMargin?: DocMargin;
   readonly widths: any;
-  readonly body: DocTableBodyT;
+  readonly body: DocTableBody;
   readonly docLayout: DocTableLayout;
 }

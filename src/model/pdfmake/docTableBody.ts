@@ -1,19 +1,28 @@
-import { logger } from "../../logger";
-export class DocTableBody {
-  constructor(private readonly params: { body: object[] }) {}
+import { IDocModel } from "./docModel";
+import { DocTableBodyRow } from "./docTableBodyRow";
 
-  public get docDefinition(): object[] {
-    // logger.info([this.params.body]);
-    return this.params.body;
+export class DocTableBody implements IDocModel {
+  constructor(
+    private readonly params: {
+      readonly numberOfColumns: number;
+      readonly numberOfRows: number;
+      readonly rows: DocTableBodyRow[];
+    }
+  ) {}
+
+  public docDefinition(): object[] {
+    const definition: object[] = [];
+    for (const row of this.params.rows) {
+      definition.push(row.docDefinition());
+    }
+    return definition;
   }
 
-  public append(params: { body: object[] }): DocTableBody {
-    if (this.params.body.length === 0) {
-      return new DocTableBody({ body: [params.body] });
-    } else {
-      return new DocTableBody({
-        body: [...this.params.body, ...params.body]
-      });
-    }
+  public append(params: { readonly row: DocTableBodyRow }): DocTableBody {
+    return new DocTableBody({
+      numberOfColumns: this.params.numberOfColumns,
+      numberOfRows: this.params.numberOfRows,
+      rows: [...this.params.rows, params.row]
+    });
   }
 }

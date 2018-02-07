@@ -3,7 +3,7 @@ export class DocMargin implements IDocModel {
   private readonly params: IDocMarginParams;
 
   constructor(readonly obj: IDocMarginParamsI = {} as IDocMarginParamsI) {
-    const { left = 0, top = 0, right = 0, bottom = 0 } = obj;
+    const { left = 5, top = 5, right = 5, bottom = 5 } = obj;
 
     this.params = { left, top, right, bottom };
   }
