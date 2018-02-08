@@ -2,12 +2,14 @@ import fs = require("fs");
 import PdfPrinter = require("pdfmake");
 
 import { CreateDoc } from "./createDoc";
+import { DocEntry } from "./model/pdfmake/docEntry";
+import { DocTableLayout } from "./model/pdfmake/docTableLayout";
+import { DocText } from "./model/pdfmake/docText";
 import { DocTable } from "./model/pdfmake/docTable";
 import { DocTableBody } from "./model/pdfmake/docTableBody";
 import { DocTableBodyRow } from "./model/pdfmake/docTableBodyRow";
 import { DocTableBodyRowEntry } from "./model/pdfmake/docTableBodyRowEntry";
-import { DocTableLayout } from "./model/pdfmake/docTableLayout";
-import { DocText } from "./model/pdfmake/docText";
+import { DocMargin } from "./model/pdfmake/docMargin";
 
 const fonts = {
   Roboto: {
@@ -51,38 +53,12 @@ const createDoc: CreateDoc = new CreateDoc({
 
 const pdfPrinter = new PdfPrinter(fonts);
 
-const a = new DocTableBodyRow({
-  entries: [
-    new DocTableBodyRowEntry({
-      docModels: [
-        new DocText({
-          text: "Beschreibung:"
-        })
-      ]
-    }),
-    new DocTableBodyRowEntry({
-      docModels: [
-        new DocText({
-          text: "Beschreibung:"
-        })
-      ]
-    })
-  ]
-});
-
-const def = new DocTable({
-  body: new DocTableBody({
-    rows: [a]
-  }),
-  docLayout: docTableLayout
-}).docDefinition();
-
 // logger.info(def);
 
 const doc = {
   content: createDoc.execute()
 
-  // content: [def]
+  //content: []
 };
 
 // logger.info(doc);

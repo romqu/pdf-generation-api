@@ -1,5 +1,5 @@
+import { DocEntry } from "./docEntry";
 import { IDocModel } from "./docModel";
-import { DocTableBodyRowEntry } from "./docTableBodyRowEntry";
 
 export class DocTableBodyRow implements IDocModel {
   private readonly params: IDocTableBodyRow;
@@ -19,19 +19,19 @@ export class DocTableBodyRow implements IDocModel {
     return docDefinitions;
   }
 
-  public addEntry(entry: DocTableBodyRowEntry): void {
+  public addEntry(entry: DocEntry): void {
     this.params.entries.push(entry);
   }
 
-  public addEntryList(entries: DocTableBodyRowEntry[]): void {
+  public addEntryList(entries: DocEntry[]): void {
     this.params.entries.push(...entries);
   }
 }
 
 interface IDocTableBodyRow {
-  readonly entries: DocTableBodyRowEntry[];
+  readonly entries: DocEntry[];
 }
 
 interface IDocTableBodyRowI {
-  readonly entries?: DocTableBodyRowEntry[];
+  readonly entries?: DocEntry[];
 }

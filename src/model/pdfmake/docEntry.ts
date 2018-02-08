@@ -1,8 +1,8 @@
 import { IDocModel } from "./docModel";
-export class DocTableBodyRowEntry implements IDocModel {
-  private readonly params: IDocTableBodyRowEntry;
+export class DocEntry implements IDocModel {
+  private readonly params: IDocEntry;
 
-  constructor(obj: IDocTableBodyRowEntryI = {} as IDocTableBodyRowEntryI) {
+  constructor(obj: IDocEntryI = {} as IDocEntryI) {
     const { docModels = [] } = obj;
 
     this.params = { docModels };
@@ -21,15 +21,15 @@ export class DocTableBodyRowEntry implements IDocModel {
     this.params.docModels.push(docModel);
   }
 
-  public addDocModelList(docModels: IDocModel[]): void {
-    this.params.docModels.push(...docModels);
+  public addDocModelList(docModelList: IDocModel[]): void {
+    this.params.docModels.push(...docModelList);
   }
 }
 
-interface IDocTableBodyRowEntry {
+interface IDocEntry {
   readonly docModels: IDocModel[];
 }
 
-interface IDocTableBodyRowEntryI {
+interface IDocEntryI {
   readonly docModels?: IDocModel[];
 }
