@@ -86,7 +86,13 @@ export class CreateDoc {
         docLayout: this.docTableLayout
       });
 
-      doc.push(new DocText().docDefinition(), table.docDefinition());
+      doc.push(
+        new DocText({ text: room.name + " " + room.number }).docDefinition(),
+        new DocLine({
+          x2: (595 - 2 * 40 - 27.5) / 2
+        }).docDefinition(),
+        new DocText({ text: room.description }).docDefinition
+      );
 
       for (const defect of room.defects) {
         defectTables.push(this.createDefectTable(defect));
