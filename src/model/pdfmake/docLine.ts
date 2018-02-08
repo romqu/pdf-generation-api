@@ -1,20 +1,25 @@
 import { DocMargin } from "./docMargin";
+import { IDocModel } from "./docModel";
 
-export class DocLine {
-  constructor(
-    private readonly params: {
-      readonly x1: number;
-      readonly y1: number;
-      readonly x2: number;
-      readonly y2: number;
-      readonly lineWidth: number;
-      readonly docMargin: DocMargin;
-    }
-  ) {}
+export class DocLine implements IDocModel {
+  private readonly params: IDocLine;
 
-  public get docDefinition(): object {
+  constructor(obj: IDocLineI = {} as IDocLineI) {
+    const {
+      x1 = 0,
+      y1 = 0,
+      x2 = 0,
+      y2 = 0,
+      lineWidth = 0.1,
+      docMargin = new DocMargin()
+    } = obj;
+
+    this.params = { x1, y1, x2, y2, lineWidth, docMargin };
+  }
+
+  public docDefinition(): object {
     return {
-      margin: this.params.docMargin.docDefinition,
+      margin: this.params.docMargin.docDefinition(),
       canvas: [
         {
           type: "line",
@@ -27,4 +32,22 @@ export class DocLine {
       ]
     };
   }
+}
+
+interface IDocLine {
+  readonly x1: number;
+  readonly y1: number;
+  readonly x2: number;
+  readonly y2: number;
+  readonly lineWidth: number;
+  readonly docMargin: DocMargin;
+}
+
+interface IDocLineI {
+  readonly x1?: number;
+  readonly y1?: number;
+  readonly x2?: number;
+  readonly y2?: number;
+  readonly lineWidth?: number;
+  readonly docMargin?: DocMargin;
 }
