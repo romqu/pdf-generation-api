@@ -2,7 +2,8 @@ import fs = require("fs");
 import PdfPrinter = require("pdfmake");
 
 import { CreateDoc } from "./createDoc";
-import { DocMargin } from "./model/pdfmake/docMargin";
+import { DocEntry } from "./model/pdfmake/docEntry";
+import { DocStack } from "./model/pdfmake/docStack";
 import { DocText } from "./model/pdfmake/docText";
 
 const fonts = {
@@ -21,7 +22,17 @@ const createDoc: CreateDoc = new CreateDoc({
 const pdfPrinter = new PdfPrinter(fonts);
 
 const doc = {
-  content: createDoc.execute()
+  // content: createDoc.execute()
+
+  content: [
+    new DocStack({
+      docEntryList: [
+        new DocEntry({
+          docModels: [new DocText()]
+        })
+      ]
+    }).docDefinition()
+  ]
 };
 
 // logger.info(doc);
