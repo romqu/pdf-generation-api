@@ -1,3 +1,4 @@
+import { DocMargin } from "./model/pdfmake/docMargin";
 import { DocTableLayout } from "./model/pdfmake/docTableLayout";
 
 export const defaultDocTableLayout: DocTableLayout = new DocTableLayout({
@@ -25,4 +26,11 @@ export const defaultDocTableLayout: DocTableLayout = new DocTableLayout({
   paddingBottom: (i: number, node: object): number => {
     return 0;
   }
+});
+
+export const defaultDocMargin: DocMargin = new DocMargin({
+  left: 2,
+  top: 2,
+  right: 2,
+  bottom: 2
 });
