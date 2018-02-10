@@ -5,6 +5,7 @@ import { DocEntry } from "./model/pdfmake/docEntry";
 import { DocLine } from "./model/pdfmake/docLine";
 import { DocStack } from "./model/pdfmake/docStack";
 import { DocText } from "./model/pdfmake/docText";
+import { createRoomEntry } from "./create_pdf/createRoomEntry";
 
 export class CreateDoc {
   constructor(
@@ -22,26 +23,9 @@ export class CreateDoc {
   private createDoc(params: { defectList: DefectList }): object[] {
     const doc: object[] = [];
     const defectEntries: DocEntry[] = [];
-    const roomEntry: DocEntry = new DocEntry();
 
     for (const room of params.defectList.floors[0].livingUnits[0].rooms) {
-      roomEntry.addDocModelList([
-        new DocStack({
-          docEntryList: [
-            new DocEntry({
-              docModels: [
-                new DocText({
-                  text: room.name + " " + room.number
-                }),
-                new DocLine({
-                  x2: (595 - 2 * 40 - 27.5) / 2
-                }),
-                new DocText({ text: room.description })
-              ]
-            })
-          ]
-        })
-      ]);
+      const roomEntry: DocEntry = createRoomEntry(room);
 
       doc.push(roomEntry.docDefinition());
 
