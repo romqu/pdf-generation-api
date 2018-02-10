@@ -16,7 +16,7 @@ export function createTestData(): DefectList {
     imageList.push(new Image({ name: "mangel-border.jpg" }));
   }
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 2; i++) {
     defectList.push(
       new Defect({
         description: "Fenster defekt",
@@ -25,23 +25,29 @@ export function createTestData(): DefectList {
         images: imageList
       })
     );
+  }
 
+  for (let i = 0; i < 2; i++) {
     roomList.push(
       new Room({
         name: "Wohnzimmer",
-        number: 1,
+        number: i,
         description: "Links",
         defects: defectList
       })
     );
+  }
 
+  for (let i = 0; i < 2; i++) {
     livingUnitList.push(
       new LivingUnit({
-        number: 1,
+        number: i,
         rooms: roomList
       })
     );
+  }
 
+  for (let i = 0; i < 2; i++) {
     floorList.push(
       new Floor({
         name: "EG",
