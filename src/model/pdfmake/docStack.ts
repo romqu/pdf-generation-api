@@ -6,31 +6,41 @@ export class DocStack implements IDocModel {
   private readonly params: IDocStack;
 
   constructor(readonly obj: IDocStackI = {} as IDocStackI) {
-    const { docEntryList = [] } = obj;
+    const { docEntryList = [], stackArgumentList = [] } = obj;
 
-    this.params = { docEntryList };
+    this.params = { docEntryList, stackArgumentList };
   }
 
   public docDefinition(): object {
     const docDefinitions: object[] = [];
+    let stackArguments: object = {};
 
     for (const entry of this.params.docEntryList) {
       docDefinitions.push(entry.docDefinition());
     }
 
-    const a = { stack: docDefinitions };
-    const b = { margin: new DocMargin({ left: 40 }).docDefinition() };
+    for (const stackArgument of this.params.stackArgumentList) {
+      stackArguments = { ...stackArguments, ...stackArgument };
+    }
+
     return {
-      ...a,
-      ...b
+      stack: docDefinitions,
+      ...stackArguments
     };
+  }
+
+  public addMargin(docMargin: DocMargin): DocStack {
+    this.params.stackArgumentList.push({ margin: docMargin.docDefinition() });
+    return this;
   }
 }
 
 interface IDocStack {
   readonly docEntryList: DocEntry[];
+  readonly stackArgumentList: object[];
 }
 
 interface IDocStackI {
   readonly docEntryList?: DocEntry[];
+  readonly stackArgumentList?: object[];
 }

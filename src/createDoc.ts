@@ -3,7 +3,7 @@ import { createTestData } from "./create_pdf/createTestData";
 import { DefectList } from "./model/defectList";
 import { DocEntry } from "./model/pdfmake/docEntry";
 import { DocLine } from "./model/pdfmake/docLine";
-import { DocMargin } from "./model/pdfmake/docMargin";
+import { DocStack } from "./model/pdfmake/docStack";
 import { DocText } from "./model/pdfmake/docText";
 
 export class CreateDoc {
@@ -26,14 +26,21 @@ export class CreateDoc {
 
     for (const room of params.defectList.floors[0].livingUnits[0].rooms) {
       roomEntry.addDocModelList([
-        new DocText({
-          text: room.name + " " + room.number,
-          docMargin: new DocMargin({ left: 10 })
-        }),
-        new DocLine({
-          x2: (595 - 2 * 40 - 27.5) / 2
-        }),
-        new DocText({ text: room.description })
+        new DocStack({
+          docEntryList: [
+            new DocEntry({
+              docModels: [
+                new DocText({
+                  text: room.name + " " + room.number
+                }),
+                new DocLine({
+                  x2: (595 - 2 * 40 - 27.5) / 2
+                }),
+                new DocText({ text: room.description })
+              ]
+            })
+          ]
+        })
       ]);
 
       doc.push(roomEntry.docDefinition());
