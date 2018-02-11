@@ -10,10 +10,11 @@ export class DocText implements IDocModel {
       docMargin = new DocMargin(),
       text = "Text",
       fontSize = 10,
-      isBold = false
+      isBold = false,
+      alignment = "left"
     } = obj;
 
-    this.params = { docMargin, text, fontSize, isBold };
+    this.params = { docMargin, text, fontSize, isBold, alignment };
   }
 
   public docDefinition(): object {
@@ -33,7 +34,8 @@ export class DocText implements IDocModel {
       margin: this.params.docMargin.docDefinition(),
       text: this.params.text,
       fontSize: this.params.fontSize,
-      bold: this.params.isBold
+      bold: this.params.isBold,
+      alignment: this.params.alignment
     };
   }
 }
@@ -43,6 +45,7 @@ interface IDocTextParamsI {
   readonly text?: string | DocText[];
   readonly fontSize?: number;
   readonly isBold?: boolean;
+  readonly alignment?: string;
 }
 
 interface IDocTextParams {
@@ -50,4 +53,5 @@ interface IDocTextParams {
   readonly text: string | DocText[];
   readonly fontSize: number;
   readonly isBold: boolean;
+  readonly alignment: string;
 }
