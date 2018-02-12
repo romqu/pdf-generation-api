@@ -7,7 +7,7 @@ import { DocTableBody } from "../model/pdfmake/docTableBody";
 import { DocTableBodyRow } from "../model/pdfmake/docTableBodyRow";
 import { DocText } from "../model/pdfmake/docText";
 
-export function createHeader(): DocEntry {
+export function createHeader(): () => object[] {
   const headerLeft = new DocTable({
     widths: ["20%", "80%"],
     body: new DocTableBody({
@@ -77,5 +77,5 @@ export function createHeader(): DocEntry {
     docLayout: defaultDocTableLayout
   });
 
-  return new DocEntry({ docModels: [header] });
+  return (): object[] => new DocEntry({ docModels: [header] }).docDefinition();
 }

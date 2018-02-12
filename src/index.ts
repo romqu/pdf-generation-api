@@ -1,9 +1,9 @@
 import fs = require("fs");
 import PdfPrinter = require("pdfmake");
 
+import { createFooter } from "./create_pdf/createFooter";
 import { createHeader } from "./create_pdf/createHeader";
 import { CreateDoc } from "./createDoc";
-import { DocText } from "./model/pdfmake/docText";
 
 const fonts = {
   Roboto: {
@@ -22,15 +22,12 @@ const pdfPrinter = new PdfPrinter(fonts);
 
 const doc = {
   pageMargins: [40, 60, 40, 40],
-  header: (): object => {
-    return createHeader().docDefinition();
-  },
-  // content: createDoc.execute()
+  header: createHeader(),
+  footer: createFooter,
+  content: createDoc.execute()
 
-  content: [new DocText().docDefinition()]
+  // content: [new DocText().docDefinition()]
 };
-
-// logger.info(doc);
 
 const pdfDoc = pdfPrinter.createPdfKitDocument(doc);
 
