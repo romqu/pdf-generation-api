@@ -4,6 +4,7 @@ import PdfPrinter = require("pdfmake");
 import { createFooter } from "./create_pdf/createFooter";
 import { createHeader } from "./create_pdf/createHeader";
 import { CreateDoc } from "./createDoc";
+import { Doc } from "./model/pdfmake/doc";
 
 const fonts = {
   Roboto: {
@@ -28,6 +29,8 @@ const doc = {
 
   // content: [new DocText().docDefinition()]
 };
+
+const d = new Doc({ docHeader: createHeader });
 
 const pdfDoc = pdfPrinter.createPdfKitDocument(doc);
 
