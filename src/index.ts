@@ -1,8 +1,8 @@
 import fs = require("fs");
 import PdfPrinter = require("pdfmake");
 
-import { CreateDoc } from "./createDoc";
 import { createHeader } from "./create_pdf/createHeader";
+import { CreateDoc } from "./createDoc";
 import { DocText } from "./model/pdfmake/docText";
 
 const fonts = {
