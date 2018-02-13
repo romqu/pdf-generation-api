@@ -13,7 +13,7 @@ export const createHeader = (): object[] => {
     body: new DocTableBody({
       rows: [
         new DocTableBodyRow({
-          entries: [
+          entries: [c
             new DocEntry({
               docModels: [
                 new DocText({
