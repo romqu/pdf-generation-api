@@ -12,13 +12,14 @@ export class CreateDoc {
     }
   ) {}
 
-  public execute(): object[] {
+  public execute(): DocEntry {
     const defects: DefectList = createTestData();
     return this.createDoc({ defectList: defects });
   }
 
-  private createDoc(params: { defectList: DefectList }): object[] {
+  private createDoc(params: { defectList: DefectList }): DocEntry {
     const doc: object[] = [];
+    const docEntries: DocEntry = new DocEntry();
 
     for (const floor of params.defectList.floors) {
       for (const livingUnit of floor.livingUnits) {
@@ -26,12 +27,16 @@ export class CreateDoc {
           floor,
           livingUnit
         );
+
         doc.push(livingUnitEntry.docDefinition());
+        docEntries.addDocModel(livingUnitEntry);
+
         for (const room of livingUnit.rooms) {
           const roomEntry: DocEntry = createRoomEntry(room);
           const defectEntries: DocEntry[] = [];
 
           doc.push(roomEntry.docDefinition());
+          docEntries.addDocModel(roomEntry);
 
           for (let i = 0; i < room.defects.length; i++) {
             defectEntries.push(
@@ -45,11 +50,12 @@ export class CreateDoc {
 
           for (const defectEntry of defectEntries) {
             doc.push(defectEntry.docDefinition());
+            docEntries.addDocModel(defectEntry);
           }
         }
       }
     }
 
-    return doc;
+    return docEntries;
   }
 }

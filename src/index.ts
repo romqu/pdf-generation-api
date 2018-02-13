@@ -5,6 +5,7 @@ import { createFooter } from "./create_pdf/createFooter";
 import { createHeader } from "./create_pdf/createHeader";
 import { CreateDoc } from "./createDoc";
 import { Doc } from "./model/pdfmake/doc";
+import { DocEntry } from "./model/pdfmake/docEntry";
 
 const fonts = {
   Roboto: {
@@ -21,18 +22,13 @@ const createDoc: CreateDoc = new CreateDoc({
 
 const pdfPrinter = new PdfPrinter(fonts);
 
-const doc = {
-  pageMargins: [40, 60, 40, 40],
-  header: createHeader(),
-  footer: createFooter,
-  content: createDoc.execute()
+const doc = new Doc({
+  docHeader: createHeader,
+  docBody: createDoc.execute(),
+  docFooter: createFooter
+});
 
-  // content: [new DocText().docDefinition()]
-};
-
-const d = new Doc({ docHeader: createHeader });
-
-const pdfDoc = pdfPrinter.createPdfKitDocument(doc);
+const pdfDoc = pdfPrinter.createPdfKitDocument(doc.docDefinition());
 
 pdfDoc.pipe(fs.createWriteStream("./pdfs/prototype.pdf"));
 

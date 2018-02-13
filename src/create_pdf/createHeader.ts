@@ -77,5 +77,5 @@ export const createHeader = (): object[] => {
     docLayout: defaultDocTableLayout
   });
 
-  return (): object[] => new DocEntry({ docModels: [header] }).docDefinition();
+  return new DocEntry({ docModels: [header] }).docDefinition();
 };
