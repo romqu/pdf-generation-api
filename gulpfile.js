@@ -16,5 +16,5 @@ gulp.task("watchTest", () => {
 
 gulp.task("watch", () => {
   nodemon({});
-  // gulp.watch("pdfs/**/*.pdf", gulpShell.task("reload-firefox-tab"));
+  gulp.watch("pdfs/**/*.pdf", gulpShell.task("reload-firefox-tab"));
 });

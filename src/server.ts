@@ -1,10 +1,12 @@
 import * as Hapi from "hapi";
 import { Lifecycle } from "hapi";
+import * as Http2 from "http2";
 import { logger } from "./logger";
 
 const server = new Hapi.Server({
   host: "localhost",
-  port: 3000
+  port: "/var/run/pdf-gen-api/ap.sock",
+  listener: Http2.createServer()
 });
 
 server.route({

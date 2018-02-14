@@ -1,6 +1,7 @@
 import { defaultDocTableLayout } from "../constants";
 import { DocEntry } from "../model/pdfmake/docEntry";
 import { DocImage } from "../model/pdfmake/docImage";
+import { DocLine } from "../model/pdfmake/docLine";
 import { DocMargin } from "../model/pdfmake/docMargin";
 import { DocTable } from "../model/pdfmake/docTable";
 import { DocTableBody } from "../model/pdfmake/docTableBody";
@@ -9,11 +10,11 @@ import { DocText } from "../model/pdfmake/docText";
 
 export const createHeader = (): object[] => {
   const headerLeft = new DocTable({
-    widths: ["20%", "80%"],
+    widths: ["auto", "auto"],
     body: new DocTableBody({
       rows: [
         new DocTableBodyRow({
-          entries: [c
+          entries: [
             new DocEntry({
               docModels: [
                 new DocText({
@@ -24,6 +25,7 @@ export const createHeader = (): object[] => {
             new DocEntry({
               docModels: [
                 new DocText({
+                  docMargin: new DocMargin({ left: 2 }),
                   text: [
                     new DocText({ text: "Musterstraße 1," }),
                     new DocText({ text: "\nMusterland" })
@@ -39,7 +41,7 @@ export const createHeader = (): object[] => {
   });
 
   const header = new DocTable({
-    docMargin: new DocMargin({ left: 40, top: 20, right: 40, bottom: 0 }),
+    docMargin: new DocMargin({ left: 7.5, top: 7.5, right: 7.5, bottom: 0 }),
     widths: ["40%", "20%", "40%"],
     body: new DocTableBody({
       rows: [
@@ -77,5 +79,10 @@ export const createHeader = (): object[] => {
     docLayout: defaultDocTableLayout
   });
 
-  return new DocEntry({ docModels: [header] }).docDefinition();
+  const line: DocLine = new DocLine({
+    x2: 595 - 2 * 7.5,
+    docMargin: new DocMargin({ left: 7.5, top: 7.5 })
+  });
+
+  return new DocEntry({ docModels: [header, line] }).docDefinition();
 };

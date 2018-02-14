@@ -10,7 +10,7 @@ export class DocLine implements IDocModel {
       y1 = 0,
       x2 = 0,
       y2 = 0,
-      lineWidth = 0.1,
+      lineWidth = 0.75,
       docMargin = new DocMargin()
     } = obj;
 
