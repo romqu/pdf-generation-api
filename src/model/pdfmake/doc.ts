@@ -1,4 +1,5 @@
 import { DocEntry } from "./docEntry";
+import { DocMargin } from "./docMargin";
 import { IDocModel } from "./docModel";
 
 export class Doc implements IDocModel {
@@ -16,7 +17,12 @@ export class Doc implements IDocModel {
 
   public docDefinition(): object {
     return {
-      pageMargins: [40, 60, 40, 40],
+      pageMargins: new DocMargin({
+        left: 7.5,
+        right: 7.5,
+        top: 60,
+        bottom: 25
+      }).docDefinition(),
       header: this.params.docHeader(),
       footer: this.params.docFooter,
       content: this.params.docBody.docDefinition()

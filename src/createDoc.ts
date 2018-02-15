@@ -18,7 +18,6 @@ export class CreateDoc {
   }
 
   private createDoc(params: { defectList: DefectList }): DocEntry {
-    const doc: object[] = [];
     const docEntries: DocEntry = new DocEntry();
 
     for (const floor of params.defectList.floors) {
@@ -28,14 +27,12 @@ export class CreateDoc {
           livingUnit
         );
 
-        doc.push(livingUnitEntry.docDefinition());
         docEntries.addDocModel(livingUnitEntry);
 
         for (const room of livingUnit.rooms) {
           const roomEntry: DocEntry = createRoomEntry(room);
           const defectEntries: DocEntry[] = [];
 
-          doc.push(roomEntry.docDefinition());
           docEntries.addDocModel(roomEntry);
 
           for (let i = 0; i < room.defects.length; i++) {
@@ -49,7 +46,6 @@ export class CreateDoc {
           }
 
           for (const defectEntry of defectEntries) {
-            doc.push(defectEntry.docDefinition());
             docEntries.addDocModel(defectEntry);
           }
         }

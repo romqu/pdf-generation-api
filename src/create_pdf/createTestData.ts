@@ -12,7 +12,7 @@ export function createTestData(): DefectList {
   const livingUnitList: LivingUnit[] = [];
   const floorList: Floor[] = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 1; i++) {
     imageList.push(new Image({ name: "mangel-border.jpg" }));
   }
 

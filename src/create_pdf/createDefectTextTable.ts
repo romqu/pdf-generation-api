@@ -33,6 +33,7 @@ export function createDefectTextTable(defect: Defect): DocEntry {
 
     docTableList.push(
       new DocTable({
+        docMargin: new DocMargin({ left: 5, bottom: 5 }),
         body: new DocTableBody({
           rows: [
             new DocTableBodyRow({
@@ -41,15 +42,15 @@ export function createDefectTextTable(defect: Defect): DocEntry {
                   docModels: [
                     new DocText({
                       docMargin: new DocMargin(),
-                      text: leftText + ":"
-                    })
-                  ]
-                }),
-                new DocEntry({
-                  docModels: [
-                    new DocText({
-                      docMargin: new DocMargin(),
-                      text: rightText
+                      text: [
+                        new DocText({
+                          text: `${leftText}:`,
+                          isBold: true
+                        }),
+                        new DocText({
+                          text: `\n ${rightText}`
+                        })
+                      ]
                     })
                   ]
                 })

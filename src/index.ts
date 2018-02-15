@@ -33,12 +33,6 @@ const createDoc: CreateDoc = new CreateDoc({
 
 const pdfPrinter = new PdfPrinter(fonts);
 
-const doc = new Doc({
-  docHeader: createHeader,
-  docBody: createDoc.execute(),
-  docFooter: createFooter
-});
-
 const table = new DocTable({
   widths: ["auto", "auto", "auto", "auto"],
   body: new DocTableBody({
@@ -48,7 +42,6 @@ const table = new DocTable({
           new DocEntry({
             docModels: [
               new DocImage({
-                margin: new DocMargin(),
                 imageUrl:
                   "/home/roman/git-projects/immo-pdf-generation/rest-api/assets/images/mangel-border.jpg",
                 fit: [200, 135]
@@ -63,7 +56,6 @@ const table = new DocTable({
           new DocEntry({
             docModels: [
               new DocImage({
-                margin: new DocMargin({ left: 5 }),
                 imageUrl:
                   "/home/roman/git-projects/immo-pdf-generation/rest-api/assets/images/mangel-border.jpg",
                 fit: [200, 135]
@@ -72,9 +64,94 @@ const table = new DocTable({
           }),
           new DocEntry({
             docModels: [
-              new DocText({
-                text: lorem,
-                docMargin: new DocMargin({ left: 5 })
+              new DocTable({
+                docMargin: new DocMargin({ left: 5 }),
+                body: new DocTableBody({
+                  rows: [
+                    new DocTableBodyRow({
+                      entries: [
+                        new DocEntry({
+                          docModels: [
+                            new DocText({
+                              docMargin: new DocMargin(),
+                              text: [
+                                new DocText({
+                                  docMargin: new DocMargin(),
+                                  text: "Beschreibung:\n",
+                                  isBold: true
+                                }),
+                                new DocText({
+                                  docMargin: new DocMargin({ top: 5 }),
+                                  text: "Text\n\n"
+                                })
+                              ]
+                            })
+                          ]
+                        })
+                      ]
+                    })
+                  ]
+                }),
+                docLayout: defaultDocTableLayout
+              }),
+              new DocTable({
+                docMargin: new DocMargin({ left: 5 }),
+                body: new DocTableBody({
+                  rows: [
+                    new DocTableBodyRow({
+                      entries: [
+                        new DocEntry({
+                          docModels: [
+                            new DocText({
+                              docMargin: new DocMargin(),
+                              text: [
+                                new DocText({
+                                  docMargin: new DocMargin(),
+                                  text: "Verantwortlicher:\n",
+                                  isBold: true
+                                }),
+                                new DocText({
+                                  docMargin: new DocMargin(),
+                                  text: "Text\n\n"
+                                })
+                              ]
+                            })
+                          ]
+                        })
+                      ]
+                    })
+                  ]
+                }),
+                docLayout: defaultDocTableLayout
+              }),
+              new DocTable({
+                docMargin: new DocMargin({ left: 5 }),
+                body: new DocTableBody({
+                  rows: [
+                    new DocTableBodyRow({
+                      entries: [
+                        new DocEntry({
+                          docModels: [
+                            new DocText({
+                              docMargin: new DocMargin(),
+                              text: [
+                                new DocText({
+                                  text: "Erledigt bis:\n",
+                                  isBold: true
+                                }),
+                                new DocText({
+                                  docMargin: new DocMargin(),
+                                  text: "Text"
+                                })
+                              ]
+                            })
+                          ]
+                        })
+                      ]
+                    })
+                  ]
+                }),
+                docLayout: defaultDocTableLayout
               })
             ]
           })
@@ -87,10 +164,12 @@ const table = new DocTable({
 
 const docc = {
   header: createHeader,
+  footer: createFooter,
   pageMargins: new DocMargin({
     left: 7.5,
     right: 7.5,
-    top: 60
+    top: 60,
+    bottom: 25
   }).docDefinition(),
   content: [
     new DocText({
@@ -124,7 +203,13 @@ const docc = {
   ]
 };
 
-const pdfDoc = pdfPrinter.createPdfKitDocument(docc);
+const doc = new Doc({
+  docHeader: createHeader,
+  docBody: createDoc.execute(),
+  docFooter: createFooter
+});
+
+const pdfDoc = pdfPrinter.createPdfKitDocument(doc.docDefinition());
 
 pdfDoc.pipe(fs.createWriteStream("./pdfs/prototype.pdf"));
 

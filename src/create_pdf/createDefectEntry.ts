@@ -18,9 +18,6 @@ export function createDefectEntry(
   const defectFirstImageTableBody: DocTableBody = new DocTableBody();
   const defectFirstImageTableRow: DocTableBodyRow = new DocTableBodyRow();
 
-  const defectSecondImageTableBody: DocTableBody = new DocTableBody();
-  const defectSecondImageRow: DocTableBodyRow = new DocTableBodyRow();
-
   const docEntry: DocEntry = new DocEntry();
 
   // Mangel 1
@@ -39,6 +36,25 @@ export function createDefectEntry(
 
   // 3 - images
   for (let i = 0; i < defect.images.length; i++) {
+    if (defect.images.length === 1) {
+      defectFirstImageTableRow.addEntryList([
+        new DocEntry({
+          docModels: [
+            new DocImage({
+              margin: defaultDocMargin,
+              imageUrl: imageBasePath + defect.images[i].name,
+              fit: [200, 150]
+            })
+          ]
+        }),
+        new DocEntry({
+          docModels: [
+            new DocText({ text: "", docMargin: new DocMargin({ left: 5 }) })
+          ]
+        })
+      ]);
+    }
+
     if (i === 0) {
       defectFirstImageTableRow.addEntry(
         new DocEntry({
@@ -46,38 +62,38 @@ export function createDefectEntry(
             new DocImage({
               margin: defaultDocMargin,
               imageUrl: imageBasePath + defect.images[i].name,
-              fit: [230, 200]
+              fit: [200, 150]
             })
           ]
         })
       );
     } else {
-      defectSecondImageRow.addEntry(
+      defectFirstImageTableRow.addEntryList([
+        new DocEntry({
+          docModels: [
+            new DocText({ text: "", docMargin: new DocMargin({ left: 5 }) })
+          ]
+        }),
         new DocEntry({
           docModels: [
             new DocImage({
               margin: defaultDocMargin,
               imageUrl: imageBasePath + defect.images[i].name,
-              fit: [230, 200]
+              fit: [200, 150]
             })
           ]
         })
-      );
+      ]);
     }
   }
 
   defectFirstImageTableRow.addEntry(defectTextTableEntry);
   defectFirstImageTableBody.addRow(defectFirstImageTableRow);
 
-  defectSecondImageTableBody.addRow(defectSecondImageRow);
-
   docEntry.addDocModelList([
     new DocTable({
+      widths: ["auto", "auto", "auto", "auto"],
       body: defectFirstImageTableBody,
-      docLayout: defaultDocTableLayout
-    }),
-    new DocTable({
-      body: defectSecondImageTableBody,
       docLayout: defaultDocTableLayout
     })
   ]);
