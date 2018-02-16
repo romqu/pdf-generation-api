@@ -34,6 +34,25 @@ export const createHeader = (): object[] => {
               ]
             })
           ]
+        }),
+        new DocTableBodyRow({
+          entries: [
+            new DocEntry({
+              docModels: [
+                new DocText({
+                  text: "Ersteller:"
+                })
+              ]
+            }),
+            new DocEntry({
+              docModels: [
+                new DocText({
+                  docMargin: new DocMargin({ left: 2 }),
+                  text: [new DocText({ text: "Max Mustermann" })]
+                })
+              ]
+            })
+          ]
         })
       ]
     }),
@@ -65,7 +84,25 @@ export const createHeader = (): object[] => {
                 new DocText({
                   text: [
                     new DocText({
-                      text: "Datum: 1.1.1111",
+                      text: "Datum: ",
+                      isBold: true,
+                      alignment: "right"
+                    }),
+                    new DocText({
+                      text: "1.1.1111",
+                      alignment: "right"
+                    })
+                  ]
+                }),
+                new DocText({
+                  text: [
+                    new DocText({
+                      text: "Maßnahmen: ",
+                      isBold: true,
+                      alignment: "right"
+                    }),
+                    new DocText({
+                      text: "Diverse",
                       alignment: "right"
                     })
                   ]

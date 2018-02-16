@@ -14,6 +14,8 @@ import { DocTable } from "./model/pdfmake/docTable";
 import { DocTableBody } from "./model/pdfmake/docTableBody";
 import { DocTableBodyRow } from "./model/pdfmake/docTableBodyRow";
 import { DocText } from "./model/pdfmake/docText";
+import { createParticipantsEntry } from "./create_pdf/createParticipantsEntry";
+import { createTestData } from "./create_pdf/createTestData";
 
 const fonts = {
   Roboto: {
@@ -205,7 +207,7 @@ const docc = {
 
 const doc = new Doc({
   docHeader: createHeader,
-  docBody: createDoc.execute(),
+  docBody: createParticipantsEntry(createTestData().participantList),
   docFooter: createFooter
 });
 

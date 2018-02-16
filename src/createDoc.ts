@@ -1,5 +1,6 @@
 import { createDefectEntry } from "./create_pdf/createDefectEntry";
 import { createFloorAndLivingUnitEntry } from "./create_pdf/createFloorAndLivingUnitEntry";
+import { createParticipantsEntry } from "./create_pdf/createParticipantsEntry";
 import { createRoomEntry } from "./create_pdf/createRoomEntry";
 import { createTestData } from "./create_pdf/createTestData";
 import { DefectList } from "./model/defectList";
@@ -18,7 +19,7 @@ export class CreateDoc {
   }
 
   private createDoc(params: { defectList: DefectList }): DocEntry {
-    const docEntries: DocEntry = new DocEntry();
+    const docEntry: DocEntry = new DocEntry();
 
     for (const floor of params.defectList.floors) {
       for (const livingUnit of floor.livingUnits) {
@@ -27,13 +28,13 @@ export class CreateDoc {
           livingUnit
         );
 
-        docEntries.addDocModel(livingUnitEntry);
+        docEntry.addDocModel(livingUnitEntry);
 
         for (const room of livingUnit.rooms) {
           const roomEntry: DocEntry = createRoomEntry(room);
           const defectEntries: DocEntry[] = [];
 
-          docEntries.addDocModel(roomEntry);
+          docEntry.addDocModel(roomEntry);
 
           for (let i = 0; i < room.defects.length; i++) {
             defectEntries.push(
@@ -46,12 +47,12 @@ export class CreateDoc {
           }
 
           for (const defectEntry of defectEntries) {
-            docEntries.addDocModel(defectEntry);
+            docEntry.addDocModel(defectEntry);
           }
         }
       }
     }
 
-    return docEntries;
+    return docEntry;
   }
 }

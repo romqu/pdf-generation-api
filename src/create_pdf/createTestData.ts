@@ -59,12 +59,14 @@ export function createTestData(): DefectList {
     );
   }
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 8; i++) {
     participantList.push(
       new Participant({
         forename: "Max",
         surname: "Mustermann",
-        phoneNumber: "1234567"
+        phoneNumber: "1234567",
+        email: "max@mustermann.de",
+        companyName: "Mustermann AG"
       })
     );
   }
@@ -78,7 +80,7 @@ export function createTestData(): DefectList {
     streetName: "Staße",
     houseNumber: 1,
     additional: "a",
-    participantList: [],
+    participantList: [...participantList],
     floors: floorList
   });
 }
