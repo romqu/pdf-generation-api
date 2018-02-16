@@ -1,13 +1,16 @@
+import { Creator } from "./creator";
 import { Floor } from "./floor";
+import { Participant } from "./participant";
 
 export class DefectList {
   constructor(
     private readonly params: {
       readonly date: string;
-      readonly creatorName: string;
+      readonly creator: Creator;
       readonly streetName: string;
       readonly houseNumber: number;
       readonly additional: string;
+      readonly participantList: Participant[];
       readonly floors: Floor[];
     }
   ) {}
@@ -16,8 +19,8 @@ export class DefectList {
     return this.params.date;
   }
 
-  public get creatorName(): string {
-    return this.params.creatorName;
+  public get creatorName(): Creator {
+    return this.params.creator;
   }
   public get streetName(): string {
     return this.params.streetName;
@@ -32,5 +35,9 @@ export class DefectList {
 
   public get floors(): Floor[] {
     return this.params.floors;
+  }
+
+  public get participantList(): Participant[] {
+    return this.params.participantList;
   }
 }

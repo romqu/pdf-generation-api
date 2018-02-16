@@ -15,6 +15,7 @@ export function createDefectEntry(
   imageBasePath: string,
   defectNumber: number
 ): DocEntry {
+  let tableWidths: string[] = ["auto", "auto", "auto", "auto"];
   const defectFirstImageTableBody: DocTableBody = new DocTableBody();
   const defectFirstImageTableRow: DocTableBodyRow = new DocTableBodyRow();
 
@@ -53,6 +54,10 @@ export function createDefectEntry(
           ]
         })
       ]);
+
+      tableWidths = ["auto", "auto", "auto"];
+
+      break;
     }
 
     if (i === 0) {
@@ -92,7 +97,7 @@ export function createDefectEntry(
 
   docEntry.addDocModelList([
     new DocTable({
-      widths: ["auto", "auto", "auto", "auto"],
+      widths: tableWidths,
       body: defectFirstImageTableBody,
       docLayout: defaultDocTableLayout
     })
