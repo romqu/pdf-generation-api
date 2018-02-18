@@ -23,7 +23,7 @@ export class Doc implements IDocModel {
         top: 60,
         bottom: 25
       }).docDefinition(),
-      header: this.params.docHeader(),
+      header: this.params.docHeader,
       footer: this.params.docFooter,
       content: this.params.docBody.docDefinition()
     };

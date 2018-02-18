@@ -4,6 +4,8 @@ import PdfPrinter = require("pdfmake");
 import { defaultDocTableLayout } from "./constants";
 import { createFooter } from "./create_pdf/createFooter";
 import { createHeader } from "./create_pdf/createHeader";
+import { createParticipantsEntry } from "./create_pdf/createParticipantsEntry";
+import { createTestData } from "./create_pdf/createTestData";
 import { CreateDoc } from "./createDoc";
 import { Doc } from "./model/pdfmake/doc";
 import { DocEntry } from "./model/pdfmake/docEntry";
@@ -14,8 +16,6 @@ import { DocTable } from "./model/pdfmake/docTable";
 import { DocTableBody } from "./model/pdfmake/docTableBody";
 import { DocTableBodyRow } from "./model/pdfmake/docTableBodyRow";
 import { DocText } from "./model/pdfmake/docText";
-import { createParticipantsEntry } from "./create_pdf/createParticipantsEntry";
-import { createTestData } from "./create_pdf/createTestData";
 
 const fonts = {
   Roboto: {

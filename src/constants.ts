@@ -3,10 +3,10 @@ import { DocTableLayout } from "./model/pdfmake/docTableLayout";
 
 export const defaultDocTableLayout: DocTableLayout = new DocTableLayout({
   hLineWidth: (i: number, node: object): number => {
-    return 0.1;
+    return 0;
   },
   vLineWidth: (i: number, node: object): number => {
-    return 0.1;
+    return 0;
   },
   hLineColor: (i: number, node: object): string => {
     return "black";

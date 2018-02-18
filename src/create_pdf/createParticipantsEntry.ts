@@ -1,5 +1,4 @@
 import { defaultDocTableLayout } from "../constants";
-import { logger } from "../logger";
 import { Participant } from "../model/participant";
 import { DocEntry } from "../model/pdfmake/docEntry";
 import { DocMargin } from "../model/pdfmake/docMargin";
@@ -22,7 +21,7 @@ export function createParticipantsEntry(
         docModels: [
           new DocTable({
             widths: ["auto", "*"],
-            docMargin: new DocMargin({ left: 5, bottom: 5 }),
+            docMargin: new DocMargin({ left: 5, bottom: 5, top: 5 }),
             body: new DocTableBody({
               rows: [
                 new DocTableBodyRow({
@@ -117,27 +116,23 @@ export function createParticipantsEntry(
     );
 
     if (ent.length < 4) {
-      for (let j = 0; j < 4 - ent.length; j++) {}
+      for (let j = 0; j < 6 - ent.length; j++) {
+        ent.push(new DocEntry());
+      }
     }
 
     rows.push(
       new DocTableBodyRow({
-        entries: entries.slice(
-          i,
-          i + 4 <= entries.length ? i + 4 : entries.length - 1
-        )
+        entries: ent
       })
     );
   }
 
   tableBody.addRows(rows);
 
-  logger.info(rows.length.toString());
-
   return new DocEntry({
     docModels: [
       new DocTable({
-        docMargin: new DocMargin({ top: 10 }),
         body: tableBody,
         docLayout: defaultDocTableLayout
       })
