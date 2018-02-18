@@ -6,6 +6,7 @@ import { DocTable } from "../model/pdfmake/docTable";
 import { DocTableBody } from "../model/pdfmake/docTableBody";
 import { DocTableBodyRow } from "../model/pdfmake/docTableBodyRow";
 import { DocText } from "../model/pdfmake/docText";
+import { DocLine } from "../model/pdfmake/docLine";
 
 export function createParticipantsEntry(
   participantList: Participant[]
@@ -15,13 +16,23 @@ export function createParticipantsEntry(
   const tableBody: DocTableBody = new DocTableBody();
   const entries: DocEntry[] = [];
 
+  const a = new DocEntry({
+    docModels: [
+      new DocText({ text: "Begehungsteilnehmer" }),
+      new DocLine({
+        x2: 200,
+        docMargin: new DocMargin({ left: 0, top: 2 })
+      })
+    ]
+  });
+
   for (let i = 0; i < participantList.length; i++) {
     entries.push(
       new DocEntry({
         docModels: [
           new DocTable({
             widths: ["auto", "*"],
-            docMargin: new DocMargin({ left: 5, bottom: 5, top: 5 }),
+            docMargin: new DocMargin({ bottom: 5, top: 5 }),
             body: new DocTableBody({
               rows: [
                 new DocTableBodyRow({
@@ -132,6 +143,7 @@ export function createParticipantsEntry(
 
   return new DocEntry({
     docModels: [
+      a,
       new DocTable({
         body: tableBody,
         docLayout: defaultDocTableLayout
