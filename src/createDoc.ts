@@ -21,6 +21,10 @@ export class CreateDoc {
   private createDoc(params: { defectList: DefectList }): DocEntry {
     const docEntry: DocEntry = new DocEntry();
 
+    docEntry.addDocModel(
+      createParticipantsEntry(params.defectList.participantList)
+    );
+
     for (const floor of params.defectList.floors) {
       for (const livingUnit of floor.livingUnits) {
         const livingUnitEntry: DocEntry = createFloorAndLivingUnitEntry(

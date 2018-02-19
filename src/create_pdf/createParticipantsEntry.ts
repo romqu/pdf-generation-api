@@ -1,12 +1,12 @@
 import { defaultDocTableLayout } from "../constants";
 import { Participant } from "../model/participant";
 import { DocEntry } from "../model/pdfmake/docEntry";
+import { DocLine } from "../model/pdfmake/docLine";
 import { DocMargin } from "../model/pdfmake/docMargin";
 import { DocTable } from "../model/pdfmake/docTable";
 import { DocTableBody } from "../model/pdfmake/docTableBody";
 import { DocTableBodyRow } from "../model/pdfmake/docTableBodyRow";
 import { DocText } from "../model/pdfmake/docText";
-import { DocLine } from "../model/pdfmake/docLine";
 
 export function createParticipantsEntry(
   participantList: Participant[]
@@ -16,7 +16,7 @@ export function createParticipantsEntry(
   const tableBody: DocTableBody = new DocTableBody();
   const entries: DocEntry[] = [];
 
-  const a = new DocEntry({
+  const headline = new DocEntry({
     docModels: [
       new DocText({ text: "Begehungsteilnehmer" }),
       new DocLine({
@@ -25,8 +25,12 @@ export function createParticipantsEntry(
       })
     ]
   });
+  const line = new DocLine({
+    x2: 200,
+    docMargin: new DocMargin({ left: 0, top: 2 })
+  });
 
-  for (let i = 0; i < participantList.length; i++) {
+  for (const participant of participantList) {
     entries.push(
       new DocEntry({
         docModels: [
@@ -40,15 +44,17 @@ export function createParticipantsEntry(
                     new DocEntry({
                       docModels: [
                         new DocText({
-                          text: "Projekt:"
+                          docMargin: new DocMargin({ top: 2 }),
+                          text: "Name: ",
+                          isBold: true
                         })
                       ]
                     }),
                     new DocEntry({
                       docModels: [
                         new DocText({
-                          docMargin: new DocMargin({ left: 2 }),
-                          text: "Musterstraße 1"
+                          docMargin: new DocMargin({ left: 3, top: 2 }),
+                          text: `${participant.forename} ${participant.surname}`
                         })
                       ]
                     })
@@ -59,15 +65,17 @@ export function createParticipantsEntry(
                     new DocEntry({
                       docModels: [
                         new DocText({
-                          text: "Projekt:"
+                          docMargin: new DocMargin({ top: 2 }),
+                          text: "Firma: ",
+                          isBold: true
                         })
                       ]
                     }),
                     new DocEntry({
                       docModels: [
                         new DocText({
-                          docMargin: new DocMargin({ left: 2 }),
-                          text: "Musterstraße 1"
+                          docMargin: new DocMargin({ left: 3, top: 2 }),
+                          text: participant.companyName
                         })
                       ]
                     })
@@ -78,15 +86,17 @@ export function createParticipantsEntry(
                     new DocEntry({
                       docModels: [
                         new DocText({
-                          text: "Projekt:"
+                          docMargin: new DocMargin({ top: 2 }),
+                          text: "E-Mail: ",
+                          isBold: true
                         })
                       ]
                     }),
                     new DocEntry({
                       docModels: [
                         new DocText({
-                          docMargin: new DocMargin({ left: 2 }),
-                          text: "Musterstraße 1"
+                          docMargin: new DocMargin({ left: 3, top: 2 }),
+                          text: participant.email
                         })
                       ]
                     })
@@ -97,15 +107,17 @@ export function createParticipantsEntry(
                     new DocEntry({
                       docModels: [
                         new DocText({
-                          text: "Projekt:"
+                          docMargin: new DocMargin({ top: 2 }),
+                          text: "Telefon: ",
+                          isBold: true
                         })
                       ]
                     }),
                     new DocEntry({
                       docModels: [
                         new DocText({
-                          docMargin: new DocMargin({ left: 2 }),
-                          text: "Musterstraße 1"
+                          docMargin: new DocMargin({ left: 3, top: 2 }),
+                          text: participant.phoneNumber
                         })
                       ]
                     })
@@ -143,11 +155,12 @@ export function createParticipantsEntry(
 
   return new DocEntry({
     docModels: [
-      a,
+      headline,
       new DocTable({
         body: tableBody,
         docLayout: defaultDocTableLayout
-      })
+      }),
+      line
     ]
   });
 }

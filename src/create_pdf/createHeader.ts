@@ -18,7 +18,8 @@ export const createHeader = (): object[] => {
             new DocEntry({
               docModels: [
                 new DocText({
-                  text: "Projekt:"
+                  text: "Projekt:",
+                  isBold: true
                 })
               ]
             }),
@@ -40,7 +41,8 @@ export const createHeader = (): object[] => {
             new DocEntry({
               docModels: [
                 new DocText({
-                  text: "Ersteller:"
+                  text: "Ersteller:",
+                  isBold: true
                 })
               ]
             }),

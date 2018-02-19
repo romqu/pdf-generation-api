@@ -5,7 +5,7 @@ import { DocText } from "../model/pdfmake/docText";
 export function createFooter(currentPage: number, pageCount: number): object {
   return new DocText({
     docMargin: new DocMargin({ top: 5 }),
-    text: currentPage.toString() + " von " + pageCount,
+    text: `Seite ${currentPage} von ${pageCount}`,
     fontSize: 9,
     alignment: "center"
   }).docDefinition();

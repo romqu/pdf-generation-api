@@ -207,7 +207,7 @@ const docc = {
 
 const doc = new Doc({
   docHeader: createHeader,
-  docBody: createParticipantsEntry(createTestData().participantList),
+  docBody: createDoc.execute(),
   docFooter: createFooter
 });
 

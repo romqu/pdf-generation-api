@@ -9,7 +9,7 @@ export class DocText implements IDocModel {
     const {
       docMargin = new DocMargin(),
       text = "Text",
-      fontSize = 10,
+      fontSize = 9.5,
       isBold = false,
       alignment = "left"
     } = obj;
