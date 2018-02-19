@@ -35,7 +35,7 @@ export function createTestData(): DefectList {
       new Room({
         name: "Wohnzimmer",
         number: i,
-        description: "Links",
+        description: "Befindet sich links, nqeben der Küche.",
         defects: defectList
       })
     );

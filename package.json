@@ -19,18 +19,18 @@
   },
   "devDependencies": {
     "@types/hapi": "^17.0.0",
-    "@types/node": "^9.4.5",
+    "@types/node": "^9.4.6",
     "@types/pino": "latest",
     "gulp": "^4.0.0",
     "gulp-shell": "^0.6.5",
-    "nodemon": "^1.14.12",
-    "pino": "^4.10.4",
+    "nodemon": "^1.15.0",
+    "pino": "^4.11.0",
     "prettier": "latest",
     "reflect-metadata": "latest",
     "ts-node": "latest",
     "tslint": "latest",
-    "tslint-config-prettier": "^1.7.0",
+    "tslint-config-prettier": "^1.8.0",
     "tslint-immutable": "latest",
-    "typescript": "^2.7.1"
+    "typescript": "^2.7.2"
   }
 }
