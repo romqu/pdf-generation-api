@@ -41,16 +41,12 @@ export function createDefectTextTable(defect: Defect): DocEntry {
                 new DocEntry({
                   docModels: [
                     new DocText({
-                      docMargin: new DocMargin(),
-                      text: [
-                        new DocText({
-                          text: `${leftText}:`,
-                          isBold: true
-                        }),
-                        new DocText({
-                          text: `\n ${rightText}`
-                        })
-                      ]
+                      text: `${leftText}:`,
+                      isBold: true
+                    }),
+                    new DocText({
+                      text: `${rightText}`,
+                      docMargin: new DocMargin({ top: 5 })
                     })
                   ]
                 })

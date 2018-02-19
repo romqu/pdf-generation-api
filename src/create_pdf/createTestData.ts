@@ -30,7 +30,7 @@ export function createTestData(): DefectList {
     );
   }
 
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 1; i++) {
     roomList.push(
       new Room({
         name: "Wohnzimmer",
@@ -41,7 +41,7 @@ export function createTestData(): DefectList {
     );
   }
 
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 1; i++) {
     livingUnitList.push(
       new LivingUnit({
         number: i,
@@ -50,7 +50,7 @@ export function createTestData(): DefectList {
     );
   }
 
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 1; i++) {
     floorList.push(
       new Floor({
         name: "EG",

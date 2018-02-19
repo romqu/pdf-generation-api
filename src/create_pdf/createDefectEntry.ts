@@ -24,10 +24,11 @@ export function createDefectEntry(
   // Mangel 1
   docEntry.addDocModelList([
     new DocText({
-      docMargin: new DocMargin(),
+      docMargin: new DocMargin({ top: 10 }),
       text: `Mangel ${defectNumber}`
     }),
     new DocLine({
+      docMargin: new DocMargin({ top: 1 }),
       x2: (595 - 2 * 40 - 27.5) / 2.5
     })
   ]);
@@ -97,6 +98,7 @@ export function createDefectEntry(
 
   docEntry.addDocModelList([
     new DocTable({
+      docMargin: new DocMargin({ top: 5 }),
       widths: tableWidths,
       body: defectFirstImageTableBody,
       docLayout: defaultDocTableLayout

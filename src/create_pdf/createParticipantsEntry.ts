@@ -20,13 +20,13 @@ export function createParticipantsEntry(
     docModels: [
       new DocText({ text: "Begehungsteilnehmer" }),
       new DocLine({
-        x2: 200,
+        x2: (595 - 2 * 40 - 27.5) / 2,
         docMargin: new DocMargin({ left: 0, top: 2 })
       })
     ]
   });
   const line = new DocLine({
-    x2: 200,
+    x2: (595 - 2 * 40 - 27.5) / 2,
     docMargin: new DocMargin({ left: 0, top: 2 })
   });
 

@@ -2,6 +2,7 @@ import { Floor } from "../model/floor";
 import { LivingUnit } from "../model/livingUnit";
 import { DocEntry } from "../model/pdfmake/docEntry";
 import { DocLine } from "../model/pdfmake/docLine";
+import { DocMargin } from "../model/pdfmake/docMargin";
 import { DocStack } from "../model/pdfmake/docStack";
 import { DocText } from "../model/pdfmake/docText";
 
@@ -16,10 +17,12 @@ export function createFloorAndLivingUnitEntry(
           new DocEntry({
             docModels: [
               new DocText({
-                text: `${floor.name} | WG - ${livingUnit.number + 1}`
+                text: `${floor.name} | WG - ${livingUnit.number + 1}`,
+                docMargin: new DocMargin({ top: 10 })
               }),
               new DocLine({
-                x2: (595 - 2 * 40 - 27.5) / 2
+                x2: (595 - 2 * 40 - 27.5) / 2,
+                docMargin: new DocMargin({ top: 1 })
               })
             ]
           })
