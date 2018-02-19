@@ -3,6 +3,7 @@ import { createFloorAndLivingUnitEntry } from "./create_pdf/createFloorAndLiving
 import { createParticipantsEntry } from "./create_pdf/createParticipantsEntry";
 import { createRoomEntry } from "./create_pdf/createRoomEntry";
 import { createTestData } from "./create_pdf/createTestData";
+import { logger } from "./logger";
 import { DefectList } from "./model/defectList";
 import { DocEntry } from "./model/pdfmake/docEntry";
 
@@ -20,6 +21,10 @@ export class CreateDoc {
 
   private createDoc(params: { defectList: DefectList }): DocEntry {
     const docEntry: DocEntry = new DocEntry();
+
+    logger.info(params.defectList);
+
+    JSON.parse(params.defectList);
 
     docEntry.addDocModel(
       createParticipantsEntry(params.defectList.participantList)
