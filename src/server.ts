@@ -1,7 +1,7 @@
 import * as Hapi from "hapi";
 
-import { logger } from "./logger";
-import { register } from "./presentation/create_pdf/route";
+import { register } from "./presentation/feature/create_pdf/route";
+import { logger } from "./util/logger";
 
 const server = new Hapi.Server({
   host: "localhost",
