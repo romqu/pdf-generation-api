@@ -1,4 +1,5 @@
 import * as Hapi from "hapi";
+
 import { logger } from "./logger";
 import { register } from "./presentation/create_pdf/route";
 
