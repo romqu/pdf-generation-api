@@ -20,7 +20,7 @@ export const imageHandler = async (
 
   const response = await filesHandler(images);
 
-  return response;
+  return data.list;
 };
 
 async function filesHandler(files: any): Promise<string[]> {

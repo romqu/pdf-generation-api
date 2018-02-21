@@ -1,0 +1,43 @@
+{
+  "date": "1.1.1111",
+  "creator": { "forename": "Mike", "surname": "Meener" },
+  "address": {
+    "streetName": "Musterstraße",
+    "houseNumber": 1,
+    "additional": "a"
+  },
+  "participantList": [
+    {
+      "forename": "Max",
+      "surname": "Mustermann",
+      "phoneNumber": "1234567",
+      "email": "max@mustermann.de",
+      "companyName": "Mustermann AG"
+    }
+  ],
+  "floorList": [
+    {
+      "name": "EG",
+      "livingUnitList": [
+        {
+          "digit": 1,
+          "roomList": [
+            {
+              "name": "Wohnzimmer",
+              "digit": 1,
+              "description": "Links neben der Küche",
+              "defectList": [
+                {
+                  "description": "Ist kaputt",
+                  "personInCharge": "Bernd",
+                  "doneTill": "",
+                  "imageList": [{ "name": "mangel-border.jpg" }]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

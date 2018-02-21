@@ -1,9 +1,9 @@
-import { serialize } from "cerialize";
+import { autoserialize } from "cerialize";
 
 export class Address {
-  @serialize public readonly streetName: string;
-  @serialize public readonly houseNumber: number;
-  @serialize public readonly additional: string;
+  @autoserialize public readonly streetName: string;
+  @autoserialize public readonly houseNumber: number;
+  @autoserialize public readonly additional: string;
 
   constructor(streetName: string, houseNumber: number, additional: string) {
     this.streetName = streetName;

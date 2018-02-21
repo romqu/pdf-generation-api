@@ -1,7 +1,7 @@
-import { serialize } from "cerialize";
+import { autoserialize } from "cerialize";
 
 export class Image {
-  @serialize public readonly name: string;
+  @autoserialize public readonly name: string;
 
   constructor(name: string) {
     this.name = name;

@@ -1,12 +1,12 @@
-import { serialize } from "cerialize";
+import { autoserialize } from "cerialize";
 
-import { Defect } from "../../model/defect";
+import { Defect } from "./defect";
 
 export class Room {
-  @serialize public readonly name: string;
-  @serialize public readonly digit: number;
-  @serialize public readonly description: string;
-  @serialize public readonly defectList: Defect[];
+  @autoserialize public readonly name: string;
+  @autoserialize public readonly digit: number;
+  @autoserialize public readonly description: string;
+  @autoserialize public readonly defectList: Defect[];
 
   constructor(
     name: string,

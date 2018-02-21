@@ -1,10 +1,11 @@
-import { serialize } from "cerialize";
+import { autoserialize } from "cerialize";
+
 export class Participant {
-  @serialize public readonly forename: string;
-  @serialize public readonly surname: string;
-  @serialize public readonly phoneNumber: string;
-  @serialize public readonly email: string;
-  @serialize public readonly companyName: string;
+  @autoserialize public readonly forename: string;
+  @autoserialize public readonly surname: string;
+  @autoserialize public readonly phoneNumber: string;
+  @autoserialize public readonly email: string;
+  @autoserialize public readonly companyName: string;
 
   constructor(
     forename: string,

@@ -1,4 +1,4 @@
-import { serialize } from "cerialize";
+import { autoserialize } from "cerialize";
 
 import { Address } from "./address";
 import { Creator } from "./creator";
@@ -6,11 +6,11 @@ import { Floor } from "./floor";
 import { Participant } from "./participant";
 
 export class DefectList {
-  @serialize public readonly date: string;
-  @serialize public readonly creator: Creator;
-  @serialize public readonly address: Address;
-  @serialize public readonly participantList: Participant[];
-  @serialize public readonly floorList: Floor[];
+  @autoserialize public readonly date: string;
+  @autoserialize public readonly creator: Creator;
+  @autoserialize public readonly address: Address;
+  @autoserialize public readonly participantList: Participant[];
+  @autoserialize public readonly floorList: Floor[];
 
   constructor(
     date: string,

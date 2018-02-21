@@ -1,10 +1,12 @@
+import { autoserialize } from "cerialize";
+
 import { Image } from "./image";
 
 export class Defect {
-  @serialize public readonly description: string;
-  @serialize public readonly personInCharge: string;
-  @serialize public readonly doneTill: string;
-  @serialize public readonly imageList: Image[];
+  @autoserialize public readonly description: string;
+  @autoserialize public readonly personInCharge: string;
+  @autoserialize public readonly doneTill: string;
+  @autoserialize public readonly imageList: Image[];
 
   constructor(
     description: string,
