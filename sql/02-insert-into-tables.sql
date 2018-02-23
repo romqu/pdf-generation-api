@@ -19,7 +19,7 @@ BEGIN
     INSERT INTO room (name, number, location_description, living_unit_id)
     VALUES ('Wohnzimmer', 2, 'Links, neben der Küche', 2);
     INSERT INTO defect (description, measure, company_in_charge, done_till, room_id)
-    VALUES ('Ist kaputt.', 'Bitte beheben.', 'Meier', '02/02/2222', 2);
+    VALUES ('KAPUTTT.', 'NOOOO.', 'MEEEE', '02/02/3333', 1);
     INSERT INTO defect_image (name, defect_id)
     VALUES ('mangel.jpg', 2);
 END TRANSACTION;
