@@ -1,18 +1,23 @@
-import * as argon2 from "argon2";
-
-import { LoginCredentialsRepository } from "./data/login_credentials/loginCredentialsRepository";
-import { pgDb, redisClient } from "./database";
-import { LoginCredentials } from "./domain/model/loginCredentials";
-import { HashPasswordTask } from "./domain/register/hashPasswordTask";
-import { RegisterManager } from "./domain/register/registerManager";
+import { ClientSessionEntity } from "./data/client_session/clientSessionEntity";
+import { ClientSessionRepo } from "./data/client_session/clientSessionRepo";
+import { redisClient } from "./database";
+import { logger } from "./util/logger";
 
 async function test(): Promise<any> {
-  await redisClient.setAsync("kid", "kid");
+  const csr = new ClientSessionRepo(redisClient);
+  await csr.insert({
+    key: "abcd",
+    value: new ClientSessionEntity("5555", 2, "t8wqtewqte")
+  });
 
-  await new RegisterManager(
+  const result = await csr.get({ key: "abcd" });
+
+  logger.info(result);
+
+  /*await new RegisterManager(
     new HashPasswordTask(argon2),
     new LoginCredentialsRepository(pgDb)
-  ).execute(new LoginCredentials({ email: "test@test.de", password: "test" }));
+  ).execute(new LoginCredentials({ email: "test@test.de", password: "test" }));*/
 }
 
 test();
