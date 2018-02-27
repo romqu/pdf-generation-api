@@ -24,8 +24,6 @@ export class CreateDoc {
 
     logger.info(params.defectList);
 
-    JSON.parse(params.defectList);
-
     docEntry.addDocModel(
       createParticipantsEntry(params.defectList.participantList)
     );

@@ -1,10 +1,10 @@
--- CREATE ROLE roman WITH PASSWORD 'test' LOGIN CREATEDB;
+-- CREATE ROLE roman WITH PASSWORD 'roman' LOGIN CREATEDB;
 -- CREATE DATABASE roman OWNER=roman;
 
-CREATE TABLE login(
+CREATE TABLE login_credentials(
 
 	id bigserial,
-	e_mail varchar(30) NOT NULL,
+	e_mail varchar(30) UNIQUE NOT NULL,
 	password_hash text NOT NULL,
 
 	CONSTRAINT login_pk PRIMARY KEY (id)
@@ -16,11 +16,11 @@ CREATE TABLE client(
 	forename varchar(20) NOT NULL,
 	surname varchar(20) NOT NULL,
 
-	login_id bigint NOT NULL,
+	login_credentials_id bigint NOT NULL,
 
 	CONSTRAINT client_pk PRIMARY KEY (id),
-    CONSTRAINT login_fk FOREIGN KEY (login_id)
-        REFERENCES login (id)
+    CONSTRAINT login_credentials_fk FOREIGN KEY (login_credentials_id)
+        REFERENCES login_credentials (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
