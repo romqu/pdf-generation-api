@@ -1,8 +1,10 @@
 import { IDatabase, ITask, QueryFile } from "pg-promise";
 
+import { pgDb } from "../../database";
 import { logger } from "../../util/loggerUtil";
 import { getQueryFile } from "../../util/sqlFileUtil";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
+import * as bluebird from "bluebird";
 
 export class LoginCredentialsRepo {
   private readonly pgDb: IDatabase<any>;
@@ -14,13 +16,13 @@ export class LoginCredentialsRepo {
   public async insert(
     loginCredentials: LoginCredentialsEntity
   ): Promise<number> {
-    const query: QueryFile = getQueryFile(
+    const queryFile: QueryFile = getQueryFile(
       "/data/login_credentials/sql/insertOne.sql"
     );
 
     return await this.pgDb.tx<number>(async (t: ITask<number>) => {
       try {
-        return await t.oneOrNone(query, {
+        return await t.oneOrNone(queryFile, {
           email: loginCredentials.email,
           passwordHash: loginCredentials.passwordHash
         });
@@ -28,5 +30,15 @@ export class LoginCredentialsRepo {
         logger.error(error);
       }
     });
+  }
+
+  public async doesEmailExist(emailP: string): Promise<boolean> {
+    const queryFile: QueryFile = getQueryFile(
+      "/data/login_credentials/sql/doesEmailExist.sql"
+    );
+
+    const { exists } = await pgDb.one(queryFile, { email: emailP });
+
+    return exists;
   }
 }
