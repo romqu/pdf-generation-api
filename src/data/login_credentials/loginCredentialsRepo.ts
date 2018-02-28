@@ -1,10 +1,10 @@
 import { IDatabase, ITask, QueryFile } from "pg-promise";
 
-import { getQueryFile } from "../../util/helper";
-import { logger } from "../../util/logger";
+import { logger } from "../../util/loggerUtil";
+import { getQueryFile } from "../../util/sqlFileUtil";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
 
-export class LoginCredentialsRepository {
+export class LoginCredentialsRepo {
   private readonly pgDb: IDatabase<any>;
 
   constructor(pgDbP: IDatabase<any>) {

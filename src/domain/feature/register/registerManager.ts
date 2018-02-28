@@ -1,18 +1,18 @@
-import { LoginCredentialsEntity } from "../../data/login_credentials/loginCredentialsEntity";
-import { LoginCredentialsRepository } from "../../data/login_credentials/loginCredentialsRepository";
-import { LoginCredentials } from "../model/loginCredentials";
+import { LoginCredentialsEntity } from "../../../data/login_credentials/loginCredentialsEntity";
+import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
+import { LoginCredentials } from "../../model/loginCredentials";
 import { HashPasswordTask } from "./hashPasswordTask";
 
 export class RegisterManager {
   private readonly hashPasswordTask: HashPasswordTask;
-  private readonly loginCredentialsRepository: LoginCredentialsRepository;
+  private readonly loginCredentialsRepository: LoginCredentialsRepo;
 
   constructor(
-    hashPasswordTaskP: HashPasswordTask,
-    loginCredentialsRepositoryP: LoginCredentialsRepository
+    hashPasswordTask: HashPasswordTask,
+    loginCredentialsRepository: LoginCredentialsRepo
   ) {
-    this.hashPasswordTask = hashPasswordTaskP;
-    this.loginCredentialsRepository = loginCredentialsRepositoryP;
+    this.hashPasswordTask = hashPasswordTask;
+    this.loginCredentialsRepository = loginCredentialsRepository;
   }
 
   public async execute(loginCredentials: LoginCredentials): Promise<number> {

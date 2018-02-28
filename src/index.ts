@@ -1,7 +1,7 @@
 import { ClientSessionEntity } from "./data/client_session/clientSessionEntity";
 import { ClientSessionRepo } from "./data/client_session/clientSessionRepo";
 import { redisClient } from "./database";
-import { logger } from "./util/logger";
+import { logger } from "./util/loggerUtil";
 
 async function test(): Promise<any> {
   const csr = new ClientSessionRepo(redisClient);
