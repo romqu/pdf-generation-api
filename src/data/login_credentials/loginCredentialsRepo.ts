@@ -4,7 +4,6 @@ import { pgDb } from "../../database";
 import { logger } from "../../util/loggerUtil";
 import { getQueryFile } from "../../util/sqlFileUtil";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
-import * as bluebird from "bluebird";
 
 export class LoginCredentialsRepo {
   private readonly pgDb: IDatabase<any>;
