@@ -21,15 +21,9 @@ async function test(): Promise<any> {
     new LoginCredentialsRepository(pgDb)
   ).execute(new LoginCredentials({ email: "test@test.de", password: "test" }));*/
 
-  const result = await new LoginCredentialsRepo(pgDb).insert(
-    new LoginCredentialsEntity({
-      id: 0,
-      email: "test@test.de",
-      passwordHash: "test"
-    })
-  );
+  const result = await new LoginCredentialsRepo(pgDb).doesEmailExist("tes");
 
-  logger.info(result.isSuccess ? result.data.id : result.errorMessage);
+  logger.info(result);
 }
 
 test();

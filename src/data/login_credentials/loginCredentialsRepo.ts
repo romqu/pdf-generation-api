@@ -2,7 +2,11 @@ import { IDatabase, ITask, QueryFile } from "pg-promise";
 
 import { pgDb } from "../../database";
 import { Response } from "../../domain/model/response";
-import { failableAsync, makeSuccessResponse } from "../../util/failableUtil";
+import {
+  callAsync,
+  failableAsync,
+  makeSuccessResponse
+} from "../../util/failableUtil";
 import { getQueryFile } from "../../util/sqlFileUtil";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
 
@@ -33,14 +37,16 @@ export class LoginCredentialsRepo {
   }
 
   public async doesEmailExist(emailP: string): Promise<Response<boolean>> {
-    const queryFile: QueryFile = getQueryFile(
-      "/data/login_credentials/sql/doesEmailExist.sql"
-    );
+    return callAsync<boolean>(async ({ success, failable, run }) => {
+      const queryFile: QueryFile = getQueryFile(
+        "/data/login_credentials/sql/doesEmailExist.sql"
+      );
 
-    const result = await failableAsync<any>(() =>
-      pgDb.one(queryFile, { email: emailP })
-    );
+      const result = await run<any>(
+        await failable<any>(() => pgDb.one(queryFile, { email: 1 }))
+      );
 
-    return result.isSuccess ? makeSuccessResponse(result.data.exists) : result;
+      return success(result);
+    });
   }
 }

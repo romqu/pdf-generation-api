@@ -1,4 +1,5 @@
 import { Response } from "../domain/model/response";
+import { logger } from "./loggerUtil";
 
 export async function failableAsync<R>(
   func: () => Promise<R>
@@ -28,43 +29,52 @@ export function makeFailureResponse(errorMessageP: string): Response<string> {
   return { isSuccess: false, errorMessage: errorMessageP };
 }
 
-function call<T>(
+export async function callAsync<T>(
   f: ((
     arg: {
-      success(value: T): Response<T>;
-      failure(error: string): Response<T>;
-      run<R>(failable: Response<R>): R;
+      success(value: T): Promise<Response<T>>;
+      failure(error: string): Promise<Response<T>>;
+      run<R>(response: Response<R>): Promise<R>;
+      failable<R>(func: () => Promise<R>): Promise<Response<R>>;
     }
-  ) => Response<T>)
-): Response<T> {
+  ) => Promise<Response<T>>)
+): Promise<Response<T>> {
   try {
-    return f({
-      success(value) {
-        return {
+    return await f({
+      success(value: T): Promise<Response<T>> {
+        return Promise.resolve<Response<T>>({
           isSuccess: true,
           data: value
-        };
+        });
       },
-      failure(e) {
-        return {
+      failure(e: string): Promise<Response<T>> {
+        return Promise.resolve<Response<T>>({
           isSuccess: false,
           errorMessage: e
-        };
+        });
       },
-      run(failable) {
-        if (!failable.isSuccess) {
-          throw new Failure(failable.errorMessage);
+      run<R>(response: Response<R>): Promise<R> {
+        if (!response.isSuccess) {
+          throw new Failure(response.errorMessage);
         } else {
-          return failable.data;
+          return Promise.resolve<R>(response.data);
+        }
+      },
+      async failable<R>(func: () => Promise<R>): Promise<Response<R>> {
+        try {
+          const result = await func();
+          return { isSuccess: true, data: result };
+        } catch (error) {
+          throw new Failure(error.toString());
         }
       }
     });
   } catch (e) {
     if (e instanceof Failure) {
-      return {
+      return Promise.resolve<Response<T>>({
         isSuccess: false,
         errorMessage: e.value
-      };
+      });
     } else {
       throw e;
     }
