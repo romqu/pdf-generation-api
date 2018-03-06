@@ -1,4 +1,5 @@
 import { autoserializeAs } from "cerialize/src/annotations";
+
 export class Creator {
   @autoserializeAs(String) public readonly forename: string;
   @autoserializeAs(String) public readonly surname: string;
