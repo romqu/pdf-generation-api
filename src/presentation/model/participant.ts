@@ -1,11 +1,11 @@
-import { autoserialize } from "cerialize";
+import { autoserializeAs } from "cerialize/src/annotations";
 
 export class Participant {
-  @autoserialize public readonly forename: string;
-  @autoserialize public readonly surname: string;
-  @autoserialize public readonly phoneNumber: string;
-  @autoserialize public readonly email: string;
-  @autoserialize public readonly companyName: string;
+  @autoserializeAs(String) public readonly forename: string;
+  @autoserializeAs(String) public readonly surname: string;
+  @autoserializeAs(String) public readonly phoneNumber: string;
+  @autoserializeAs(String) public readonly email: string;
+  @autoserializeAs(String) public readonly companyName: string;
 
   constructor(
     forename: string,

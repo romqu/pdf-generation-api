@@ -16,11 +16,12 @@
   "dependencies": {
     "argon2": "^0.17.2",
     "bluebird": "^3.5.1",
-    "cerialize": "^0.1.18",
+    "cerialize": "^2.0.1",
     "hapi": "^17.2.1",
     "pdfmake": "^0.1.36",
     "pg-promise": "^8.1.1",
-    "redis": "^2.8.0"
+    "redis": "^2.8.0",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.20",
@@ -28,6 +29,7 @@
     "@types/node": "^9.4.6",
     "@types/pino": "latest",
     "@types/redis": "^2.8.6",
+    "@types/uuid": "^3.4.3",
     "gulp": "^4.0.0",
     "gulp-shell": "^0.6.5",
     "node-gyp": "^3.6.2",
@@ -35,7 +37,7 @@
     "pino": "^4.13.0",
     "prettier": "^1.11.1",
     "reflect-metadata": "latest",
-    "ts-node": "^5.0.0",
+    "ts-node": "^5.0.1",
     "tslint": "latest",
     "tslint-config-prettier": "^1.9.0",
     "tslint-immutable": "^4.5.2",

@@ -1,10 +1,14 @@
-import { autoserialize } from "cerialize";
+import {
+  autoserializeAs,
+  autoserializeAsArray
+} from "cerialize/src/annotations";
 
 import { LivingUnit } from "./livingUnit";
 
 export class Floor {
-  @autoserialize public readonly name: string;
-  @autoserialize public readonly livingUnitList: LivingUnit[];
+  @autoserializeAs(String) public readonly name: string;
+  @autoserializeAsArray(LivingUnit)
+  public readonly livingUnitList: LivingUnit[];
 
   constructor(name: string, livingUnitList: LivingUnit[]) {
     this.name = name;

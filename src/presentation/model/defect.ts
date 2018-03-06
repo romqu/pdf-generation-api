@@ -1,12 +1,15 @@
-import { autoserialize } from "cerialize";
+import {
+  autoserializeAs,
+  autoserializeAsArray
+} from "cerialize/src/annotations";
 
 import { Image } from "./image";
 
 export class Defect {
-  @autoserialize public readonly description: string;
-  @autoserialize public readonly personInCharge: string;
-  @autoserialize public readonly doneTill: string;
-  @autoserialize public readonly imageList: Image[];
+  @autoserializeAs(String) public readonly description: string;
+  @autoserializeAs(String) public readonly personInCharge: string;
+  @autoserializeAs(String) public readonly doneTill: string;
+  @autoserializeAsArray(Image) public readonly imageList: Image[];
 
   constructor(
     description: string,

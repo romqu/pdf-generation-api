@@ -1,6 +1,7 @@
 import { LoginCredentialsEntity } from "../../../data/login_credentials/loginCredentialsEntity";
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
 import { LoginCredentials } from "../../model/loginCredentials";
+import { Response } from "../../model/response";
 import { HashPasswordTask } from "./hashPasswordTask";
 
 export class RegistrationManager {
@@ -15,7 +16,9 @@ export class RegistrationManager {
     this.loginCredentialsRepo = loginCredentialsRepo;
   }
 
-  public async execute(loginCredentials: LoginCredentials): Promise<number> {
+  public async execute(
+    loginCredentials: LoginCredentials
+  ): Promise<Response<number>> {
     const doesEmailExist = await this.loginCredentialsRepo.doesEmailExist(
       loginCredentials.email
     );

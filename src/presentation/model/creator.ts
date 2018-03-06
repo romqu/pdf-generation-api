@@ -1,8 +1,7 @@
-import { autoserialize } from "cerialize";
-
+import { autoserializeAs } from "cerialize/src/annotations";
 export class Creator {
-  @autoserialize public readonly forename: string;
-  @autoserialize public readonly surname: string;
+  @autoserializeAs(String) public readonly forename: string;
+  @autoserializeAs(String) public readonly surname: string;
 
   constructor(forename: string, surname: string) {
     this.forename = forename;

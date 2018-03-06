@@ -1,7 +1,8 @@
 import { IDatabase, ITask, QueryFile } from "pg-promise";
 
 import { pgDb } from "../../database";
-import { logger } from "../../util/loggerUtil";
+import { Response } from "../../domain/model/response";
+import { failableAsync, makeSuccessResponse } from "../../util/failableUtil";
 import { getQueryFile } from "../../util/sqlFileUtil";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
 
@@ -14,30 +15,32 @@ export class LoginCredentialsRepo {
 
   public async insert(
     loginCredentials: LoginCredentialsEntity
-  ): Promise<number> {
+  ): Promise<Response<number>> {
     const queryFile: QueryFile = getQueryFile(
       "/data/login_credentials/sql/insertOne.sql"
     );
 
-    return await this.pgDb.tx<number>(async (t: ITask<number>) => {
-      try {
-        return await t.oneOrNone(queryFile, {
+    return failableAsync<number>(() =>
+      this.pgDb.tx<number>(async (t: ITask<number>) => {
+        const result = await t.one(queryFile, {
           email: loginCredentials.email,
           passwordHash: loginCredentials.passwordHash
         });
-      } catch (error) {
-        logger.error(error);
-      }
-    });
+
+        return result.isSuccess ? makeSuccessResponse(result.data.id) : result;
+      })
+    );
   }
 
-  public async doesEmailExist(emailP: string): Promise<boolean> {
+  public async doesEmailExist(emailP: string): Promise<Response<boolean>> {
     const queryFile: QueryFile = getQueryFile(
       "/data/login_credentials/sql/doesEmailExist.sql"
     );
 
-    const { exists } = await pgDb.one(queryFile, { email: emailP });
+    const result = await failableAsync<any>(() =>
+      pgDb.one(queryFile, { email: emailP })
+    );
 
-    return exists;
+    return result.isSuccess ? makeSuccessResponse(result.data.exists) : result;
   }
 }

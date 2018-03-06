@@ -1,10 +1,10 @@
 import fs = require("fs");
 import PdfPrinter = require("pdfmake");
 
+import { Doc } from "../../model/pdfmake/doc";
 import { CreateDoc } from "./createDoc";
-import { createFooter } from "./domain/create_pdf/createFooter";
-import { createHeader } from "./domain/create_pdf/createHeader";
-import { Doc } from "./model/pdfmake/doc";
+import { createFooter } from "./createFooter";
+import { createHeader } from "./createHeader";
 
 const fonts = {
   Roboto: {

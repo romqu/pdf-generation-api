@@ -1,12 +1,15 @@
-import { autoserialize } from "cerialize";
+import {
+  autoserializeAs,
+  autoserializeAsArray
+} from "cerialize/src/annotations";
 
 import { Defect } from "./defect";
 
 export class Room {
-  @autoserialize public readonly name: string;
-  @autoserialize public readonly digit: number;
-  @autoserialize public readonly description: string;
-  @autoserialize public readonly defectList: Defect[];
+  @autoserializeAs(String) public readonly name: string;
+  @autoserializeAs(Number) public readonly digit: number;
+  @autoserializeAs(String) public readonly description: string;
+  @autoserializeAsArray(Defect) public readonly defectList: Defect[];
 
   constructor(
     name: string,

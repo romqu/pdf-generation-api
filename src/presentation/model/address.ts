@@ -1,9 +1,9 @@
-import { autoserialize } from "cerialize";
+import { autoserializeAs } from "cerialize/src/annotations";
 
 export class Address {
-  @autoserialize public readonly streetName: string;
-  @autoserialize public readonly houseNumber: number;
-  @autoserialize public readonly additional: string;
+  @autoserializeAs(String) public readonly streetName: string;
+  @autoserializeAs(Number) public readonly houseNumber: number;
+  @autoserializeAs(String) public readonly additional: string;
 
   constructor(streetName: string, houseNumber: number, additional: string) {
     this.streetName = streetName;
