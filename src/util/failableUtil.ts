@@ -28,42 +28,42 @@ export function makeFailureResponse(errorMessageP: string): Response<string> {
   return { isSuccess: false, errorMessage: errorMessageP };
 }
 
-function call<T = never, E = never>(
+function call<T>(
   f: ((
     arg: {
-      success(value: T): Failable<T, E>;
-      failure(error: E): Failable<T, E>;
-      run<R>(failable: Failable<R, E>): R;
+      success(value: T): Response<T>;
+      failure(error: string): Response<T>;
+      run<R>(failable: Response<R>): R;
     }
-  ) => Failable<T, E>)
-): Failable<T, E> {
+  ) => Response<T>)
+): Response<T> {
   try {
     return f({
       success(value) {
         return {
-          isError: false,
-          value: value
+          isSuccess: true,
+          data: value
         };
       },
       failure(e) {
         return {
-          isError: true,
-          error: e
+          isSuccess: false,
+          errorMessage: e
         };
       },
       run(failable) {
-        if (failable.isError) {
-          throw new Failure(failable.error);
+        if (!failable.isSuccess) {
+          throw new Failure(failable.errorMessage);
         } else {
-          return failable.value;
+          return failable.data;
         }
       }
     });
   } catch (e) {
     if (e instanceof Failure) {
       return {
-        isError: true,
-        error: e.value
+        isSuccess: false,
+        errorMessage: e.value
       };
     } else {
       throw e;
@@ -71,16 +71,6 @@ function call<T = never, E = never>(
   }
 }
 
-class Failure<E> {
-  constructor(public readonly value: E) {}
+class Failure {
+  constructor(public readonly value: string) {}
 }
-
-type Failable<R, E> =
-  | {
-      isError: true;
-      error: E;
-    }
-  | {
-      isError: false;
-      value: R;
-    };
