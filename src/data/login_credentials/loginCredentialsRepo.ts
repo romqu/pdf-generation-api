@@ -9,6 +9,7 @@ import {
 } from "../../util/failableUtil";
 import { getQueryFile } from "../../util/sqlFileUtil";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
+import { failable } from "../../util/failableUtil";
 
 export class LoginCredentialsRepo {
   private readonly pgDb: IDatabase<any>;
@@ -20,6 +21,7 @@ export class LoginCredentialsRepo {
   public async insert(
     loginCredentials: LoginCredentialsEntity
   ): Promise<Response<number>> {
+    return callAsync<number>(async ({ failable }) => {});
     const queryFile: QueryFile = getQueryFile(
       "/data/login_credentials/sql/insertOne.sql"
     );
@@ -42,11 +44,15 @@ export class LoginCredentialsRepo {
         "/data/login_credentials/sql/doesEmailExist.sql"
       );
 
-      const result = await run<any>(
-        await failable<any>(() => pgDb.one(queryFile, { email: 1 }))
+      const result = await run<IDoesExists>(
+        await failable<any>(() => pgDb.one(queryFile, { email: emailP }))
       );
 
-      return success(result);
+      return success(result.exists);
     });
   }
+}
+
+interface IDoesExists {
+  readonly exists: boolean;
 }

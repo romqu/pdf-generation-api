@@ -1,5 +1,6 @@
 import { LoginCredentialsEntity } from "../../../data/login_credentials/loginCredentialsEntity";
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
+import { callAsync } from "../../../util/failableUtil";
 import { LoginCredentials } from "../../model/loginCredentials";
 import { Response } from "../../model/response";
 import { HashPasswordTask } from "./hashPasswordTask";
@@ -19,20 +20,30 @@ export class RegistrationManager {
   public async execute(
     loginCredentials: LoginCredentials
   ): Promise<Response<number>> {
-    const doesEmailExist = await this.loginCredentialsRepo.doesEmailExist(
-      loginCredentials.email
-    );
+    return callAsync<number>(async ({ failure, success, run }) => {
+      const doesEmailExist = await run(
+        await this.loginCredentialsRepo.doesEmailExist(loginCredentials.email)
+      );
 
-    const passwordHashV = await this.hashPasswordTask.execute(
-      loginCredentials.password
-    );
+      if (doesEmailExist) {
+        return failure("Email exists");
+      }
 
-    return await this.loginCredentialsRepo.insert(
-      new LoginCredentialsEntity({
-        id: 0,
-        email: loginCredentials.email,
-        passwordHash: passwordHashV
-      })
-    );
+      const passwordHashV = await run(
+        await this.hashPasswordTask.execute(loginCredentials.password)
+      );
+
+      const result = await run(
+        await this.loginCredentialsRepo.insert(
+          new LoginCredentialsEntity({
+            id: 0,
+            email: loginCredentials.email,
+            passwordHash: passwordHashV
+          })
+        )
+      );
+
+      return success(result);
+    });
   }
 }

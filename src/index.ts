@@ -1,7 +1,9 @@
 import { ClientSessionRepo } from "./data/client_session/clientSessionRepo";
-import { LoginCredentialsEntity } from "./data/login_credentials/loginCredentialsEntity";
 import { LoginCredentialsRepo } from "./data/login_credentials/loginCredentialsRepo";
 import { pgDb, redisClient } from "./database";
+import { HashPasswordTask } from "./domain/feature/registration/hashPasswordTask";
+import { RegistrationManager } from "./domain/feature/registration/registrationManager";
+import { LoginCredentials } from "./domain/model/loginCredentials";
 import { logger } from "./util/loggerUtil";
 
 async function test(): Promise<any> {
@@ -15,13 +17,10 @@ async function test(): Promise<any> {
 
   // const result = await csr.get({ key: "abcd" });
 
-  // logger.info(r);
-  /*await new RegisterManager(
-    new HashPasswordTask(argon2),
-    new LoginCredentialsRepository(pgDb)
-  ).execute(new LoginCredentials({ email: "test@test.de", password: "test" }));*/
-
-  const result = await new LoginCredentialsRepo(pgDb).doesEmailExist("tes");
+  const result = await new RegistrationManager(
+    new HashPasswordTask(),
+    new LoginCredentialsRepo(pgDb)
+  ).execute(new LoginCredentials({ email: "test@1234.de", password: "test" }));
 
   logger.info(result);
 }
