@@ -4,12 +4,12 @@ import { pgDb } from "../../database";
 import { Response } from "../../domain/model/response";
 import {
   callAsync,
+  failable,
   failableAsync,
   makeSuccessResponse
 } from "../../util/failableUtil";
 import { getQueryFile } from "../../util/sqlFileUtil";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
-import { failable } from "../../util/failableUtil";
 
 export class LoginCredentialsRepo {
   private readonly pgDb: IDatabase<any>;
@@ -22,6 +22,7 @@ export class LoginCredentialsRepo {
     loginCredentials: LoginCredentialsEntity
   ): Promise<Response<number>> {
     return callAsync<number>(async ({ failable }) => {});
+
     const queryFile: QueryFile = getQueryFile(
       "/data/login_credentials/sql/insertOne.sql"
     );

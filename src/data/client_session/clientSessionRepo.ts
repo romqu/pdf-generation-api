@@ -1,7 +1,7 @@
 import { Deserialize } from "cerialize";
 
 import { Response } from "../../domain/model/response";
-import { ClientSessionEntity } from "./clientSessionEntity";
+import { ClientSessionEntity } from './clientSessionEntity';
 
 export class ClientSessionRepo {
   private readonly redis: any;
