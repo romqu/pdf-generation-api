@@ -1,29 +1,28 @@
 import { Deserialize } from "cerialize";
+import { RedisClient } from "redis";
 
 import { Response } from "../../domain/model/response";
-import { ClientSessionEntity } from './clientSessionEntity';
+import { callAsync } from "../../util/failableUtil";
+import { ClientSessionEntity } from "./clientSessionEntity";
 
 export class ClientSessionRepo {
-  private readonly redis: any;
+  private readonly redis: RedisClient;
 
   constructor(redis: any) {
     this.redis = redis;
   }
 
   public async insert(params: {
-    key: string;
     value: ClientSessionEntity;
   }): Promise<Response<string>> {
-    try {
-      const result = await this.redis.setAsync(
-        params.key,
-        JSON.stringify(params.value)
+    return callAsync<string>(async ({ success, run, failable }) => {
+      const result = await run<string>(
+        await failable<string>(() =>
+          this.redis.setAsync(params.value.uuid, JSON.stringify(params.value))
+        )
       );
-
-      return { isSuccess: true, data: result };
-    } catch (error) {
-      return { isSuccess: false, errorMessage: error };
-    }
+      return success(result);
+    });
   }
 
   public async get(params: {

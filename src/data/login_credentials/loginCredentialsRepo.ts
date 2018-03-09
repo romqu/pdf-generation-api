@@ -4,7 +4,6 @@ import { pgDb } from "../../database";
 import { Response } from "../../domain/model/response";
 import {
   callAsync,
-  failable,
   failableAsync,
   makeSuccessResponse
 } from "../../util/failableUtil";
