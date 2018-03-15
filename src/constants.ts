@@ -1,5 +1,5 @@
-import { DocMargin } from "./model/pdfmake/docMargin";
-import { DocTableLayout } from "./model/pdfmake/docTableLayout";
+import { DocMargin } from "./domain/model/pdfmake/docMargin";
+import { DocTableLayout } from "./domain/model/pdfmake/docTableLayout";
 
 export const defaultDocTableLayout: DocTableLayout = new DocTableLayout({
   hLineWidth: (i: number, node: object): number => {
@@ -34,3 +34,7 @@ export const defaultDocMargin: DocMargin = new DocMargin({
   right: 2,
   bottom: 2
 });
+
+export enum ErrorTags {
+  DB = "DB"
+}

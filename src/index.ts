@@ -1,9 +1,6 @@
 import { ClientSessionRepo } from "./data/client_session/clientSessionRepo";
-import { LoginCredentialsRepo } from "./data/login_credentials/loginCredentialsRepo";
+import { DiskDataSource } from "./data/diskDataSource";
 import { pgDb, redisClient } from "./database";
-import { HashPasswordTask } from "./domain/feature/registration/hashPasswordTask";
-import { RegistrationManager } from "./domain/feature/registration/registrationManager";
-import { LoginCredentials } from "./domain/model/loginCredentials";
 import { logger } from "./util/loggerUtil";
 
 async function test(): Promise<any> {
@@ -17,12 +14,28 @@ async function test(): Promise<any> {
 
   // const result = await csr.get({ key: "abcd" });
 
-  const result = await new RegistrationManager(
-    new HashPasswordTask(),
-    new LoginCredentialsRepo(pgDb)
-  ).execute(new LoginCredentials({ email: "test@1234.de", password: "test" }));
+  // const result = await new RegistrationManager(
+  //   new HashPasswordTask(),
+  //   new LoginCredentialsRepo(pgDb)
+  // ).execute(new LoginCredentials({ email: "test@1234.de", password: "test" }));
 
-  logger.info(result);
+  // const result = await new LoginCredentialsRepo(pgDb).insert(
+  //   new LoginCredentialsEntity({
+  //     id: 0,
+  //     email: "wqewqdwqdewqdwq",
+  //     passwordHash: "ASAEwqdw"
+  //   })
+  // );
+
+  const r = await new DiskDataSource(pgDb).queryOne<number>(
+    "/data/login_credentials/sql/insertOne.sql",
+    {
+      email: "loginCredentials.email",
+      passwordHash: "abcdg"
+    }
+  );
+
+  logger.info(r);
 }
 
 test();
