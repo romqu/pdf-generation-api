@@ -1,5 +1,7 @@
 import { ClientSessionRepo } from "./data/client_session/clientSessionRepo";
 import { DiskDataSource } from "./data/diskDataSource";
+import { LoginCredentialsEntity } from "./data/login_credentials/loginCredentialsEntity";
+import { LoginCredentialsRepo } from "./data/login_credentials/loginCredentialsRepo";
 import { pgDb, redisClient } from "./database";
 import { logger } from "./util/loggerUtil";
 
@@ -14,28 +16,11 @@ async function test(): Promise<any> {
 
   // const result = await csr.get({ key: "abcd" });
 
-  // const result = await new RegistrationManager(
-  //   new HashPasswordTask(),
-  //   new LoginCredentialsRepo(pgDb)
-  // ).execute(new LoginCredentials({ email: "test@1234.de", password: "test" }));
-
-  // const result = await new LoginCredentialsRepo(pgDb).insert(
-  //   new LoginCredentialsEntity({
-  //     id: 0,
-  //     email: "wqewqdwqdewqdwq",
-  //     passwordHash: "ASAEwqdw"
-  //   })
-  // );
-
-  const r = await new DiskDataSource(pgDb).queryOne<number>(
-    "/data/login_credentials/sql/insertOne.sql",
-    {
-      email: "loginCredentials.email",
-      passwordHash: "abcdg"
-    }
+  const re = await new LoginCredentialsRepo(new DiskDataSource(pgDb)).insert(
+    new LoginCredentialsEntity({ id: 0, email: "", passwordHash: "" })
   );
 
-  logger.info(r);
+  logger.info(re);
 }
 
 test();

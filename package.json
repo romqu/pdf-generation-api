@@ -17,7 +17,7 @@
     "argon2": "^0.17.2",
     "bluebird": "^3.5.1",
     "cerialize": "^0.1.18",
-    "hapi": "^17.2.2",
+    "hapi": "^17.2.3",
     "pdfmake": "^0.1.36",
     "pg-promise": "^8.2.2",
     "redis": "^2.8.0",
@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.20",
-    "@types/hapi": "^17.0.5",
+    "@types/hapi": "^17.0.6",
     "@types/node": "^9.4.7",
     "@types/pino": "latest",
     "@types/redis": "^2.8.6",

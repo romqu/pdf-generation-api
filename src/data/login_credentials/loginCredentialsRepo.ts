@@ -14,40 +14,29 @@ export class LoginCredentialsRepo {
     this.diskDataSoruce = diskDataSoruce;
   }
 
-  public async insert(
+  public insert(
     loginCredentials: LoginCredentialsEntity
   ): ResponsePromise<number> {
-    return callAsync<number>(async ({ success, run }) => {
-      const result = run(
-        await this.diskDataSoruce.queryOne<number>(
-          "/data/login_credentials/sql/insertOne.sql",
-          {
-            email: loginCredentials.email,
-            passwordHash: loginCredentials.passwordHash
-          }
+    return this.diskDataSoruce.queryOne<number>(
+      "/data/login_credentials/sql/insertOne.sql",
+      {
+        email: loginCredentials.email,
+        passwordHash: loginCredentials.passwordHash
+      }
+    );
+  }
+
+  public doesEmailExist(email: string): ResponsePromise<boolean> {
+    return callAsync<boolean>(async ({ success, run }) => {
+      const result = run<IDoesExists>(
+        await this.diskDataSoruce.queryOne<IDoesExists>(
+          "/data/login_credentials/sql/doesEmailExist.sql",
+          { email }
         )
       );
 
-      return success(result);
+      return success(result.exists);
     });
-  }
-
-  public async doesEmailExist(
-    emailP: string
-  ): ResponsePromise<boolean, DBError> {
-    return callAsyncTwo<boolean, DBError>(
-      async ({ success, failable, run }) => {
-        const queryFile: QueryFile = getQueryFile(
-          "/data/login_credentials/sql/doesEmailExist.sql"
-        );
-
-        const result = run<IDoesExists>(
-          await failable<any>(() => pgDb.one(queryFile, { email: emailP }))
-        );
-
-        return success(result.exists);
-      }
-    );
   }
 }
 

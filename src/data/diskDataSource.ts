@@ -1,4 +1,4 @@
-import { IDatabase, ITask, QueryFile } from "pg-promise";
+import { IDatabase, ITask } from "pg-promise";
 
 import { ErrorTags } from "../constants";
 import { ResponsePromise } from "../domain/model/response";
