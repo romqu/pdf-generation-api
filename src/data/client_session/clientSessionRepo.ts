@@ -6,9 +6,9 @@ import { callAsync, callAsyncTwo } from "../../util/failableUtil";
 import { ClientSessionEntity } from "./clientSessionEntity";
 
 export class ClientSessionRepo {
-  private readonly redis: RedisClient;
+  private readonly memoryDataSource: MemoryDataSource;
 
-  constructor(redis: any) {
+  constructor(redis: RedisClient) {
     this.redis = redis;
   }
 

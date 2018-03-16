@@ -35,6 +35,6 @@ export const defaultDocMargin: DocMargin = new DocMargin({
   bottom: 2
 });
 
-export enum ErrorTags {
+export const enum ErrorTags {
   DB = "DB"
 }
