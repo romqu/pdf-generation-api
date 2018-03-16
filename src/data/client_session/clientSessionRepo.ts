@@ -1,49 +1,35 @@
-import { Deserialize } from "cerialize";
-import { RedisClient } from "redis";
+import { Deserialize, Serialize } from "cerialize";
 
-import { Response } from "../../domain/model/response";
-import { callAsync, callAsyncTwo } from "../../util/failableUtil";
+import { ResponsePromise } from "../../domain/model/response";
+import { callAsync } from "../../util/failableUtil";
+import { MemoryDataSource } from "../memoryDataSource";
 import { ClientSessionEntity } from "./clientSessionEntity";
 
 export class ClientSessionRepo {
   private readonly memoryDataSource: MemoryDataSource;
 
-  constructor(redis: RedisClient) {
-    this.redis = redis;
+  constructor(memoryDataSource: MemoryDataSource) {
+    this.memoryDataSource = memoryDataSource;
   }
 
-  public async insert(params: {
+  public insert(params: {
     value: ClientSessionEntity;
-  }): Promise<Response<string>> {
-    return callAsync<string>(async ({ success, run, failable }) => {
-      const result = await run<string>(
-        await failable<string>(() =>
-          this.redis.setAsync(params.value.uuid, JSON.stringify(params.value))
-        )
-      );
-      return success(result);
+  }): ResponsePromise<string> {
+    return this.memoryDataSource.insert({
+      key: params.value.uuid,
+      value: JSON.stringify(Serialize(params.value, ClientSessionEntity))
     });
   }
 
-  public async get(params: {
-    key: string;
-  }): Promise<Response<ClientSessionEntity>> {
-    callAsyncTwo<ClientSessionEntity>(async ({ success, run, failable }) => {
-      const result = await run<any>(
-        await failable(() => this.redis.getAsync(params.key))
+  public get(params: { key: string }): ResponsePromise<ClientSessionEntity> {
+    return callAsync<ClientSessionEntity>(async ({ success, run }) => {
+      const result = run<string>(
+        await this.memoryDataSource.get({ key: params.key })
       );
 
       const client = Deserialize(JSON.parse(result), ClientSessionEntity);
 
       return success(client);
     });
-    try {
-      const result = await this.redis.getAsync(params.key);
-      const client = Deserialize(JSON.parse(result), ClientSessionEntity);
-
-      return { isSuccess: true, data: client };
-    } catch (error) {
-      return { isSuccess: false, errorMessage: error };
-    }
   }
 }

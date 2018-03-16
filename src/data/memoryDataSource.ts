@@ -25,7 +25,7 @@ export class MemoryDataSource {
     });
   }
 
-  public async get(params: { key: string }): ResponsePromise<string> {
+  public get(params: { key: string }): ResponsePromise<string> {
     return callAsync<string>(async ({ success, run, failable, failure }) => {
       const result = run<string>(
         await failable<string>(ErrorTags.DB, () =>
