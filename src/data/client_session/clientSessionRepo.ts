@@ -1,7 +1,6 @@
-import { Deserialize, Serialize } from "cerialize";
-
 import { ResponsePromise } from "../../domain/model/response";
 import { callAsync } from "../../util/failableUtil";
+import { deserializeObject, serializeObject } from "../../util/jsonUtil";
 import { MemoryDataSource } from "../memoryDataSource";
 import { ClientSessionEntity } from "./clientSessionEntity";
 
@@ -15,9 +14,19 @@ export class ClientSessionRepo {
   public insert(params: {
     value: ClientSessionEntity;
   }): ResponsePromise<string> {
-    return this.memoryDataSource.insert({
-      key: params.value.uuid,
-      value: JSON.stringify(Serialize(params.value, ClientSessionEntity))
+    return callAsync<string>(async ({ success, run }) => {
+      const data = run<string>(
+        serializeObject(params.value, ClientSessionEntity)
+      );
+
+      const result = run<string>(
+        await this.memoryDataSource.insert({
+          key: params.value.uuid,
+          value: data
+        })
+      );
+
+      return success(result);
     });
   }
 
@@ -27,7 +36,9 @@ export class ClientSessionRepo {
         await this.memoryDataSource.get({ key: params.key })
       );
 
-      const client = Deserialize(JSON.parse(result), ClientSessionEntity);
+      const client = run<ClientSessionEntity>(
+        deserializeObject(result, ClientSessionEntity)
+      );
 
       return success(client);
     });

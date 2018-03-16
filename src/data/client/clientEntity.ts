@@ -1,4 +1,4 @@
-export class Client {
+export class ClientEntity {
   constructor(
     private readonly params: {
       readonly id: number;

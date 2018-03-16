@@ -1,5 +1,5 @@
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
-import { Response } from "../../model/response";
+import { ResponsePromise } from "../../model/response";
 
 export class DoesEmailExistTask {
   private readonly loginCredentialsRepo: LoginCredentialsRepo;
@@ -8,7 +8,7 @@ export class DoesEmailExistTask {
     this.loginCredentialsRepo = loginCredentialsRepo;
   }
 
-  public async execute(email: string): Promise<Response<boolean>> {
-    return await this.loginCredentialsRepo.doesEmailExist(email);
+  public execute(email: string): ResponsePromise<boolean> {
+    return this.loginCredentialsRepo.doesEmailExist(email);
   }
 }

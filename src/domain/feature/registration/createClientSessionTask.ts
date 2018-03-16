@@ -1,5 +1,6 @@
 import { ClientSessionEntity } from "../../../data/client_session/clientSessionEntity";
 import { ClientSessionRepo } from "../../../data/client_session/clientSessionRepo";
+import { ResponsePromise } from "../../model/response";
 
 export class CreateClientSessionTask {
   // create uuidv4
@@ -12,5 +13,7 @@ export class CreateClientSessionTask {
     this.clientSessionRepo = clientSessionRepo;
   }
 
-  public execute(clientSessionEntity: ClientSessionEntity): void {}
+  public execute(
+    clientSessionEntity: ClientSessionEntity
+  ): ResponsePromise<string> {}
 }

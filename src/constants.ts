@@ -35,6 +35,10 @@ export const defaultDocMargin: DocMargin = new DocMargin({
   bottom: 2
 });
 
-export const enum ErrorTags {
-  DB = "DB"
+export const enum ErrorTag {
+  DB = "DB",
+  SERIALIZATION = "SERIALIZATION",
+  DESERIALIZATION = "DESERIALIZATION",
+  ARGON2HASH = "ARGON2HASH",
+  EMAILEXISTS = "EMAILEXISTS"
 }

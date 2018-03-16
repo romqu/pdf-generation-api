@@ -1,12 +1,13 @@
+import { ErrorTag } from "../../../constants";
+import { ClientSessionEntity } from "../../../data/client_session/clientSessionEntity";
 import { ClientSessionRepo } from "../../../data/client_session/clientSessionRepo";
 import { LoginCredentialsEntity } from "../../../data/login_credentials/loginCredentialsEntity";
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
 import { callAsync } from "../../../util/failableUtil";
 import { generateUuidv4 } from "../../../util/uuidv4Util";
 import { LoginCredentials } from "../../model/loginCredentials";
-import { Response } from "../../model/response";
+import { ResponsePromise } from "../../model/response";
 import { HashPasswordTask } from "./hashPasswordTask";
-import { ClientSessionEntity } from "../../../data/client_session/clientSessionEntity";
 
 export class RegistrationManager {
   private readonly hashPasswordTask: HashPasswordTask;
@@ -25,14 +26,14 @@ export class RegistrationManager {
 
   public async execute(
     loginCredentials: LoginCredentials
-  ): Promise<Response<number>> {
+  ): ResponsePromise<number> {
     return callAsync<number>(async ({ failure, success, run }) => {
       const doesEmailExist = await run(
         await this.loginCredentialsRepo.doesEmailExist(loginCredentials.email)
       );
 
       if (doesEmailExist) {
-        return failure("Email exists");
+        return failure(ErrorTag.EMAILEXISTS, "Email exists");
       }
 
       const passwordHashV = await run(
