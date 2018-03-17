@@ -1,8 +1,8 @@
 import { hashValue } from "../../../util/argon2Util";
-import { Response } from "../../model/response";
+import { ResponsePromise } from "../../model/response";
 
 export class HashPasswordTask {
-  public execute(password: string): Promise<Response<string>> {
+  public execute(password: string): ResponsePromise<string> {
     return hashValue(password);
   }
 }

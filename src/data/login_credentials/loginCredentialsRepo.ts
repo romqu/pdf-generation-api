@@ -1,9 +1,5 @@
-import { QueryFile } from "pg-promise";
-
-import { pgDb } from "../../database";
 import { ResponsePromise } from "../../domain/model/response";
 import { callAsync } from "../../util/failableUtil";
-import { getQueryFile } from "../../util/sqlFileUtil";
 import { DiskDataSource } from "../diskDataSource";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
 
