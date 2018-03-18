@@ -1,6 +1,6 @@
 import { Deserialize, Serialize } from "cerialize";
 
-import { ErrorTags } from "../constants";
+import { ErrorTag } from "../constants";
 import { Response } from "../domain/model/response";
 import { failable } from "./failableUtil";
 
@@ -9,7 +9,7 @@ export function serializeObject(
   // tslint:disable-next-line:ban-types
   type: Function
 ): Response<string> {
-  return failable<string>(ErrorTags.SERIALIZATION, () =>
+  return failable<string>(ErrorTag.SERIALIZATION, () =>
     JSON.stringify(Serialize(data, type))
   );
 }
@@ -19,7 +19,7 @@ export function deserializeObject<T>(
   // tslint:disable-next-line:ban-types
   type: Function
 ): Response<T> {
-  return failable<T>(ErrorTags.DESERIALIZATION, () =>
+  return failable<T>(ErrorTag.DESERIALIZATION, () =>
     Deserialize(JSON.parse(data), type)
   );
 }

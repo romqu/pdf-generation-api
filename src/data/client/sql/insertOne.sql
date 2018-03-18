@@ -1,2 +1,2 @@
-INSERT INTO client (forename, surname)
-    VALUES (${forename}, ${surname}) RETURNING id;
+INSERT INTO client (forename, surname, login_credentials_id)
+    VALUES (${forename}, ${surname}, ${loginCredentialsId}) RETURNING id;

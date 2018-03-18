@@ -1,5 +1,7 @@
-import { ClientSessionEntity } from "../../../data/client_session/clientSessionEntity";
 import { ClientSessionRepo } from "../../../data/client_session/clientSessionRepo";
+import { LoginCredentials } from "../../../domain/model/loginCredentials";
+import { generateUuidv4 } from "../../../util/uuidv4Util";
+import { loginCredentialsToClientSessionEntity } from "../../mapper/modelMapper";
 import { ResponsePromise } from "../../model/response";
 
 export class CreateClientSessionTask {
@@ -14,6 +16,15 @@ export class CreateClientSessionTask {
   }
 
   public execute(
-    clientSessionEntity: ClientSessionEntity
-  ): ResponsePromise<string> {}
+    loginCredentials: LoginCredentials,
+    id: number
+  ): ResponsePromise<string> {
+    return this.clientSessionRepo.insert({
+      value: loginCredentialsToClientSessionEntity(
+        loginCredentials,
+        generateUuidv4(),
+        id
+      )
+    });
+  }
 }

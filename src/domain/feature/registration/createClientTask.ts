@@ -4,13 +4,16 @@ import { Client } from "../../model/client";
 import { ResponsePromise } from "../../model/response";
 
 export class CreateClientTask {
-  public readonly repo: ClientRepo;
+  private readonly repo: ClientRepo;
 
   constructor(repo: ClientRepo) {
     this.repo = repo;
   }
 
-  public execute(client: Client): ResponsePromise<number> {
-    return this.repo.insert(clientToClientEntity(client));
+  public execute(
+    client: Client,
+    loginCredentialsId: number
+  ): ResponsePromise<number> {
+    return this.repo.insert(clientToClientEntity(client, loginCredentialsId));
   }
 }

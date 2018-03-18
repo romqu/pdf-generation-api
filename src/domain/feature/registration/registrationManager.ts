@@ -1,64 +1,77 @@
 import { ErrorTag } from "../../../constants";
-import { ClientSessionEntity } from "../../../data/client_session/clientSessionEntity";
-import { ClientSessionRepo } from "../../../data/client_session/clientSessionRepo";
-import { LoginCredentialsEntity } from "../../../data/login_credentials/loginCredentialsEntity";
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
 import { callAsync } from "../../../util/failableUtil";
-import { generateUuidv4 } from "../../../util/uuidv4Util";
-import { LoginCredentials } from "../../model/loginCredentials";
+import { loginCredentialsToLoginCredentialsEntity } from "../../mapper/modelMapper";
+import { Registration } from "../../model/registration";
 import { ResponsePromise } from "../../model/response";
+import { CreateClientSessionTask } from "./createClientSessionTask";
+import { CreateClientTask } from "./createClientTask";
+import { DoesEmailExistTask } from "./doesEmailExistTask";
 import { HashPasswordTask } from "./hashPasswordTask";
 
 export class RegistrationManager {
+  private readonly doesEmailExistTask: DoesEmailExistTask;
   private readonly hashPasswordTask: HashPasswordTask;
+  private readonly createClientTask: CreateClientTask;
+  private readonly createClientSessionTask: CreateClientSessionTask;
   private readonly loginCredentialsRepo: LoginCredentialsRepo;
-  private readonly clientSessionRepo: ClientSessionRepo;
 
   constructor(
+    doesEmailExistTask: DoesEmailExistTask,
     hashPasswordTask: HashPasswordTask,
-    loginCredentialsRepo: LoginCredentialsRepo,
-    clientSessionRepo: ClientSessionRepo
+    createClientTask: CreateClientTask,
+    createClientSessionTask: CreateClientSessionTask,
+    loginCredentialsRepo: LoginCredentialsRepo
   ) {
+    this.doesEmailExistTask = doesEmailExistTask;
     this.hashPasswordTask = hashPasswordTask;
+    this.createClientTask = createClientTask;
+    this.createClientSessionTask = createClientSessionTask;
     this.loginCredentialsRepo = loginCredentialsRepo;
-    this.clientSessionRepo = clientSessionRepo;
   }
 
-  public async execute(
-    loginCredentials: LoginCredentials
-  ): ResponsePromise<number> {
-    return callAsync<number>(async ({ failure, success, run }) => {
-      const doesEmailExist = await run(
-        await this.loginCredentialsRepo.doesEmailExist(loginCredentials.email)
+  public execute(registration: Registration): ResponsePromise<string> {
+    return callAsync(async ({ failure, success, run }) => {
+      const doesEmailExist = run(
+        await this.doesEmailExistTask.execute(
+          registration.loginCredentials.email
+        )
       );
 
       if (doesEmailExist) {
-        return failure(ErrorTag.EMAILEXISTS, "Email exists");
+        return failure(ErrorTag.EMAIL_EXISTS, "Email exists");
       }
 
-      const passwordHashV = await run(
-        await this.hashPasswordTask.execute(loginCredentials.password)
+      const passwordHash = run(
+        await this.hashPasswordTask.execute(
+          registration.loginCredentials.password
+        )
       );
 
-      const loginCredentialsId = await run(
+      const loginCredentialsId = run(
         await this.loginCredentialsRepo.insert(
-          new LoginCredentialsEntity({
-            id: 0,
-            email: loginCredentials.email,
-            passwordHash: passwordHashV
-          })
+          loginCredentialsToLoginCredentialsEntity(
+            registration.loginCredentials,
+            passwordHash
+          )
         )
       );
 
-      this.clientSessionRepo.insert({
-        value: new ClientSessionEntity(
-          generateUuidv4(),
-          loginCredentialsId,
-          loginCredentials.email
+      run(
+        await this.createClientTask.execute(
+          registration.client,
+          loginCredentialsId
         )
-      });
+      );
 
-      return success(loginCredentialsId);
+      const result = run(
+        await this.createClientSessionTask.execute(
+          registration.loginCredentials,
+          loginCredentialsId
+        )
+      );
+
+      return success(result);
     });
   }
 }

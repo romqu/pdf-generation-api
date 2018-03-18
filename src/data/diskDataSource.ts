@@ -1,6 +1,6 @@
 import { IDatabase, ITask } from "pg-promise";
 
-import { ErrorTags } from "../constants";
+import { ErrorTag } from "../constants";
 import { ResponsePromise } from "../domain/model/response";
 import { callAsync } from "../util/failableUtil";
 import { getQueryFile } from "../util/sqlFileUtil";
@@ -17,7 +17,7 @@ export class DiskDataSource {
       const queryFile = getQueryFile(queryFilePath);
 
       const result = run(
-        await failable(ErrorTags.DB, () =>
+        await failable(ErrorTag.DB, () =>
           this.pgDb.tx<T>(async (t: ITask<T>) => {
             const queryResult = await t.one(queryFile, data);
 
@@ -29,4 +29,8 @@ export class DiskDataSource {
       return success(result);
     });
   }
+}
+
+export interface IReturnedId {
+  id: number;
 }

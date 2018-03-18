@@ -19,14 +19,14 @@ export class ClientSessionRepo {
         serializeObject(params.value, ClientSessionEntity)
       );
 
-      const result = run<string>(
+      run<string>(
         await this.memoryDataSource.insert({
           key: params.value.uuid,
           value: data
         })
       );
 
-      return success(result);
+      return success(params.value.uuid);
     });
   }
 

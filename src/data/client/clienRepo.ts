@@ -1,5 +1,6 @@
 import { ResponsePromise } from "../../domain/model/response";
-import { DiskDataSource } from "../diskDataSource";
+import { callAsync } from "../../util/failableUtil";
+import { DiskDataSource, IReturnedId } from "../diskDataSource";
 import { ClientEntity } from "./clientEntity";
 
 export class ClientRepo {
@@ -10,9 +11,19 @@ export class ClientRepo {
   }
 
   public insert(clientEntity: ClientEntity): ResponsePromise<number> {
-    return this.disk.queryOne<number>("/data/client/sql/insertOne.sql", {
-      forename: clientEntity.forename,
-      surname: clientEntity.surname
+    return callAsync(async ({ success, run }) => {
+      const result = run(
+        await this.disk.queryOne<IReturnedId>(
+          "/data/client/sql/insertOne.sql",
+          {
+            forename: clientEntity.forename,
+            surname: clientEntity.surname,
+            loginCredentialsId: clientEntity.loginCredentialsId
+          }
+        )
+      );
+
+      return success(result.id);
     });
   }
 }

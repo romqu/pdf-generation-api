@@ -1,6 +1,6 @@
 import { ResponsePromise } from "../../domain/model/response";
 import { callAsync } from "../../util/failableUtil";
-import { DiskDataSource } from "../diskDataSource";
+import { DiskDataSource, IReturnedId } from "../diskDataSource";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
 
 export class LoginCredentialsRepo {
@@ -13,13 +13,19 @@ export class LoginCredentialsRepo {
   public insert(
     loginCredentials: LoginCredentialsEntity
   ): ResponsePromise<number> {
-    return this.diskDataSoruce.queryOne<number>(
-      "/data/login_credentials/sql/insertOne.sql",
-      {
-        email: loginCredentials.email,
-        passwordHash: loginCredentials.passwordHash
-      }
-    );
+    return callAsync<number>(async ({ success, run }) => {
+      const result = run(
+        await this.diskDataSoruce.queryOne<IReturnedId>(
+          "/data/login_credentials/sql/insertOne.sql",
+          {
+            email: loginCredentials.email,
+            passwordHash: loginCredentials.passwordHash
+          }
+        )
+      );
+
+      return success(result.id);
+    });
   }
 
   public doesEmailExist(email: string): ResponsePromise<boolean> {
