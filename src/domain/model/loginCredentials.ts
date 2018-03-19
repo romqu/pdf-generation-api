@@ -1,16 +1,11 @@
+import { deserializeAs } from "cerialize";
+
 export class LoginCredentials {
-  constructor(
-    private readonly params: {
-      readonly email: string;
-      readonly password: string;
-    }
-  ) {}
+  @deserializeAs(String) public readonly email: string;
+  @deserializeAs(String) public readonly password: string;
 
-  public get email(): string {
-    return this.params.email;
-  }
-
-  public get password(): string {
-    return this.params.password;
+  constructor(email: string, password: string) {
+    this.email = email;
+    this.password = password;
   }
 }

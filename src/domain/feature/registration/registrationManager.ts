@@ -2,7 +2,7 @@ import { ErrorTag } from "../../../constants";
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
 import { callAsync } from "../../../util/failableUtil";
 import { loginCredentialsToLoginCredentialsEntity } from "../../mapper/modelMapper";
-import { Registration } from "../../model/registration";
+import { RegistrationData } from "../../model/registrationData";
 import { ResponsePromise } from "../../model/response";
 import { CreateClientSessionTask } from "./createClientSessionTask";
 import { CreateClientTask } from "./createClientTask";
@@ -30,12 +30,14 @@ export class RegistrationManager {
     this.loginCredentialsRepo = loginCredentialsRepo;
   }
 
-  public execute(registration: Registration): ResponsePromise<string> {
+  public execute(registrationData: RegistrationData): ResponsePromise<string> {
     return callAsync(async ({ failure, success, run }) => {
+      const loginCredentials = registrationData.loginCredentials;
+
+      const client = registrationData.client;
+
       const doesEmailExist = run(
-        await this.doesEmailExistTask.execute(
-          registration.loginCredentials.email
-        )
+        await this.doesEmailExistTask.execute(loginCredentials.email)
       );
 
       if (doesEmailExist) {
@@ -43,30 +45,23 @@ export class RegistrationManager {
       }
 
       const passwordHash = run(
-        await this.hashPasswordTask.execute(
-          registration.loginCredentials.password
-        )
+        await this.hashPasswordTask.execute(loginCredentials.password)
       );
 
       const loginCredentialsId = run(
         await this.loginCredentialsRepo.insert(
           loginCredentialsToLoginCredentialsEntity(
-            registration.loginCredentials,
+            loginCredentials,
             passwordHash
           )
         )
       );
 
-      run(
-        await this.createClientTask.execute(
-          registration.client,
-          loginCredentialsId
-        )
-      );
+      run(await this.createClientTask.execute(client, loginCredentialsId));
 
       const result = run(
         await this.createClientSessionTask.execute(
-          registration.loginCredentials,
+          loginCredentials,
           loginCredentialsId
         )
       );
