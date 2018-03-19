@@ -17,9 +17,7 @@ export async function registrationHandler(
     RegistrationData
   );
 
-  logger.info("registration data:", h);
+  
 
-  return h
-    .response(registrationData)
-    .header("Authorization : ", "Bearer cn389ncoiwuencr");
+  return registrationData;
 }

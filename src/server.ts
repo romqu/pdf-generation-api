@@ -1,24 +1,52 @@
+import * as Boom from "boom";
 import * as Hapi from "hapi";
-
-import { registrationRoute } from "./presentation/feature/registration/registrationRoute";
-
 import * as AuthBearer from "hapi-auth-bearer-token";
+
+import { Lifecycle, ResponseObject } from "hapi";
+import { registrationRoute } from "./presentation/feature/registration/registrationRoute";
+import { logger } from "./util/loggerUtil";
 
 export async function init(): Promise<Hapi.Server> {
   const server = new Hapi.Server({
     host: "localhost",
     port: 3000,
     routes: {
+      validate: {
+        failAction: async (request, h, err): Promise<Hapi.Lifecycle.Method> => {
+          if (process.env.NODE_ENV === "production") {
+            throw Boom.badRequest(`Invalid request payload input`);
+          } else {
+            throw err;
+          }
+        }
+      },
       cors: {
         origin: ["*"]
       }
     }
   });
 
-  registerRoutes(server);
+  registerExtEvents(server);
   registerPlugins(server);
+  registerRoutes(server);
 
   return server;
+}
+
+function registerExtEvents(server: Hapi.Server): void {
+  server.ext("onPreResponse", async (request, h): Promise<
+    Lifecycle.ReturnValue
+  > => {
+    const response = request.response;
+
+    if (response instanceof Boom) {
+      return response;
+    } else if (response === null) {
+      return Boom.internal();
+    } else {
+      return response.source;
+    }
+  });
 }
 
 function registerRoutes(server: Hapi.Server): void {
