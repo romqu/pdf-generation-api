@@ -18,6 +18,7 @@
     "bluebird": "^3.5.1",
     "cerialize": "^0.1.18",
     "hapi": "^17.2.3",
+    "hapi-auth-bearer-token": "^6.0.1",
     "pdfmake": "^0.1.36",
     "pg-promise": "^8.2.2",
     "redis": "^2.8.0",

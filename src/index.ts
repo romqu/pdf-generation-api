@@ -9,11 +9,8 @@ import { CreateClientTask } from "./domain/feature/registration/createClientTask
 import { DoesEmailExistTask } from "./domain/feature/registration/doesEmailExistTask";
 import { HashPasswordTask } from "./domain/feature/registration/hashPasswordTask";
 import { RegistrationManager } from "./domain/feature/registration/registrationManager";
-import { Client } from "./domain/model/client";
-import { LoginCredentials } from "./domain/model/loginCredentials";
-import { Registration } from "./domain/model/registration";
+import * as Server from "./server";
 import { logger } from "./util/loggerUtil";
-import { generateUuidv4 } from "./util/uuidv4Util";
 
 async function test(): Promise<any> {
   const memory = new MemoryDataSource(redisClient);
@@ -28,21 +25,16 @@ async function test(): Promise<any> {
     new CreateClientSessionTask(clientSessionRepo),
     new LoginCredentialsRepo(disk)
   );
-
-  const result = await manager.execute(
-    new Registration(
-      new LoginCredentials({
-        email: generateUuidv4().slice(1, 20),
-        password: "1234"
-      }),
-      new Client("Bert", "Ad")
-    )
-  );
-
-  logger.info(
-    "Result:",
-    result.isSuccess ? result.data : result.error.value.stack
-  );
 }
 
-test();
+async function start(): Promise<any> {
+  try {
+    const server = await Server.init();
+    server.start();
+    logger.info("successful");
+  } catch (err) {
+    logger.error(err);
+  }
+}
+
+start();

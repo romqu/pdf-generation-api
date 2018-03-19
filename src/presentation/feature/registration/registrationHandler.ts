@@ -1,5 +1,5 @@
 import { Deserialize } from "cerialize";
-import { Lifecycle, ResponseToolkit } from "hapi";
+import { Lifecycle, Request, ResponseToolkit } from "hapi";
 
 import { RegistrationData } from "../../../domain/model/registrationData";
 import { logger } from "../../../util/loggerUtil";
@@ -10,12 +10,16 @@ export async function registrationHandler(
 ): Promise<Lifecycle.ReturnValue> {
   const data = request.payload;
 
+  logger.info("payload", data);
+
   const registrationData: RegistrationData = Deserialize(
     data,
     RegistrationData
   );
 
-  logger.info("registration data:", registrationData);
+  logger.info("registration data:", h);
 
-  return registrationData;
+  return h
+    .response(registrationData)
+    .header("Authorization : ", "Bearer cn389ncoiwuencr");
 }

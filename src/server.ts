@@ -1,23 +1,47 @@
 import * as Hapi from "hapi";
-import { logger } from "./util/loggerUtil";
 
-const server = new Hapi.Server({
-  host: "localhost",
-  port: 3000,
-  routes: {
-    cors: {
-      origin: ["*"]
+import { registrationRoute } from "./presentation/feature/registration/registrationRoute";
+
+import * as AuthBearer from "hapi-auth-bearer-token";
+
+export async function init(): Promise<Hapi.Server> {
+  const server = new Hapi.Server({
+    host: "localhost",
+    port: 3000,
+    routes: {
+      cors: {
+        origin: ["*"]
+      }
     }
-  }
-});
+  });
 
-async function start(): Promise<any> {
-  try {
-    await server.start();
-    logger.info("successful");
-  } catch (err) {
-    logger.info(err);
-  }
+  registerRoutes(server);
+  registerPlugins(server);
+
+  return server;
+}
+
+function registerRoutes(server: Hapi.Server): void {
+  server.route(registrationRoute());
+}
+
+async function registerPlugins(server: Hapi.Server): Promise<any> {
+  await server.register(AuthBearer);
+
+  server.auth.strategy("simple", "bearer-access-token", {
+    validate: async (request: any, token: any, h: any): Promise<any> => {
+      // here is where you validate your token
+      // comparing with token from your database for example
+      const isValid = token === "1234";
+
+      const credentials = { token };
+      const artifacts = { test: "info" };
+
+      return { isValid, credentials, artifacts };
+    }
+  });
+
+  server.auth.default("simple");
 }
 
 // function data(): void {
@@ -45,5 +69,3 @@ async function start(): Promise<any> {
 //     [{ ...floor }]
 //   );
 // }
-
-start();

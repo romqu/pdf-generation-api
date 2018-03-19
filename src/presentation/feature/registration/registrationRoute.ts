@@ -7,7 +7,7 @@ export function registrationRoute(): ServerRoute {
   return {
     method: "POST",
     path: "/registration",
-    options: {},
+    options: { auth: false },
     handler: registrationHandler
   };
 }

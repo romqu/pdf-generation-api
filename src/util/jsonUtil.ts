@@ -15,7 +15,7 @@ export function serializeObject(
 }
 
 export function deserializeObject<T>(
-  data: string,
+  data: any,
   // tslint:disable-next-line:ban-types
   type: Function
 ): Response<T> {
