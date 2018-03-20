@@ -12,20 +12,7 @@ import { RegistrationManager } from "./domain/feature/registration/registrationM
 import * as Server from "./server";
 import { logger } from "./util/loggerUtil";
 
-async function test(): Promise<any> {
-  const memory = new MemoryDataSource(redisClient);
-  const disk = new DiskDataSource(pgDb);
-  const clientRepo = new ClientRepo(disk);
-  const clientSessionRepo = new ClientSessionRepo(memory);
-
-  const manager = new RegistrationManager(
-    new DoesEmailExistTask(new LoginCredentialsRepo(disk)),
-    new HashPasswordTask(),
-    new CreateClientTask(clientRepo),
-    new CreateClientSessionTask(clientSessionRepo),
-    new LoginCredentialsRepo(disk)
-  );
-}
+async function test(): Promise<any> {}
 
 async function start(): Promise<any> {
   try {
