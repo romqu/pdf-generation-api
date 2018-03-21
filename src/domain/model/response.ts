@@ -1,10 +1,12 @@
+import { IError } from "./error";
+
 export type Response<T> = IFailure | ISuccess<T>;
 
 export type ResponsePromise<T> = Promise<Response<T>>;
 
 export interface IFailure {
   readonly isSuccess: false;
-  readonly error: IResponseError;
+  readonly error: IError;
 }
 
 export interface ISuccess<T> {

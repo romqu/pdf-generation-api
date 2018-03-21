@@ -29,6 +29,8 @@ const manager = new RegistrationManager(
   new LoginCredentialsRepo(disk)
 );
 
+const controller = new RegistrationController(manager);
+
 export async function registrationHandler(
   request: Request,
   h: ResponseToolkit
@@ -42,9 +44,7 @@ export async function registrationHandler(
     RegistrationData
   );
 
-  const controller = new RegistrationController(manager);
-
   const result = await controller.execute(registrationData);
 
-  return result.isSuccess ? result.data : result.error.value.message;
+  return result;
 }

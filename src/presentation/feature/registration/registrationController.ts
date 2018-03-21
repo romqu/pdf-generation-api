@@ -1,7 +1,8 @@
 import { RegistrationManager } from "../../../domain/feature/registration/registrationManager";
 import { RegistrationData } from "../../../domain/model/registrationData";
-import { ResponsePromise } from "../../../domain/model/response";
 import { matchResponse } from "../../../util/failableUtil";
+import { ErrorModel } from "../../model/errorModel";
+import { ResponseModel } from "../../model/responseModel";
 
 export class RegistrationController {
   private readonly manager: RegistrationManager;
@@ -10,13 +11,24 @@ export class RegistrationController {
     this.manager = manager;
   }
 
-  public async execute(
-    registrationData: RegistrationData
-  ): ResponsePromise<string> {
-    const result = await this.manager.execute(registrationData);
+  public async execute(registrationData: RegistrationData): Promise<string> {
+    const response = await this.manager.execute(registrationData);
 
-    matchResponse(result, { onSuccess });
+    const result = matchResponse(
+      response,
+      (data): ResponseModel<string> => {
+        const model = new ResponseModel(true, data, []);
 
-    return result;
+        return model;
+      },
+      (error): ResponseModel<string> => {
+        const model = new ResponseModel(false, "", [
+          new ErrorModel("", "", error.tag, error.value.message)
+        ]);
+        return model;
+      }
+    );
+
+    return JSON.stringify(result);
   }
 }

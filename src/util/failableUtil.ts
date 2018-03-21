@@ -1,3 +1,4 @@
+import { IError } from "../domain/model/error";
 import {
   IResponseError,
   Response,
@@ -8,12 +9,9 @@ export async function callAsync<T = never>(
   f: ((
     arg: {
       success(data: T): ResponsePromise<T>;
-      failure(errorTag: string, errorMessage: string): ResponsePromise<T>;
+      failure(error: IError): ResponsePromise<T>;
       run<R>(response: Response<R>): R;
-      failable<R>(
-        errorTag: string,
-        func: () => Promise<R>
-      ): Promise<Response<R>>;
+      failable<R>(error: IError, func: () => Promise<R>): Promise<Response<R>>;
     }
   ) => ResponsePromise<T>)
 ): ResponsePromise<T> {
@@ -21,14 +19,13 @@ export async function callAsync<T = never>(
     success(data: T): ResponsePromise<T> {
       return Promise.resolve<Response<T>>({
         isSuccess: true,
-        // tslint:disable-next-line:object-literal-shorthand
-        data: data
+        data
       });
     },
-    failure(errorTag: string, errorMessage: string): ResponsePromise<T> {
+    failure(error: IError): ResponsePromise<T> {
       return Promise.resolve<Response<T>>({
         isSuccess: false,
-        error: { tag: errorTag, value: new Error(errorMessage) }
+        error
       });
     },
     run<R>(response: Response<R>): R {
@@ -39,7 +36,7 @@ export async function callAsync<T = never>(
       }
     },
     async failable<R>(
-      errorTag: string,
+      error: IError,
       func: () => Promise<R>
     ): ResponsePromise<R> {
       try {
@@ -48,7 +45,7 @@ export async function callAsync<T = never>(
       } catch (err) {
         return {
           isSuccess: false,
-          error: { tag: errorTag, value: new Error(err.toString()) }
+          error
         };
       }
     }
@@ -56,7 +53,7 @@ export async function callAsync<T = never>(
     if (e instanceof Failure) {
       return Promise.resolve<Response<T>>({
         isSuccess: false,
-        error: e.value
+        error: e.error
       });
     } else {
       return Promise.reject(e);
@@ -68,7 +65,7 @@ export function call<T = never>(
   f: ((
     arg: {
       success(data: T): Response<T>;
-      failure(errorTag: string, errorMessage: string): Response<T>;
+      failure(errorTag: string, error: string): Response<T>;
       run<R>(response: Response<R>): R;
       failable<R>(errorTag: string, func: () => R): Response<R>;
     }
@@ -83,10 +80,10 @@ export function call<T = never>(
           data: data
         };
       },
-      failure(errorTag: string, errorMessage: string): Response<T> {
+      failure(errorTag: string, error: string): Response<T> {
         return {
           isSuccess: false,
-          error: { tag: errorTag, value: new Error(errorMessage) }
+          error: { tag: errorTag, value: new Error(error) }
         };
       },
       run<R>(response: Response<R>): R {
@@ -112,7 +109,7 @@ export function call<T = never>(
     if (e instanceof Failure) {
       return {
         isSuccess: false,
-        error: e.value
+        error: e.error
       };
     } else {
       throw e;
@@ -121,7 +118,7 @@ export function call<T = never>(
 }
 
 class Failure {
-  constructor(public readonly value: IResponseError) {}
+  constructor(public readonly error: IError) {}
 }
 
 export function failable<R>(errorTag: string, func: () => R): Response<R> {
@@ -137,37 +134,36 @@ export function failable<R>(errorTag: string, func: () => R): Response<R> {
 }
 
 export async function failableAsync<R>(
-  errorTag: string,
+  error: IError,
   func: () => Promise<R>
 ): ResponsePromise<R> {
   try {
     const result = await func();
     return { isSuccess: true, data: result };
   } catch (err) {
+    const e = new Error();
+    const stack = e.stack ? e.stack : "";
+
     return {
       isSuccess: false,
-      error: { tag: errorTag, value: new Error(err.toString()) }
+      error: {
+        code: error.code,
+        title: error.title,
+        message: err.toSring(),
+        stack
+      }
     };
   }
 }
 
 export function matchResponse<T, R>(
   response: Response<T>,
-  cases: IResponseMatchCase<T, R>
+  onSuccess: (data: T) => R,
+  onFailure: (error: IResponseError) => R
 ): R {
   if (response.isSuccess) {
-    return cases.onSuccess(response.data);
+    return onSuccess(response.data);
   }
 
-  return cases.onFailure(response.error);
-}
-
-interface IResponseMatchCase<T, R> {
-  onFailure: (error: IResponseError) => R;
-
-  /**
-   * Callback that is called in case of success.
-   * It is passed the success value of the result.
-   */
-  onSuccess: (data: T) => R;
+  return onFailure(response.error);
 }
