@@ -142,7 +142,7 @@ export async function failableAsync<R>(
     return { isSuccess: true, data: result };
   } catch (err) {
     const e = new Error();
-    const stack = e.stack ? e.stack : "";
+    const stack = typeof e.stack === "string" ? e.stack : "";
 
     return {
       isSuccess: false,
