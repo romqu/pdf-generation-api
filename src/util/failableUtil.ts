@@ -1,9 +1,5 @@
-import { IError } from "../domain/model/error";
-import {
-  IResponseError,
-  Response,
-  ResponsePromise
-} from "../domain/model/response";
+import { IError, IErrorIn } from "../domain/model/error";
+import { Response, ResponsePromise } from "../domain/model/response";
 
 export async function callAsync<T = never>(
   f: ((
@@ -11,7 +7,10 @@ export async function callAsync<T = never>(
       success(data: T): ResponsePromise<T>;
       failure(error: IError): ResponsePromise<T>;
       run<R>(response: Response<R>): R;
-      failable<R>(error: IError, func: () => Promise<R>): Promise<Response<R>>;
+      failable<R>(
+        error: IErrorIn,
+        func: () => Promise<R>
+      ): Promise<Response<R>>;
     }
   ) => ResponsePromise<T>)
 ): ResponsePromise<T> {
@@ -36,16 +35,24 @@ export async function callAsync<T = never>(
       }
     },
     async failable<R>(
-      error: IError,
+      error: IErrorIn,
       func: () => Promise<R>
     ): ResponsePromise<R> {
       try {
         const result = await func();
         return { isSuccess: true, data: result };
       } catch (err) {
+        const e = new Error();
+        const stack = typeof e.stack === "string" ? e.stack : "";
+
         return {
           isSuccess: false,
-          error
+          error: {
+            code: error.code,
+            title: error.title,
+            message: err.toSring(),
+            stack
+          }
         };
       }
     }
@@ -65,9 +72,9 @@ export function call<T = never>(
   f: ((
     arg: {
       success(data: T): Response<T>;
-      failure(errorTag: string, error: string): Response<T>;
+      failure(error: IError): Response<T>;
       run<R>(response: Response<R>): R;
-      failable<R>(errorTag: string, func: () => R): Response<R>;
+      failable<R>(error: IErrorIn, func: () => R): Response<R>;
     }
   ) => Response<T>)
 ): Response<T> {
@@ -76,14 +83,13 @@ export function call<T = never>(
       success(data: T): Response<T> {
         return {
           isSuccess: true,
-          // tslint:disable-next-line:object-literal-shorthand
-          data: data
+          data
         };
       },
-      failure(errorTag: string, error: string): Response<T> {
+      failure(error: IError): Response<T> {
         return {
           isSuccess: false,
-          error: { tag: errorTag, value: new Error(error) }
+          error
         };
       },
       run<R>(response: Response<R>): R {
@@ -93,14 +99,22 @@ export function call<T = never>(
           throw new Failure(response.error);
         }
       },
-      failable<R>(errorTag: string, func: () => R): Response<R> {
+      failable<R>(error: IErrorIn, func: () => R): Response<R> {
         try {
           const result = func();
           return { isSuccess: true, data: result };
         } catch (err) {
+          const e = new Error();
+          const stack = typeof e.stack === "string" ? e.stack : "";
+
           return {
             isSuccess: false,
-            error: { tag: errorTag, value: new Error(err.toString()) }
+            error: {
+              code: error.code,
+              title: error.title,
+              message: err.toSring(),
+              stack
+            }
           };
         }
       }
@@ -121,20 +135,28 @@ class Failure {
   constructor(public readonly error: IError) {}
 }
 
-export function failable<R>(errorTag: string, func: () => R): Response<R> {
+export function failable<R>(error: IErrorIn, func: () => R): Response<R> {
   try {
     const result = func();
     return { isSuccess: true, data: result };
   } catch (err) {
+    const e = new Error();
+    const stack = typeof e.stack === "string" ? e.stack : "";
+
     return {
       isSuccess: false,
-      error: { tag: errorTag, value: new Error(err.toString()) }
+      error: {
+        code: error.code,
+        title: error.title,
+        message: err.toSring(),
+        stack
+      }
     };
   }
 }
 
 export async function failableAsync<R>(
-  error: IError,
+  error: IErrorIn,
   func: () => Promise<R>
 ): ResponsePromise<R> {
   try {
@@ -159,7 +181,7 @@ export async function failableAsync<R>(
 export function matchResponse<T, R>(
   response: Response<T>,
   onSuccess: (data: T) => R,
-  onFailure: (error: IResponseError) => R
+  onFailure: (error: IError) => R
 ): R {
   if (response.isSuccess) {
     return onSuccess(response.data);

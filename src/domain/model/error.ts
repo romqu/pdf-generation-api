@@ -4,3 +4,8 @@ export interface IError {
   readonly message: string;
   readonly stack: string;
 }
+
+export interface IErrorIn {
+  readonly code: number;
+  readonly title: string;
+}

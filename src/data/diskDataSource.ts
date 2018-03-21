@@ -1,6 +1,5 @@
 import { IDatabase, ITask } from "pg-promise";
 
-import { ErrorTag } from "../constants";
 import { ResponsePromise } from "../domain/model/response";
 import { callAsync } from "../util/failableUtil";
 import { getQueryFile } from "../util/sqlFileUtil";
@@ -17,7 +16,7 @@ export class DiskDataSource {
       const queryFile = getQueryFile(queryFilePath);
 
       const result = run(
-        await failable(ErrorTag.DB, () =>
+        await failable({ code: 100, title: "Query Error" }, () =>
           this.pgDb.tx<T>(async (t: ITask<T>) => {
             const queryResult = await t.one(queryFile, data);
 
