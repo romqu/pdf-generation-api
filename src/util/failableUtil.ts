@@ -150,3 +150,24 @@ export async function failableAsync<R>(
     };
   }
 }
+
+export function matchResponse<T, R>(
+  response: Response<T>,
+  cases: IResponseMatchCase<T, R>
+): R {
+  if (response.isSuccess) {
+    return cases.onSuccess(response.data);
+  }
+
+  return cases.onFailure(response.error);
+}
+
+interface IResponseMatchCase<T, R> {
+  onFailure: (error: IResponseError) => R;
+
+  /**
+   * Callback that is called in case of success.
+   * It is passed the success value of the result.
+   */
+  onSuccess: (data: T) => R;
+}
