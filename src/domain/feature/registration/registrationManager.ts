@@ -1,4 +1,3 @@
-import { ErrorTag } from "../../../constants";
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
 import { callAsync } from "../../../util/failableUtil";
 import { loginCredentialsToLoginCredentialsEntity } from "../../mapper/modelMapper";
@@ -41,7 +40,13 @@ export class RegistrationManager {
       );
 
       if (doesEmailExist) {
-        return failure(ErrorTag.EMAIL_EXISTS, "Email exists");
+        return failure({
+          type: "Abort",
+          code: 104,
+          title: "Email exist",
+          message: "Supplied Email already exists",
+          stack: ""
+        });
       }
 
       const passwordHash = run(

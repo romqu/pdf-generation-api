@@ -1,5 +1,6 @@
 import { ResponsePromise } from "../../domain/model/response";
 import { callAsync } from "../../util/failableUtil";
+import { deserializeObject } from "../../util/jsonUtil";
 import { DiskDataSource, IReturnedId } from "../diskDataSource";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
 
@@ -13,7 +14,7 @@ export class LoginCredentialsRepo {
   public insert(
     loginCredentials: LoginCredentialsEntity
   ): ResponsePromise<number> {
-    return callAsync<number>(async ({ success, run }) => {
+    return callAsync(async ({ success, run }) => {
       const result = run(
         await this.diskDataSoruce.queryOne<IReturnedId>(
           "/data/login_credentials/sql/insertOne.sql",
@@ -29,8 +30,8 @@ export class LoginCredentialsRepo {
   }
 
   public doesEmailExist(email: string): ResponsePromise<boolean> {
-    return callAsync<boolean>(async ({ success, run }) => {
-      const result = run<IDoesExists>(
+    return callAsync(async ({ success, run }) => {
+      const result = run(
         await this.diskDataSoruce.queryOne<IDoesExists>(
           "/data/login_credentials/sql/doesEmailExist.sql",
           { email }
@@ -38,6 +39,26 @@ export class LoginCredentialsRepo {
       );
 
       return success(result.exists);
+    });
+  }
+
+  public getByEmail(email: string): ResponsePromise<LoginCredentialsEntity> {
+    return callAsync(async ({ success, run }) => {
+      const result = run(
+        await this.diskDataSoruce.queryOne<any>(
+          "/data/login_credentials/sql/getOneByEmail.sql",
+          { email }
+        )
+      );
+
+      const entity = run(
+        deserializeObject<LoginCredentialsEntity>(
+          result,
+          LoginCredentialsEntity
+        )
+      );
+
+      return success(entity);
     });
   }
 }

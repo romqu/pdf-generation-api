@@ -16,7 +16,7 @@ export class DiskDataSource {
       const queryFile = getQueryFile(queryFilePath);
 
       const result = run(
-        await failable({ code: 100, title: "Query Error" }, () =>
+        await failable({ type: "DB", code: 100, title: "Query Error" }, () =>
           this.pgDb.tx<T>(async (t: ITask<T>) => {
             const queryResult = await t.one(queryFile, data);
 

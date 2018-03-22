@@ -4,7 +4,7 @@
 CREATE TABLE login_credentials(
 
 	id bigserial,
-	e_mail varchar(30) UNIQUE NOT NULL,
+	e_mail varchar(100) UNIQUE NOT NULL,
 	password_hash text NOT NULL,
 
 	CONSTRAINT login_pk PRIMARY KEY (id)

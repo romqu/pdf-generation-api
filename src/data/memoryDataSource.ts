@@ -1,6 +1,5 @@
 import { RedisClient } from "redis";
 
-import { ErrorTag } from "../constants";
 import { ResponsePromise } from "../domain/model/response";
 import { callAsync } from "../util/failableUtil";
 
@@ -17,8 +16,9 @@ export class MemoryDataSource {
   }): ResponsePromise<string> {
     return callAsync(async ({ success, run, failable }) => {
       const result = run(
-        await failable<string>(ErrorTag.DB, () =>
-          this.redis.setAsync(params.key, params.value)
+        await failable<string>(
+          { type: "MDB", code: 101, title: "Insert Error" },
+          () => this.redis.setAsync(params.key, params.value)
         )
       );
       return success(result);
@@ -28,13 +28,20 @@ export class MemoryDataSource {
   public get(params: { key: string }): ResponsePromise<string> {
     return callAsync(async ({ success, run, failable, failure }) => {
       const result = run(
-        await failable<string>(ErrorTag.DB, () =>
-          this.redis.getAsync(params.key)
+        await failable<string>(
+          { type: "MDB", code: 102, title: "Get Error" },
+          () => this.redis.getAsync(params.key)
         )
       );
 
       if (result === null) {
-        return failure(ErrorTag.DB, "Value does not exist");
+        return failure({
+          type: "MDB",
+          code: 103,
+          title: "Value Error",
+          message: "Value does not exist",
+          stack: ""
+        });
       }
 
       return success(result);

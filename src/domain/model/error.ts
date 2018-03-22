@@ -1,4 +1,5 @@
 export interface IError {
+  readonly type: string;
   readonly code: number;
   readonly title: string;
   readonly message: string;
@@ -6,6 +7,7 @@ export interface IError {
 }
 
 export interface IErrorIn {
+  readonly type: string;
   readonly code: number;
   readonly title: string;
 }

@@ -1,6 +1,7 @@
 import { RegistrationManager } from "../../../domain/feature/registration/registrationManager";
 import { RegistrationData } from "../../../domain/model/registrationData";
 import { matchResponse } from "../../../util/failableUtil";
+import { stringifyObject } from "../../../util/jsonUtil";
 import { ErrorModel } from "../../model/errorModel";
 import { ResponseModel } from "../../model/responseModel";
 
@@ -23,12 +24,12 @@ export class RegistrationController {
       },
       (error): ResponseModel<string> => {
         const model = new ResponseModel(false, "", [
-          new ErrorModel("", "", error.tag, error.value.message)
+          new ErrorModel("", "", error.type, error.message)
         ]);
         return model;
       }
     );
 
-    return JSON.stringify(result);
+    return stringifyObject(result);
   }
 }

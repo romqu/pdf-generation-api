@@ -21,10 +21,12 @@ export async function callAsync<T = never>(
         data
       });
     },
-    failure(error: IError): ResponsePromise<T> {
+    failure(err: IError): ResponsePromise<T> {
+      const e = new Error();
+      const stack = typeof e.stack === "string" ? e.stack : "";
       return Promise.resolve<Response<T>>({
         isSuccess: false,
-        error
+        error: { ...err, stack }
       });
     },
     run<R>(response: Response<R>): R {
@@ -48,9 +50,10 @@ export async function callAsync<T = never>(
         return {
           isSuccess: false,
           error: {
+            type: error.type,
             code: error.code,
             title: error.title,
-            message: err.toSring(),
+            message: err.toString(),
             stack
           }
         };
@@ -110,9 +113,10 @@ export function call<T = never>(
           return {
             isSuccess: false,
             error: {
+              type: error.type,
               code: error.code,
               title: error.title,
-              message: err.toSring(),
+              message: err.toString(),
               stack
             }
           };
@@ -146,9 +150,10 @@ export function failable<R>(error: IErrorIn, func: () => R): Response<R> {
     return {
       isSuccess: false,
       error: {
+        type: error.type,
         code: error.code,
         title: error.title,
-        message: err.toSring(),
+        message: err.toString(),
         stack
       }
     };
@@ -169,9 +174,10 @@ export async function failableAsync<R>(
     return {
       isSuccess: false,
       error: {
+        type: error.type,
         code: error.code,
         title: error.title,
-        message: err.toSring(),
+        message: err.toString(),
         stack
       }
     };

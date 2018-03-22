@@ -2,6 +2,11 @@ import * as Hapi from "hapi";
 
 import * as Server from "./server";
 import { logger } from "./util/loggerUtil";
+import { LoginCredentialsRepo } from "./data/login_credentials/loginCredentialsRepo";
+import { DiskDataSource } from "./data/diskDataSource";
+import { pgDb } from "./database";
+
+Error.stackTraceLimit = Infinity;
 
 async function test(server: Hapi.Server): Promise<any> {
   const r = await server.inject({
@@ -19,11 +24,22 @@ async function start(): Promise<any> {
   try {
     const server = await Server.init();
     server.start();
-    logger.info("successful");
-    await test(server);
+    logger.info("server started successful");
+    // await test(server);
   } catch (err) {
     logger.error(err);
   }
 }
 
-start();
+async function testRepo(): Promise<any> {
+  const a = await new LoginCredentialsRepo(new DiskDataSource(pgDb)).getByEmail(
+    "test@1234.de"
+  );
+
+  logger.info(a);
+
+  return "";
+}
+
+testRepo();
+// start();
