@@ -1,3 +1,4 @@
+import { ClientRepo } from "../../../data/client/clienRepo";
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
 import { verifyValue } from "../../../util/argon2Util";
 import { callAsync } from "../../../util/failableUtil";
@@ -7,14 +8,17 @@ import { CreateClientSessionTask } from "../registration/createClientSessionTask
 
 export class LoginManager {
   private readonly loginCredentialsRepo: LoginCredentialsRepo;
+  private readonly clientRepo: ClientRepo;
   private readonly createClientSessionTask: CreateClientSessionTask;
 
   constructor(
     loginCredentialsRepo: LoginCredentialsRepo,
-    createClientSessionTask: CreateClientSessionTask
+    createClientSessionTask: CreateClientSessionTask,
+    clientRepo: ClientRepo
   ) {
     this.loginCredentialsRepo = loginCredentialsRepo;
     this.createClientSessionTask = createClientSessionTask;
+    this.clientRepo = clientRepo;
   }
 
   public execute(loginCredentials: LoginCredentials): ResponsePromise<boolean> {
@@ -33,6 +37,10 @@ export class LoginManager {
             loginCredentials,
             loginEntity.id
           )
+        );
+
+        const client = run(
+          await this.clientRepo.getByLoginCredentialsId(loginEntity.id)
         );
       }
 

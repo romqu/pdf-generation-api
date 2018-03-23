@@ -1,10 +1,11 @@
 import { ResponsePromise } from "../../domain/model/response";
 import { callAsync } from "../../util/failableUtil";
+import { deserializeObject } from "../../util/jsonUtil";
 import { DiskDataSource, IReturnedId } from "../diskDataSource";
 import { ClientEntity } from "./clientEntity";
 
 export class ClientRepo {
-  public readonly disk: DiskDataSource;
+  private readonly disk: DiskDataSource;
 
   constructor(disk: DiskDataSource) {
     this.disk = disk;
@@ -24,6 +25,25 @@ export class ClientRepo {
       );
 
       return success(result.id);
+    });
+  }
+
+  public getByLoginCredentialsId(
+    loginId: number
+  ): ResponsePromise<ClientEntity> {
+    return callAsync(async ({ success, run }) => {
+      const result = run(
+        await this.disk.queryOne<IReturnedId>(
+          "/data/client/sql/getByLoginCredentialsId.sql",
+          {
+            loginCredentialsId: loginId
+          }
+        )
+      );
+
+      const entity = run(deserializeObject<ClientEntity>(result, ClientEntity));
+
+      return success(entity);
     });
   }
 }
