@@ -61,8 +61,25 @@ export class LoginCredentialsRepo {
       return success(entity);
     });
   }
+
+  public getPasswordHashByEmail(email: string): ResponsePromise<string> {
+    return callAsync(async ({ success, run }) => {
+      const result = run(
+        await this.diskDataSoruce.queryOne<IPasswordHash>(
+          "/data/login_credentials/sql/getPasswordHashByEmail.sql",
+          { email }
+        )
+      );
+
+      return success(result.password_hash);
+    });
+  }
 }
 
 interface IDoesExists {
   readonly exists: boolean;
+}
+
+interface IPasswordHash {
+  readonly password_hash: string;
 }

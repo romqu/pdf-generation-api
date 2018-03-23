@@ -32,13 +32,11 @@ async function start(): Promise<any> {
 }
 
 async function testRepo(): Promise<any> {
-  const a = await new LoginCredentialsRepo(new DiskDataSource(pgDb)).getByEmail(
-    "test@1234.de"
-  );
+  const a = await new LoginCredentialsRepo(
+    new DiskDataSource(pgDb)
+  ).getPasswordHashByEmail("test@1234.de");
 
   logger.info(a);
-
-  return "";
 }
 
 testRepo();
