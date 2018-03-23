@@ -16,12 +16,12 @@ export function hashValue(value: string): ResponsePromise<string> {
   );
 }
 
-export function verifyHash(
+export function verifyValue(
   hash: string,
-  password: string
+  value: string
 ): ResponsePromise<boolean> {
   return failableAsync(
     { type: "HASH_VERIFY", code: 106, title: "Verify Hash Error" },
-    () => argon2.verify(hash, password)
+    () => argon2.verify(hash, value)
   );
 }
