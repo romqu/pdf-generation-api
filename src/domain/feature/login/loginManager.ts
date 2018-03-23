@@ -1,5 +1,6 @@
 import { ClientRepo } from "../../../data/client/clienRepo";
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
+import { LoginModel } from "../../../presentation/model/loginModel";
 import { verifyValue } from "../../../util/argon2Util";
 import { callAsync } from "../../../util/failableUtil";
 import { LoginCredentials } from "../../model/loginCredentials";
@@ -21,8 +22,10 @@ export class LoginManager {
     this.clientRepo = clientRepo;
   }
 
-  public execute(loginCredentials: LoginCredentials): ResponsePromise<boolean> {
-    return callAsync(async ({ success, run }) => {
+  public execute(
+    loginCredentials: LoginCredentials
+  ): ResponsePromise<LoginModel> {
+    return callAsync(async ({ success, run, failure }) => {
       const loginEntity = run(
         await this.loginCredentialsRepo.getByEmail(loginCredentials.email)
       );
@@ -31,28 +34,30 @@ export class LoginManager {
         await verifyValue(loginEntity.passwordHash, loginCredentials.password)
       );
 
-      if (isValid) {
-        const sessionUuid = run(
-          await this.createClientSessionTask.execute(
-            loginCredentials,
-            loginEntity.id
-          )
-        );
-
-        const client = run(
-          await this.clientRepo.getByLoginCredentialsId(loginEntity.id)
-        );
+      if (!isValid) {
+        return failure({
+          type: "login",
+          code: 106,
+          title: "login error",
+          message: "password is invalid",
+          stack: ""
+        });
       }
 
-      return success(true);
+      const sessionUuid = run(
+        await this.createClientSessionTask.execute(
+          loginCredentials,
+          loginEntity.id
+        )
+      );
+
+      const client = run(
+        await this.clientRepo.getByLoginCredentialsId(loginEntity.id)
+      );
+
+      return success(
+        new LoginModel(sessionUuid, client.forename, client.surname)
+      );
     });
-    // get password hash from db
-    // verify password
-    // if (true)
-    //      insert client session into mDb, return session uuid
-    //      get client from dDb <----
-    //      return loginModel (sessionUuid, client)
-    // else
-    //      return error
   }
 }
