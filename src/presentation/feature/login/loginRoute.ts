@@ -1,6 +1,8 @@
 import { ServerRoute } from "hapi";
 import * as Joi from "joi";
 
+import { loginHandler } from "./loginHandler";
+
 export function registrationRoute(): ServerRoute {
   return {
     method: "POST",
@@ -23,6 +25,6 @@ export function registrationRoute(): ServerRoute {
         }
       }
     },
-    handler: {}
+    handler: loginHandler
   };
 }
