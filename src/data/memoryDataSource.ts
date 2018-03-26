@@ -1,12 +1,18 @@
+import { inject } from "inversify";
 import { RedisClient } from "redis";
 
 import { ResponsePromise } from "../domain/model/response";
+import { provide } from "../ioc/ioc";
+import { TYPES } from "../ioc/types";
 import { callAsync } from "../util/failableUtil";
 
+@provide(MemoryDataSource)
+  .inSingletonScope()
+  .done()
 export class MemoryDataSource {
   private readonly redis: RedisClient;
 
-  constructor(redis: RedisClient) {
+  constructor(@inject(TYPES.RedisClient) redis: RedisClient) {
     this.redis = redis;
   }
 

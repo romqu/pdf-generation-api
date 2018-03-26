@@ -2,9 +2,8 @@ import * as Boom from "boom";
 import * as Hapi from "hapi";
 import * as AuthBearer from "hapi-auth-bearer-token";
 
-import { Lifecycle, ResponseObject } from "hapi";
+import { Lifecycle } from "hapi";
 import { registrationRoute } from "./presentation/feature/registration/registrationRoute";
-import { logger } from "./util/loggerUtil";
 
 export async function init(): Promise<Hapi.Server> {
   const server = new Hapi.Server({
@@ -27,7 +26,7 @@ export async function init(): Promise<Hapi.Server> {
   });
 
   registerExtEvents(server);
-  registerPlugins(server);
+  await registerPlugins(server);
   registerRoutes(server);
 
   return server;

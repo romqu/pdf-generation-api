@@ -2,8 +2,6 @@ import * as Hapi from "hapi";
 
 import * as Server from "./server";
 import { logger } from "./util/loggerUtil";
-import { container } from "./ioc/ioc";
-import { DiskDataSource } from "./data/diskDataSource";
 
 Error.stackTraceLimit = Infinity;
 
@@ -30,13 +28,4 @@ async function start(): Promise<any> {
   }
 }
 
-async function testA(): Promise<any> {
-  // const a = await new LoginCredentialsRepo(
-  //   new DiskDataSource(pgDb)
-  // ).getPasswordHashByEmail("test@1234.de");
-  // logger.info(a);
-  container.get<DiskDataSource>(DiskDataSource).test();
-}
-
-testA();
-// start();
+start();
