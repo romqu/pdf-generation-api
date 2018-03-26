@@ -1,7 +1,7 @@
 import { Container, ContainerModule } from "inversify";
+import { makeFluentProvideDecorator } from "inversify-binding-decorators";
 import { IDatabase } from "pg-promise";
 
-import { DiskDataSource } from "../data/diskDataSource";
 import * as Database from "../database";
 import { TYPES } from "./types";
 
@@ -11,14 +11,16 @@ const thirdPartyDependencies = new ContainerModule((bind): void => {
   bind<IDatabase<any>>(TYPES.PgpDb).toConstantValue(dbClients.pgpDb);
 });
 
-const applicationDependencies = new ContainerModule((bind): void => {
-  bind(DiskDataSource)
-    .toSelf()
-    .inSingletonScope();
-});
+// const applicationDependencies = new ContainerModule((bind): void => {
+//   bind(DiskDataSource)
+//     .toSelf()
+//     .inSingletonScope();
+// });
 
 const container = new Container();
 
-container.load(thirdPartyDependencies, applicationDependencies);
+const provide = makeFluentProvideDecorator(container);
 
-export { container };
+container.load(thirdPartyDependencies);
+
+export { container, provide };

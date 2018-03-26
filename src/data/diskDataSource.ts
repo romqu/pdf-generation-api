@@ -1,15 +1,18 @@
-import { inject, injectable } from "inversify";
+import "reflect-metadata";
+
+import { inject } from "inversify";
 import { IDatabase, ITask } from "pg-promise";
 
 import { ResponsePromise } from "../domain/model/response";
+import { provide } from "../ioc/ioc";
 import { TYPES } from "../ioc/types";
 import { callAsync } from "../util/failableUtil";
+import { logger } from "../util/loggerUtil";
 import { getQueryFile } from "../util/sqlFileUtil";
 
-import "reflect-metadata";
-import { logger } from "../util/loggerUtil";
-
-@injectable()
+@provide(DiskDataSource)
+  .inSingletonScope()
+  .done()
 export class DiskDataSource {
   private readonly pgDb: IDatabase<any>;
 
