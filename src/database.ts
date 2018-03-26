@@ -6,22 +6,32 @@ import * as redis from "redis";
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
 
-export const redisClient: redis.RedisClient = redis.createClient(
-  "/var/run/redis/redis.sock"
-);
+export function init(): IDatabaseClients {
+  const initOptions: IOptions<any> = {
+    promiseLib: Promise
+  };
 
-const initOptions: IOptions<any> = {
-  promiseLib: Promise
-};
+  const config: TConfig = {
+    host: "localhost",
+    port: 5432,
+    database: "roman",
+    user: "roman",
+    password: "roman"
+  };
 
-const config: TConfig = {
-  host: "localhost",
-  port: 5432,
-  database: "roman",
-  user: "roman",
-  password: "roman"
-};
+  const pgpMain: IMain = pgPromise(initOptions);
 
-export const pgp: IMain = pgPromise(initOptions);
+  const pgpDb: IDatabase<any> = pgpMain(config);
 
-export const pgDb: IDatabase<any> = pgp(config);
+  const redisClient: redis.RedisClient = redis.createClient(
+    "/var/run/redis/redis.sock"
+  );
+
+  return { pgpMain, pgpDb, redisClient };
+}
+
+export interface IDatabaseClients {
+  readonly pgpMain: IMain;
+  readonly pgpDb: IDatabase<any>;
+  readonly redisClient: redis.RedisClient;
+}

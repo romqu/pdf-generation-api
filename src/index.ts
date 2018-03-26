@@ -2,9 +2,8 @@ import * as Hapi from "hapi";
 
 import * as Server from "./server";
 import { logger } from "./util/loggerUtil";
-import { LoginCredentialsRepo } from "./data/login_credentials/loginCredentialsRepo";
+import { container } from "./ioc/ioc";
 import { DiskDataSource } from "./data/diskDataSource";
-import { pgDb } from "./database";
 
 Error.stackTraceLimit = Infinity;
 
@@ -31,13 +30,13 @@ async function start(): Promise<any> {
   }
 }
 
-async function testRepo(): Promise<any> {
-  const a = await new LoginCredentialsRepo(
-    new DiskDataSource(pgDb)
-  ).getPasswordHashByEmail("test@1234.de");
-
-  logger.info(a);
+async function testA(): Promise<any> {
+  // const a = await new LoginCredentialsRepo(
+  //   new DiskDataSource(pgDb)
+  // ).getPasswordHashByEmail("test@1234.de");
+  // logger.info(a);
+  container.get<DiskDataSource>(DiskDataSource).test();
 }
 
-testRepo();
+testA();
 // start();
