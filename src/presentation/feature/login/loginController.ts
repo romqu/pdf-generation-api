@@ -1,11 +1,15 @@
 import { LoginManager } from "../../../domain/feature/login/loginManager";
 import { LoginCredentials } from "../../../domain/model/loginCredentials";
+import { provide } from "../../../ioc/ioc";
 import { matchResponse } from "../../../util/failableUtil";
 import { stringifyObject } from "../../../util/jsonUtil";
 import { ErrorModel } from "../../model/errorModel";
 import { LoginModel } from "../../model/loginModel";
 import { ResponseModel } from "../../model/responseModel";
 
+@provide(LoginController)
+  .inSingletonScope()
+  .done()
 export class LoginController {
   private readonly manager: LoginManager;
 

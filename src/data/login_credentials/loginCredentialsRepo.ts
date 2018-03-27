@@ -1,9 +1,13 @@
 import { ResponsePromise } from "../../domain/model/response";
+import { provide } from "../../ioc/ioc";
 import { callAsync } from "../../util/failableUtil";
-import { deserializeObject } from "../../util/jsonUtil";
+import { parseStringifyDeserializeObject } from "../../util/jsonUtil";
 import { DiskDataSource, IReturnedId } from "../diskDataSource";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
 
+@provide(LoginCredentialsRepo)
+  .inSingletonScope()
+  .done()
 export class LoginCredentialsRepo {
   private readonly diskDataSoruce: DiskDataSource;
 
@@ -52,7 +56,7 @@ export class LoginCredentialsRepo {
       );
 
       const entity = run(
-        deserializeObject<LoginCredentialsEntity>(
+        parseStringifyDeserializeObject<LoginCredentialsEntity>(
           result,
           LoginCredentialsEntity
         )

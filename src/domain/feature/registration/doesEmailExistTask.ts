@@ -1,6 +1,10 @@
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
+import { provide } from "../../../ioc/ioc";
 import { ResponsePromise } from "../../model/response";
 
+@provide(DoesEmailExistTask)
+  .inSingletonScope()
+  .done()
 export class DoesEmailExistTask {
   private readonly loginCredentialsRepo: LoginCredentialsRepo;
 

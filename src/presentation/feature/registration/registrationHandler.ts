@@ -1,35 +1,12 @@
 import { Deserialize } from "cerialize";
 import { Lifecycle, Request, ResponseToolkit } from "hapi";
 
-import { ClientRepo } from "../../../data/client/clienRepo";
-import { ClientSessionRepo } from "../../../data/client_session/clientSessionRepo";
-import { DiskDataSource } from "../../../data/diskDataSource";
-import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
-import { MemoryDataSource } from "../../../data/memoryDataSource";
-import { pgDb, redisClient } from "../../../database";
-import { CreateClientSessionTask } from "../../../domain/feature/registration/createClientSessionTask";
-import { CreateClientTask } from "../../../domain/feature/registration/createClientTask";
-import { DoesEmailExistTask } from "../../../domain/feature/registration/doesEmailExistTask";
-import { HashPasswordTask } from "../../../domain/feature/registration/hashPasswordTask";
-import { RegistrationManager } from "../../../domain/feature/registration/registrationManager";
 import { RegistrationData } from "../../../domain/model/registrationData";
+import { container } from "../../../ioc/ioc";
 import { logger } from "../../../util/loggerUtil";
 import { RegistrationController } from "./registrationController";
 
-const memory = new MemoryDataSource(redisClient);
-const disk = new DiskDataSource(pgDb);
-const clientRepo = new ClientRepo(disk);
-const clientSessionRepo = new ClientSessionRepo(memory);
-
-const manager = new RegistrationManager(
-  new DoesEmailExistTask(new LoginCredentialsRepo(disk)),
-  new HashPasswordTask(),
-  new CreateClientTask(clientRepo),
-  new CreateClientSessionTask(clientSessionRepo),
-  new LoginCredentialsRepo(disk)
-);
-
-const controller = new RegistrationController(manager);
+const controller = container.get(RegistrationController);
 
 export async function registrationHandler(
   request: Request,

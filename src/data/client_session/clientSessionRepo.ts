@@ -1,9 +1,16 @@
 import { ResponsePromise } from "../../domain/model/response";
+import { provide } from "../../ioc/ioc";
 import { callAsync } from "../../util/failableUtil";
-import { deserializeObject, serializeObject } from "../../util/jsonUtil";
+import {
+  parseStringifyDeserializeObject,
+  serializeObject
+} from "../../util/jsonUtil";
 import { MemoryDataSource } from "../memoryDataSource";
 import { ClientSessionEntity } from "./clientSessionEntity";
 
+@provide(ClientSessionRepo)
+  .inSingletonScope()
+  .done()
 export class ClientSessionRepo {
   private readonly memoryDataSource: MemoryDataSource;
 
@@ -37,7 +44,7 @@ export class ClientSessionRepo {
       );
 
       const client = run<ClientSessionEntity>(
-        deserializeObject(result, ClientSessionEntity)
+        parseStringifyDeserializeObject(result, ClientSessionEntity)
       );
 
       return success(client);

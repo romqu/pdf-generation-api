@@ -4,6 +4,7 @@ import * as AuthBearer from "hapi-auth-bearer-token";
 
 import { Lifecycle } from "hapi";
 import { registrationRoute } from "./presentation/feature/registration/registrationRoute";
+import { loginRoute } from "./presentation/feature/login/loginRoute";
 
 export async function init(): Promise<Hapi.Server> {
   const server = new Hapi.Server({
@@ -50,6 +51,7 @@ function registerExtEvents(server: Hapi.Server): void {
 
 function registerRoutes(server: Hapi.Server): void {
   server.route(registrationRoute());
+  server.route(loginRoute());
 }
 
 async function registerPlugins(server: Hapi.Server): Promise<any> {

@@ -1,9 +1,12 @@
 import * as path from "path";
-import { QueryFile } from "pg-promise";
+import { IMain, QueryFile } from "pg-promise";
 
-import { pgp } from "../database";
+import { container } from "../ioc/ioc";
+import { TYPES } from "../ioc/types";
+
+const pgpMain = container.get<IMain>(TYPES.PgpMain);
 
 export function getQueryFile(fileName: string): QueryFile {
   const fullPath = path.join(".", fileName);
-  return new pgp.QueryFile(fullPath, { minify: true });
+  return new pgpMain.QueryFile(fullPath, { minify: true });
 }

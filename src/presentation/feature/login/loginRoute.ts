@@ -3,7 +3,7 @@ import * as Joi from "joi";
 
 import { loginHandler } from "./loginHandler";
 
-export function registrationRoute(): ServerRoute {
+export function loginRoute(): ServerRoute {
   return {
     method: "POST",
     path: "/login",
@@ -11,17 +11,15 @@ export function registrationRoute(): ServerRoute {
       auth: false,
       validate: {
         payload: {
-          loginCredentials: Joi.object({
-            email: Joi.string()
-              .trim()
-              .email({ minDomainAtoms: 2 })
-              .required(),
-            password: Joi.string()
-              .trim()
-              .min(8)
-              .max(30)
-              .required()
-          }).required()
+          e_mail: Joi.string()
+            .trim()
+            .email({ minDomainAtoms: 2 })
+            .required(),
+          password: Joi.string()
+            .trim()
+            .min(8)
+            .max(30)
+            .required()
         }
       }
     },

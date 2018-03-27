@@ -9,9 +9,8 @@ async function test(server: Hapi.Server): Promise<any> {
   const r = await server.inject({
     app: {},
     method: "POST",
-    url: "127.0.0.1:3000/registration",
-    payload:
-      '{"loginCredentials":{"email":"test@saewqdwq.de","password":"adwqd ezaaa"},"client":{"forename":"zfzu","surname":"Meier"}}'
+    url: "127.0.0.1:3000/login",
+    payload: '{"e_mail":"test@1234.de","password":"adwqd ezaaa"}'
   });
 
   logger.info("RESULT:", r.result);
@@ -22,7 +21,8 @@ async function start(): Promise<any> {
     const server = await Server.init();
     server.start();
     logger.info("server started successful");
-    // await test(server);
+
+    await test(server);
   } catch (err) {
     logger.error(err);
   }

@@ -1,9 +1,13 @@
 import { ResponsePromise } from "../../domain/model/response";
+import { provide } from "../../ioc/ioc";
 import { callAsync } from "../../util/failableUtil";
-import { deserializeObject } from "../../util/jsonUtil";
+import { parseStringifyDeserializeObject } from "../../util/jsonUtil";
 import { DiskDataSource, IReturnedId } from "../diskDataSource";
 import { ClientEntity } from "./clientEntity";
 
+@provide(ClientRepo)
+  .inSingletonScope()
+  .done()
 export class ClientRepo {
   private readonly disk: DiskDataSource;
 
@@ -41,7 +45,9 @@ export class ClientRepo {
         )
       );
 
-      const entity = run(deserializeObject<ClientEntity>(result, ClientEntity));
+      const entity = run(
+        parseStringifyDeserializeObject<ClientEntity>(result, ClientEntity)
+      );
 
       return success(entity);
     });

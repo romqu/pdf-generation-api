@@ -1,4 +1,5 @@
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
+import { provide } from "../../../ioc/ioc";
 import { callAsync } from "../../../util/failableUtil";
 import { loginCredentialsToLoginCredentialsEntity } from "../../mapper/modelMapper";
 import { RegistrationData } from "../../model/registrationData";
@@ -8,6 +9,9 @@ import { CreateClientTask } from "./createClientTask";
 import { DoesEmailExistTask } from "./doesEmailExistTask";
 import { HashPasswordTask } from "./hashPasswordTask";
 
+@provide(RegistrationManager)
+  .inSingletonScope()
+  .done()
 export class RegistrationManager {
   private readonly doesEmailExistTask: DoesEmailExistTask;
   private readonly hashPasswordTask: HashPasswordTask;

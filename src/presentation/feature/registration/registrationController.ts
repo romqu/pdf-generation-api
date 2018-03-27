@@ -1,10 +1,14 @@
 import { RegistrationManager } from "../../../domain/feature/registration/registrationManager";
 import { RegistrationData } from "../../../domain/model/registrationData";
+import { provide } from "../../../ioc/ioc";
 import { matchResponse } from "../../../util/failableUtil";
 import { stringifyObject } from "../../../util/jsonUtil";
 import { ErrorModel } from "../../model/errorModel";
 import { ResponseModel } from "../../model/responseModel";
 
+@provide(RegistrationController)
+  .inSingletonScope()
+  .done()
 export class RegistrationController {
   private readonly manager: RegistrationManager;
 
