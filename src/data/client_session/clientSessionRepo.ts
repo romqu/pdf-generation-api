@@ -1,15 +1,9 @@
 import { ResponsePromise } from "../../domain/model/response";
 import { provide } from "../../ioc/ioc";
 import { callAsync } from "../../util/failableUtil";
-import {
-  parseStringifyDeserializeObject,
-  serializeObject,
-  deserializeObject
-} from "../../util/jsonUtil";
-import { logInfo } from "../../util/loggerUtil";
+import { parseDeserializeObject, serializeObject } from "../../util/jsonUtil";
 import { MemoryDataSource } from "../memoryDataSource";
 import { ClientSessionEntity } from "./clientSessionEntity";
-import { parseDeserializeObject } from "../../util/jsonUtil";
 
 @provide(ClientSessionRepo)
   .inSingletonScope()

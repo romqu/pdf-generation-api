@@ -3,6 +3,14 @@ import { Deserialize, Serialize } from "cerialize";
 import { Response } from "../domain/model/response";
 import { failable } from "./failableUtil";
 
+export function serializeSafeObject(
+  data: object,
+  // tslint:disable-next-line:ban-types
+  type: Function
+): string {
+  return stringifyObject(Serialize(data, type));
+}
+
 export function serializeObject(
   data: object,
   // tslint:disable-next-line:ban-types

@@ -32,7 +32,7 @@ async function start(): Promise<any> {
     server.start();
     logInfo("server started successful");
 
-    // await test(server);
+    await test(server);
   } catch (err) {
     logInfo(err);
   }

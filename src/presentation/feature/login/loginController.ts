@@ -1,8 +1,12 @@
 import { LoginManager } from "../../../domain/feature/login/loginManager";
 import { LoginCredentials } from "../../../domain/model/loginCredentials";
 import { provide } from "../../../ioc/ioc";
-import { matchResponse } from "../../../util/failableUtil";
-import { stringifyObject } from "../../../util/jsonUtil";
+import { callAsync, matchResponse } from "../../../util/failableUtil";
+import {
+  serializeObject,
+  serializeSafeObject,
+  stringifyObject
+} from "../../../util/jsonUtil";
 import { ErrorModel } from "../../model/errorModel";
 import { LoginModel } from "../../model/loginModel";
 import { ResponseModel } from "../../model/responseModel";
@@ -18,23 +22,30 @@ export class LoginController {
   }
 
   public async execute(loginCredentials: LoginCredentials): Promise<string> {
-    const response = await this.manager.execute(loginCredentials);
+    const response = await callAsync<string>(async ({ success, run }) => {
+      const dat = run(await this.manager.execute(loginCredentials));
+
+      const res = run(
+        serializeObject(new ResponseModel(true, dat, []), ResponseModel)
+      );
+
+      return success(res);
+    });
 
     const result = matchResponse(
       response,
-      (data): ResponseModel<LoginModel> => {
-        const model = new ResponseModel(true, data, []);
-
-        return model;
+      (data): string => {
+        return data;
       },
-      (error): ResponseModel<LoginModel> => {
-        const model = new ResponseModel(false, {} as LoginModel, [
+      (error): string => {
+        const model = new ResponseModel(false, {}, [
           new ErrorModel("", "", error.type, error.message)
         ]);
-        return model;
+
+        return serializeSafeObject(model, ResponseModel);
       }
     );
 
-    return stringifyObject(result);
+    return result;
   }
 }
