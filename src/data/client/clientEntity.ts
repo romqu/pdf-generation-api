@@ -5,7 +5,7 @@ export class ClientEntity {
   public readonly id: number;
   @autoserializeAs(String, "forename")
   public readonly forename: string;
-  @autoserializeAs(String, "surename")
+  @autoserializeAs(String, "surname")
   public readonly surname: string;
   @autoserializeAs(Number, "login_credentials_id")
   public readonly loginCredentialsId: number;

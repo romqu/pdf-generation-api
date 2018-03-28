@@ -4,7 +4,7 @@ import { LoginCredentials } from "../../../domain/model/loginCredentials";
 import { container } from "../../../ioc/ioc";
 import { matchResponse } from "../../../util/failableUtil";
 import { deserializeObject } from "../../../util/jsonUtil";
-import { logger } from "../../../util/loggerUtil";
+import { logInfo } from "../../../util/loggerUtil";
 import { LoginController } from "./loginController";
 
 const controller = container.get(LoginController);
@@ -15,6 +15,8 @@ export async function loginHandler(
 ): Promise<Lifecycle.ReturnValue> {
   const payload = request.payload;
 
+  logInfo("payload", payload);
+
   const loginCredentials = matchResponse(
     deserializeObject<LoginCredentials>(payload, LoginCredentials),
     (data): LoginCredentials => data,
@@ -22,8 +24,6 @@ export async function loginHandler(
       throw error;
     }
   );
-
-  logger.info("object", loginCredentials.password);
 
   return await controller.execute(loginCredentials);
 }

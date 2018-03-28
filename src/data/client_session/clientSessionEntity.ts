@@ -1,9 +1,12 @@
-import { autoserialize } from "cerialize";
+import { autoserializeAs } from "cerialize";
 
 export class ClientSessionEntity {
-  @autoserialize public readonly uuid: string;
-  @autoserialize public readonly loginCredentialsId: number;
-  @autoserialize public readonly email: string;
+  @autoserializeAs(String, "uuid")
+  public readonly uuid: string;
+  @autoserializeAs(Number, "loginCredentialsId")
+  public readonly loginCredentialsId: number;
+  @autoserializeAs(String, "email")
+  public readonly email: string;
 
   constructor(uuid: string, loginCredentialsId: number, email: string) {
     this.uuid = uuid;

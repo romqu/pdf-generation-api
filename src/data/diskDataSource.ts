@@ -7,7 +7,6 @@ import { ResponsePromise } from "../domain/model/response";
 import { provide } from "../ioc/ioc";
 import { TYPES } from "../ioc/types";
 import { callAsync } from "../util/failableUtil";
-import { logger } from "../util/loggerUtil";
 import { getQueryFile } from "../util/sqlFileUtil";
 
 @provide(DiskDataSource)
@@ -37,12 +36,4 @@ export class DiskDataSource {
       return success(result);
     });
   }
-
-  public test(): void {
-    logger.info("Test", this.pgDb.$config);
-  }
-}
-
-export interface IReturnedId {
-  id: number;
 }

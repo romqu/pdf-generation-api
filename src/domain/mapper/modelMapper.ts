@@ -20,11 +20,7 @@ export function loginCredentialsToLoginCredentialsEntity(
   loginCredentials: LoginCredentials,
   passwordHash: string
 ): LoginCredentialsEntity {
-  return new LoginCredentialsEntity({
-    id: 0,
-    email: loginCredentials.email,
-    passwordHash
-  });
+  return new LoginCredentialsEntity(0, loginCredentials.email, passwordHash);
 }
 
 export function loginCredentialsToClientSessionEntity(

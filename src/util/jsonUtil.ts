@@ -30,10 +30,15 @@ export function stringifyDeserializeObject<T>(
   // tslint:disable-next-line:ban-types
   type: Function
 ): Response<T> {
-  return failable<T>(
-    { type: "DESERIALIZE", code: 105, title: "Deserialize Object Error" },
-    () => Deserialize(stringifyObject(data), type)
-  );
+  return deserializeObject(stringifyObject(data), type);
+}
+
+export function parseDeserializeObject<T>(
+  data: any,
+  // tslint:disable-next-line:ban-types
+  type: Function
+): Response<T> {
+  return deserializeObject(JSON.parse(data), type);
 }
 
 export function parseStringifyDeserializeObject<T>(
@@ -41,10 +46,7 @@ export function parseStringifyDeserializeObject<T>(
   // tslint:disable-next-line:ban-types
   type: Function
 ): Response<T> {
-  return failable<T>(
-    { type: "DESERIALIZE", code: 105, title: "Deserialize Object Error" },
-    () => Deserialize(JSON.parse(stringifyObject(data)), type)
-  );
+  return deserializeObject(JSON.parse(stringifyObject(data)), type);
 }
 
 export function stringifyObject(data: any): string {

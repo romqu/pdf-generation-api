@@ -12,12 +12,12 @@ export function registrationRoute(): ServerRoute {
       validate: {
         payload: {
           loginCredentials: Joi.object({
-            email: Joi.string()
+            e_mail: Joi.string()
               .trim()
               .email({ minDomainAtoms: 2 })
               .required(),
             password: Joi.string()
-              .trim()
+              .replace(/\s/g, "")
               .min(8)
               .max(30)
               .required()

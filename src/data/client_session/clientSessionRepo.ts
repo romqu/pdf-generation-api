@@ -3,10 +3,13 @@ import { provide } from "../../ioc/ioc";
 import { callAsync } from "../../util/failableUtil";
 import {
   parseStringifyDeserializeObject,
-  serializeObject
+  serializeObject,
+  deserializeObject
 } from "../../util/jsonUtil";
+import { logInfo } from "../../util/loggerUtil";
 import { MemoryDataSource } from "../memoryDataSource";
 import { ClientSessionEntity } from "./clientSessionEntity";
+import { parseDeserializeObject } from "../../util/jsonUtil";
 
 @provide(ClientSessionRepo)
   .inSingletonScope()
@@ -21,12 +24,10 @@ export class ClientSessionRepo {
   public insert(params: {
     value: ClientSessionEntity;
   }): ResponsePromise<string> {
-    return callAsync<string>(async ({ success, run }) => {
-      const data = run<string>(
-        serializeObject(params.value, ClientSessionEntity)
-      );
+    return callAsync(async ({ success, run }) => {
+      const data = run(serializeObject(params.value, ClientSessionEntity));
 
-      run<string>(
+      run(
         await this.memoryDataSource.insert({
           key: params.value.uuid,
           value: data
@@ -38,13 +39,11 @@ export class ClientSessionRepo {
   }
 
   public get(params: { key: string }): ResponsePromise<ClientSessionEntity> {
-    return callAsync<ClientSessionEntity>(async ({ success, run }) => {
-      const result = run<string>(
-        await this.memoryDataSource.get({ key: params.key })
-      );
+    return callAsync(async ({ success, run }) => {
+      const result = run(await this.memoryDataSource.get({ key: params.key }));
 
       const client = run<ClientSessionEntity>(
-        parseStringifyDeserializeObject(result, ClientSessionEntity)
+        parseDeserializeObject(result, ClientSessionEntity)
       );
 
       return success(client);

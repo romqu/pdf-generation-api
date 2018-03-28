@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { inject } from "inversify";
 import { RedisClient } from "redis";
 
@@ -40,7 +42,7 @@ export class MemoryDataSource {
         )
       );
 
-      if (result === null) {
+      if (result === null || undefined) {
         return failure({
           type: "MDB",
           code: 103,

@@ -4,7 +4,7 @@ const pretty = pino.pretty();
 
 pretty.pipe(process.stdout);
 
-export const logger = pino(
+const logger = pino(
   {
     // name: "app",
     safe: true,
@@ -12,3 +12,13 @@ export const logger = pino(
   },
   pretty
 );
+
+export function logInfo(title: string, message: any = ""): void {
+  if (isDev) {
+    logger.info(title, message);
+  }
+}
+
+function isDev(): boolean {
+  return process.env.NODE_ENV !== "production";
+}

@@ -1,8 +1,8 @@
 import { ResponsePromise } from "../../domain/model/response";
 import { provide } from "../../ioc/ioc";
 import { callAsync } from "../../util/failableUtil";
-import { parseStringifyDeserializeObject } from "../../util/jsonUtil";
-import { DiskDataSource, IReturnedId } from "../diskDataSource";
+import { deserializeObject } from "../../util/jsonUtil";
+import { DiskDataSource } from "../diskDataSource";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
 
 @provide(LoginCredentialsRepo)
@@ -56,7 +56,7 @@ export class LoginCredentialsRepo {
       );
 
       const entity = run(
-        parseStringifyDeserializeObject<LoginCredentialsEntity>(
+        deserializeObject<LoginCredentialsEntity>(
           result,
           LoginCredentialsEntity
         )
@@ -86,4 +86,8 @@ interface IDoesExists {
 
 interface IPasswordHash {
   readonly password_hash: string;
+}
+
+interface IReturnedId {
+  id: number;
 }
