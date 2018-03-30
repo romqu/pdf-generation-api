@@ -195,3 +195,15 @@ export function matchResponse<T, R>(
 
   return onFailure(response.error);
 }
+
+export async function matchResponseAsync<T, R>(
+  response: Response<T>,
+  onSuccess: (data: T) => Promise<R>,
+  onFailure: (error: IError) => Promise<R>
+): Promise<R> {
+  if (response.isSuccess) {
+    return onSuccess(response.data);
+  }
+
+  return onFailure(response.error);
+}

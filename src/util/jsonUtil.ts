@@ -66,12 +66,12 @@ export function deserializePayload<T>(
   payload: stream.Readable | Buffer | string | object,
   // tslint:disable-next-line:ban-types
   type: Function
-): T {
-  return matchResponse(
+): Response<T> {
+  return matchResponse<T, Response<T>>(
     deserializeObject<T>(payload, type),
-    (data): T => data,
-    (error): T => {
-      throw error;
+    (data): Response<T> => ({ isSuccess: true, data }),
+    (error): Response<T> => {
+      return { isSuccess: false, error };
     }
   );
 }
