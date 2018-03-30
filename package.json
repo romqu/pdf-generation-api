@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "argon2": "^0.17.2",
+    "argon2": "^0.17.3",
     "bluebird": "^3.5.1",
     "boom": "^7.2.0",
     "cerialize": "^0.1.18",
@@ -30,11 +30,11 @@
     "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "@types/boom": "^7.2.0",
-    "@types/joi": "^13.0.7",
     "@types/bluebird": "^3.5.20",
+    "@types/boom": "^7.2.0",
     "@types/hapi": "^17.0.7",
-    "@types/node": "^9.6.0",
+    "@types/joi": "^13.0.7",
+    "@types/node": "^9.6.1",
     "@types/pino": "latest",
     "@types/redis": "^2.8.6",
     "@types/uuid": "^3.4.3",
@@ -42,12 +42,12 @@
     "gulp-shell": "^0.6.5",
     "node-gyp": "^3.6.2",
     "nodemon": "^1.17.2",
-    "pino": "^4.15.0",
+    "pino": "^4.15.3",
     "prettier": "^1.11.1",
     "ts-node": "^5.0.1",
     "tslint": "latest",
     "tslint-config-prettier": "^1.10.0",
     "tslint-immutable": "^4.5.2",
-    "typescript": "^2.8.0-rc"
+    "typescript": "^2.8.1"
   }
 }

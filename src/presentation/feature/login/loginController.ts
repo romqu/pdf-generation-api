@@ -2,13 +2,8 @@ import { LoginManager } from "../../../domain/feature/login/loginManager";
 import { LoginCredentials } from "../../../domain/model/loginCredentials";
 import { provide } from "../../../ioc/ioc";
 import { callAsync, matchResponse } from "../../../util/failableUtil";
-import {
-  serializeObject,
-  serializeSafeObject,
-  stringifyObject
-} from "../../../util/jsonUtil";
+import { serializeObject, serializeSafeObject } from "../../../util/jsonUtil";
 import { ErrorModel } from "../../model/errorModel";
-import { LoginModel } from "../../model/loginModel";
 import { ResponseModel } from "../../model/responseModel";
 
 @provide(LoginController)

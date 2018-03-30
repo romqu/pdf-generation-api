@@ -1,7 +1,8 @@
 import { Deserialize, Serialize } from "cerialize";
+import * as stream from "stream";
 
 import { Response } from "../domain/model/response";
-import { failable } from "./failableUtil";
+import { failable, matchResponse } from "./failableUtil";
 
 export function serializeSafeObject(
   data: object,
@@ -59,4 +60,18 @@ export function parseStringifyDeserializeObject<T>(
 
 export function stringifyObject(data: any): string {
   return JSON.stringify(data);
+}
+
+export function deserializePayload<T>(
+  payload: stream.Readable | Buffer | string | object,
+  // tslint:disable-next-line:ban-types
+  type: Function
+): T {
+  return matchResponse(
+    deserializeObject<T>(payload, type),
+    (data): T => data,
+    (error): T => {
+      throw error;
+    }
+  );
 }
