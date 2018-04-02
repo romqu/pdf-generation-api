@@ -18,7 +18,7 @@
     "bluebird": "^3.5.1",
     "boom": "^7.2.0",
     "cerialize": "^0.1.18",
-    "hapi": "^17.2.3",
+    "hapi": "^17.3.0",
     "hapi-auth-bearer-token": "^6.0.1",
     "inversify": "^4.11.1",
     "inversify-binding-decorators": "^3.2.0",
@@ -41,13 +41,13 @@
     "gulp": "^4.0.0",
     "gulp-shell": "^0.6.5",
     "node-gyp": "^3.6.2",
-    "nodemon": "^1.17.2",
+    "nodemon": "^1.17.3",
     "pino": "^4.15.3",
     "prettier": "^1.11.1",
     "ts-node": "^5.0.1",
     "tslint": "latest",
     "tslint-config-prettier": "^1.10.0",
-    "tslint-immutable": "^4.5.2",
+    "tslint-immutable": "^4.5.3",
     "typescript": "^2.8.1"
   }
 }

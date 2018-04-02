@@ -8,7 +8,6 @@ import {
   deserializePayload,
   serializeSafeObject
 } from "../../../util/jsonUtil";
-import { logInfo } from "../../../util/loggerUtil";
 import { ErrorModel } from "../../model/errorModel";
 import { ResponseModel } from "../../model/responseModel";
 import { RegistrationController } from "./registrationController";
@@ -20,13 +19,8 @@ export async function registrationHandler(
   h: ResponseToolkit
 ): Promise<Lifecycle.ReturnValue> {
   const payload = deserializePayload<RegistrationData>(
-    "request.payload",
+    request.payload,
     RegistrationData
-  );
-
-  logInfo(
-    "AAAAAAAAAAAAAA",
-    payload.isSuccess ? payload.data.client.forename : payload.error.title
   );
 
   return await matchResponseAsync<RegistrationData, string>(
