@@ -1,5 +1,6 @@
 import fs = require("fs");
 import { Lifecycle, Request, ResponseToolkit } from "hapi";
+import { generateUuidv4 } from "../../../util/uuidv4Util";
 
 const imageFilter = (fileName: string): boolean => {
   // accept image only
@@ -10,17 +11,16 @@ const imageFilter = (fileName: string): boolean => {
   return true;
 };
 
-export const imageHandler = async (
+export const uploadImagesHandler = async (
   request: Request,
   h: ResponseToolkit
 ): Promise<Lifecycle.ReturnValue> => {
   const data = request.payload;
 
   const images = data.images;
+  // const response = await fileHandler(images);
 
-  const response = await filesHandler(images);
-
-  return data.list;
+  return request.payload.images[0];
 };
 
 async function filesHandler(files: any): Promise<string[]> {
@@ -40,7 +40,9 @@ async function fileHandler(file: any): Promise<string> {
     throw new Error("file type not allowed");
   }
 
-  const fileStream = fs.createWriteStream(`./uploads/${orignalName}`);
+  const fileStream = fs.createWriteStream(
+    `./uploads/${generateUuidv4()}${orignalName}`
+  );
 
   return new Promise<string>((resolve, reject): void => {
     file.on("error", err => {
