@@ -49,7 +49,7 @@ async function test(server: Hapi.Server): Promise<any> {
 
     const result = await server.inject(req);
 
-    logInfo("result", result.result);
+    // logInfo("result", result.result);
   });
 
   const form = new FormData();
@@ -57,8 +57,12 @@ async function test(server: Hapi.Server): Promise<any> {
   // const s = fs.createReadStream("./assets/images/mangel.jpg");
   const file = fs.readFileSync("./assets/images/mangel.jpg");
 
-  for (let i = 0; i < 1; i++) {
-    form.append("images", file);
+  form.append("json", JSON.stringify({ json: "json" }), {
+    contentType: "application/json"
+  });
+
+  for (let i = 0; i < 2; i++) {
+    form.append("images", fs.createReadStream("./assets/images/mangel.jpg"));
   }
 
   form.pipe(converter);

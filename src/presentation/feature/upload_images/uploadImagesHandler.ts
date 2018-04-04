@@ -5,7 +5,6 @@ import { Lifecycle, Request, ResponseToolkit } from "hapi";
 import { logInfo } from "../../../util/loggerUtil";
 import { generateUuidv4 } from "../../../util/uuidv4Util";
 
-// import busboy from "then-busboy";
 const imageFilter = (fileName: string): boolean => {
   // accept image only
   if (!fileName.match(/\.(jpg|jpeg|png)$/)) {
@@ -24,20 +23,21 @@ export const uploadImagesHandler = async (
   // const images = data.images;
   // const response = await fileHandler(images);
 
-  // const result = await busboy(data);
-
-  const result = parse(data, {
-    autoFields: true
-  });
+  const result = parse(data);
 
   const value: any[] = [];
 
   try {
     let part;
     while ((part = await result)) {
-      // it's a stream
       value.push(part);
-      part.pipe(fs.createWriteStream("/tmp/myfile" + value.length));
+
+      if (part.length) {
+        logInfo("1", "1");
+      } else {
+        logInfo("2", "2");
+        part.pipe(fs.createWriteStream("/tmp/BBBBBBBBB_" + part.filename));
+      }
     }
   } catch (err) {
     logInfo("Error", err);
