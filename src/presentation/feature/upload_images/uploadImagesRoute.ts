@@ -11,9 +11,10 @@ export function uploadImagesRoute(): ServerRoute {
     options: {
       auth: false,
       payload: {
-        output: "file",
-        parse: true,
-        allow: "multipart/form-data"
+        output: "stream",
+        parse: false,
+        allow: "multipart/form-data",
+        maxBytes: 1024 * 1024 * 50
       }
       // validate: {
       //   payload: {

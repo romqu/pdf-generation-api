@@ -48,11 +48,18 @@ async function test(server: Hapi.Server): Promise<any> {
     };
 
     const result = await server.inject(req);
+
+    logInfo("result", result.result);
   });
 
   const form = new FormData();
 
-  form.append("images", fs.createReadStream("./assets/images/mangel.jpg"));
+  // const s = fs.createReadStream("./assets/images/mangel.jpg");
+  const file = fs.readFileSync("./assets/images/mangel.jpg");
+
+  for (let i = 0; i < 1; i++) {
+    form.append("images", file);
+  }
 
   form.pipe(converter);
 }
