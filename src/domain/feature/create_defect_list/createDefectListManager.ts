@@ -1,5 +1,6 @@
 import { ClientRepo } from "../../../data/client/clienRepo";
 import { callAsync } from "../../../util/failableUtil";
+import { getSha256Hash } from "../../../util/hashUtil";
 import { ResponsePromise } from "../../model/response";
 
 export class CreateDefectListManager {
@@ -11,8 +12,9 @@ export class CreateDefectListManager {
 
   public execute(): ResponsePromise<number> {
     return callAsync(async ({ success, run, failure }) => {
+      const client = run(await this.clientRepo.getForAndSurnameById(1));
 
-      this.clientRepo.
+      const folderHashName = getSha256Hash();
 
       return success(1);
     });
