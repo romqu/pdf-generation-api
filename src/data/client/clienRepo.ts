@@ -1,7 +1,10 @@
 import { ResponsePromise } from "../../domain/model/response";
 import { provide } from "../../ioc/ioc";
 import { callAsync } from "../../util/failableUtil";
-import { parseStringifyDeserializeObject } from "../../util/jsonUtil";
+import {
+  deserializeObject,
+  parseStringifyDeserializeObject
+} from "../../util/jsonUtil";
 import { DiskDataSource, IReturnedId } from "../diskDataSource";
 import { ClientEntity } from "./clientEntity";
 
@@ -48,6 +51,23 @@ export class ClientRepo {
       const entity = run(
         parseStringifyDeserializeObject<ClientEntity>(result, ClientEntity)
       );
+
+      return success(entity);
+    });
+  }
+
+  public getForAndSurnameById(id: number): ResponsePromise<ClientEntity> {
+    return callAsync(async ({ success, run }) => {
+      const result = run(
+        await this.disk.queryOne<IReturnedId>(
+          "/data/client/sql/getForAndSurnameById.sql",
+          {
+            id
+          }
+        )
+      );
+
+      const entity = run(deserializeObject<ClientEntity>(result, ClientEntity));
 
       return success(entity);
     });

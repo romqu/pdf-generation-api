@@ -11,7 +11,7 @@ END TRANSACTION;
 BEGIN
     TRANSACTION;
     INSERT INTO defect_list(name, client_id)
-    VALUES ('EG', 1);
+    VALUES ('9743017409730921', 1);
     INSERT INTO street_address (postal_code, name, number, additional, defect_list_id)
     VALUES (11345, 'Musterstraße', 1, 'a', 1);
     INSERT INTO view_participant (forename, surname, phone_number, e_mail, company_name, street_address_id)

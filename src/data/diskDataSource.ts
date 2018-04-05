@@ -37,3 +37,7 @@ export class DiskDataSource {
     });
   }
 }
+
+export interface IReturnedId {
+  id: number;
+}

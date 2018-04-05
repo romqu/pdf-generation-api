@@ -2,7 +2,7 @@ import { ResponsePromise } from "../../domain/model/response";
 import { provide } from "../../ioc/ioc";
 import { callAsync } from "../../util/failableUtil";
 import { deserializeObject } from "../../util/jsonUtil";
-import { DiskDataSource } from "../diskDataSource";
+import { DiskDataSource, IReturnedId } from "../diskDataSource";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
 
 @provide(LoginCredentialsRepo)
@@ -86,8 +86,4 @@ interface IDoesExists {
 
 interface IPasswordHash {
   readonly password_hash: string;
-}
-
-interface IReturnedId {
-  id: number;
 }

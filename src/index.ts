@@ -1,8 +1,7 @@
-import * as FormData from "form-data";
-import * as fs from "fs";
 import * as Hapi from "hapi";
-import * as Stream from "stream";
 
+import { ClientRepo } from "./data/client/clienRepo";
+import { container } from "./ioc/ioc";
 import * as Server from "./server";
 import { logInfo } from "./util/loggerUtil";
 
@@ -24,48 +23,52 @@ async function test(server: Hapi.Server): Promise<any> {
   //   payload: '{"e_mail":"hello@hello.de","password":"password"}'
   // });
 
-  const converter = new Stream.Writable();
-  converter.data = [];
+  // const converter = new Stream.Writable();
+  // converter.data = [];
 
-  converter._write = (
-    chunk: any,
-    encoding: string,
-    callback: (err?: Error) => void
-  ): void => {
-    converter.data.push(chunk);
-    callback();
-  };
+  // converter._write = (
+  //   chunk: any,
+  //   encoding: string,
+  //   callback: (err?: Error) => void
+  // ): void => {
+  //   converter.data.push(chunk);
+  //   callback();
+  // };
 
-  converter.on("finish", async () => {
-    const payload = Buffer.concat(converter.data);
+  // converter.on("finish", async () => {
+  //   const payload = Buffer.concat(converter.data);
 
-    const req = {
-      app: {},
-      method: "POST",
-      url: "/images",
-      headers: form.getHeaders(),
-      payload
-    };
+  //   const req = {
+  //     app: {},
+  //     method: "POST",
+  //     url: "/images",
+  //     headers: form.getHeaders(),
+  //     payload
+  //   };
 
-    const result = await server.inject(req);
+  //   const result = await server.inject(req);
 
-    // logInfo("result", result.result);
-  });
+  //   // logInfo("result", result.result);
+  // });
 
-  const form = new FormData();
+  // const form = new FormData();
 
-  // const s = fs.createReadStream("./assets/images/mangel.jpg");
-  const file = fs.readFileSync("./assets/images/mangel.jpg");
+  // // const s = fs.createReadStream("./assets/images/mangel.jpg");
+  // const file = fs.readFileSync("./assets/images/mangel.jpg");
 
-  form.append("json", JSON.stringify({ json: "json" }), {
-    contentType: "application/json"
-  });
+  // form.append("json", JSON.stringify({ json: "json" }), {
+  //   contentType: "application/json"
+  // });
 
-  for (let i = 0; i < 2; i++) {
-    form.append("images", fs.createReadStream("./assets/images/mangel.jpg"));
-  }
+  // for (let i = 0; i < 2; i++) {
+  //   form.append("images", fs.createReadStream("./assets/images/mangel.jpg"));
+  // }
 
-  form.pipe(converter);
+  // form.pipe(converter);
+
+  const result = await container.get(ClientRepo).getForAndSurnameById(2);
+
+  logInfo("Result", result.isSuccess ? result.data.forename : result);
 }
 
 async function start(): Promise<any> {
@@ -73,7 +76,7 @@ async function start(): Promise<any> {
     const server = await Server.init();
     server.start();
     logInfo("server started successful");
-    // await test(server);
+    await test(server);
   } catch (err) {
     logInfo(err);
   }

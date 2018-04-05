@@ -35,7 +35,7 @@
     "@types/bluebird": "^3.5.20",
     "@types/boom": "^7.2.0",
     "@types/form-data": "^2.2.1",
-    "@types/hapi": "^17.0.8",
+    "@types/hapi": "^17.0.9",
     "@types/joi": "^13.0.7",
     "@types/node": "^9.6.2",
     "@types/pino": "latest",
@@ -46,12 +46,12 @@
     "gulp-shell": "^0.6.5",
     "node-gyp": "^3.6.2",
     "nodemon": "^1.17.3",
-    "pino": "^4.15.4",
+    "pino": "^4.16.0",
     "prettier": "^1.11.1",
     "ts-node": "^5.0.1",
     "tslint": "latest",
     "tslint-config-prettier": "^1.10.0",
     "tslint-immutable": "^4.5.3",
-    "typescript": "^2.9.0-dev.20180404"
+    "typescript": "^2.9.0-dev.20180405"
   }
 }

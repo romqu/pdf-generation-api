@@ -11,10 +11,10 @@ export class ClientEntity {
   public readonly loginCredentialsId: number;
 
   constructor(
-    id: number,
+    id: number = 0,
     forename: string,
     surname: string,
-    loginCredentialsId: number
+    loginCredentialsId: number = 0
   ) {
     this.id = id;
     this.forename = forename;
