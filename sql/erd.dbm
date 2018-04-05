@@ -225,7 +225,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="is_logged_in" not-null="true">
 		<type name="bool" length="0"/>
 	</column>
-	<column name="uuid_v4">
+	<column name="session_uuid">
 		<type name="char" length="36"/>
 	</column>
 	<column name="login_id">

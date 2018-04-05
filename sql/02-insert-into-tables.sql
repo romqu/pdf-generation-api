@@ -2,13 +2,17 @@ BEGIN
     TRANSACTION;
     INSERT INTO login_credentials (e_mail, password_hash)
     VALUES ('test@test.de', 'test');
+    INSERT INTO login_status (is_logged_in, login_credentials_id)
+    VALUES (false, 1);
     INSERT INTO client (forename, surname, login_credentials_id)
     VALUES ('Peter', 'Hemm', 1);
 END TRANSACTION;
 
 BEGIN
     TRANSACTION;
-    INSERT INTO street_address (postal_code, name, number, additional, client_id)
+    INSERT INTO defect_list(name, client_id)
+    VALUES ('EG', 1);
+    INSERT INTO street_address (postal_code, name, number, additional, defect_list_id)
     VALUES (11345, 'Musterstraße', 1, 'a', 1);
     INSERT INTO view_participant (forename, surname, phone_number, e_mail, company_name, street_address_id)
     VALUES ('Max', 'Mustermann', 1134567, 'max@mustermann.de', 'Mustermann AG', 1);

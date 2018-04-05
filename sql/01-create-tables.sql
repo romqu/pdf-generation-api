@@ -3,20 +3,35 @@
 
 CREATE TABLE login_credentials(
 
-	id bigserial,
-	e_mail varchar(100) UNIQUE NOT NULL,
-	password_hash text NOT NULL,
+	id BIGSERIAL,
+	e_mail VARCHAR(100) UNIQUE NOT NULL,
+	password_hash TEXT NOT NULL,
 
 	CONSTRAINT login_pk PRIMARY KEY (id)
 );
 
+CREATE TABLE login_status(
+
+	id BIGSERIAL,
+	is_logged_in BOOLEAN NOT NULL,
+	session_uuid VARCHAR(36) UNIQUE,
+
+	login_credentials_id BIGINT NOT NULL,
+
+	CONSTRAINT login_pk PRIMARY KEY (id),
+	CONSTRAINT login_credentials_fk FOREIGN KEY (login_credentials_id)
+        REFERENCES login_credentials (id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+
+);
+
 CREATE TABLE client(
 
-	id bigserial,
-	forename varchar(20) NOT NULL,
-	surname varchar(20) NOT NULL,
+	id BIGSERIAL,
+	forename VARCHAR(20) NOT NULL,
+	surname VARCHAR(20) NOT NULL,
 
-	login_credentials_id bigint NOT NULL,
+	login_credentials_id BIGINT NOT NULL,
 
 	CONSTRAINT client_pk PRIMARY KEY (id),
     CONSTRAINT login_credentials_fk FOREIGN KEY (login_credentials_id)
@@ -24,33 +39,46 @@ CREATE TABLE client(
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE defect_list(
 
-CREATE TABLE street_address(
+	id BIGSERIAL,
+	name VARCHAR(255) NOT NULL,
 
-	id bigserial,
-	postal_code integer NOT NULL,
-	name varchar(255) NOT NULL,
-	number integer NOT NULL,
-	additional varchar(5),
+	client_id BIGINT NOT NULL,
 
-	client_id bigint NOT NULL,
-
-	CONSTRAINT address_pk PRIMARY KEY (id),
+	CONSTRAINT defect_list_pk PRIMARY KEY (id),
     CONSTRAINT client_fk FOREIGN KEY (client_id)
         REFERENCES client (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+
+CREATE TABLE street_address(
+
+	id BIGSERIAL,
+	postal_code INTEGER NOT NULL,
+	name VARCHAR(255) NOT NULL,
+	number INTEGER NOT NULL,
+	additional VARCHAR(5),
+
+	defect_list_id BIGINT NOT NULL,
+
+	CONSTRAINT street_address_pk PRIMARY KEY (id),
+    CONSTRAINT defect_list_fk FOREIGN KEY (defect_list_id)
+        REFERENCES defect_list (id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 CREATE TABLE view_participant(
 
-	id bigserial,
-	forename varchar(30) NOT NULL,
-	surname varchar(30) NOT NULL,
-	phone_number integer NOT NULL,
-	e_mail varchar(255) NOT NULL,
-	company_name varchar(255) NOT NULL,
+	id BIGSERIAL,
+	forename VARCHAR(30) NOT NULL,
+	surname VARCHAR(30) NOT NULL,
+	phone_number INTEGER NOT NULL,
+	e_mail VARCHAR(255) NOT NULL,
+	company_name VARCHAR(255) NOT NULL,
 
-	street_address_id bigint NOT NULL,
+	street_address_id BIGINT NOT NULL,
 
 	CONSTRAINT participant_pk PRIMARY KEY (id),
     CONSTRAINT street_address_fk FOREIGN KEY (street_address_id)
@@ -61,10 +89,10 @@ CREATE TABLE view_participant(
 
 CREATE TABLE floor(
 
-	id bigserial,
-	name varchar(20) NOT NULL,
+	id BIGSERIAL,
+	name VARCHAR(20) NOT NULL,
 
-	street_address_id bigint,
+	street_address_id BIGINT,
 
 	CONSTRAINT floor_pk PRIMARY KEY (id),
     CONSTRAINT street_address_fk FOREIGN KEY (street_address_id)
@@ -74,10 +102,10 @@ CREATE TABLE floor(
 
 CREATE TABLE living_unit(
 
-	id bigserial,
-	number integer NOT NULL,
+	id BIGSERIAL,
+	number INTEGER NOT NULL,
 
-	floor_id bigint,
+	floor_id BIGINT,
 
 	CONSTRAINT living_unit_pk PRIMARY KEY (id),
     CONSTRAINT floor_fk FOREIGN KEY (floor_id)
@@ -87,12 +115,12 @@ CREATE TABLE living_unit(
 
 CREATE TABLE room(
 
-	id bigserial,
-	name varchar(30) NOT NULL,
-	number integer NOT NULL,
-	location_description text NOT NULL,
+	id BIGSERIAL,
+	name VARCHAR(30) NOT NULL,
+	number INTEGER NOT NULL,
+	location_description TEXT NOT NULL,
 
-	living_unit_id bigint NOT NULL,
+	living_unit_id BIGINT NOT NULL,
 
 	CONSTRAINT room_pk PRIMARY KEY (id),
     CONSTRAINT living_unit_fk FOREIGN KEY (living_unit_id )
@@ -103,13 +131,13 @@ CREATE TABLE room(
 
 CREATE TABLE defect(
 
-	id bigserial,
-	description text NOT NULL,
-	measure text NOT NULL,
-	company_in_charge varchar(50) NOT NULL,
-	done_till date NOT NULL,
+	id BIGSERIAL,
+	description TEXT NOT NULL,
+	measure TEXT NOT NULL,
+	company_in_charge VARCHAR(50) NOT NULL,
+	done_till DATE NOT NULL,
 
-	room_id bigint NOT NULL,
+	room_id BIGINT NOT NULL,
 
 	CONSTRAINT defect_pk PRIMARY KEY (id),
     CONSTRAINT room_fk FOREIGN KEY (room_id)
@@ -120,10 +148,10 @@ CREATE TABLE defect(
 
 CREATE TABLE defect_image(
 
-	id bigserial,
-	name varchar(50) NOT NULL,
+	id BIGSERIAL,
+	name VARCHAR(50) NOT NULL,
 
-	defect_id bigint NOT NULL,
+	defect_id BIGINT NOT NULL,
 
 	CONSTRAINT defect_image_pk PRIMARY KEY (id),
     CONSTRAINT defect_fk FOREIGN KEY (defect_id)
