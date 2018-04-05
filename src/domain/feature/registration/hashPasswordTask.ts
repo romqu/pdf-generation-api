@@ -1,5 +1,5 @@
 import { provide } from "../../../ioc/ioc";
-import { hashValue } from "../../../util/argon2Util";
+import { hashValueArgon2 } from "../../../util/hashUtil";
 import { ResponsePromise } from "../../model/response";
 
 @provide(HashPasswordTask)
@@ -7,6 +7,6 @@ import { ResponsePromise } from "../../model/response";
   .done()
 export class HashPasswordTask {
   public execute(password: string): ResponsePromise<string> {
-    return hashValue(password);
+    return hashValueArgon2(password);
   }
 }

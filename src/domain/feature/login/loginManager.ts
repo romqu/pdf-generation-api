@@ -2,8 +2,8 @@ import { ClientRepo } from "../../../data/client/clienRepo";
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
 import { provide } from "../../../ioc/ioc";
 import { LoginModel } from "../../../presentation/model/loginModel";
-import { verifyValue } from "../../../util/argon2Util";
 import { callAsync } from "../../../util/failableUtil";
+import { verifyValueArgon2 } from "../../../util/hashUtil";
 import { LoginCredentials } from "../../model/loginCredentials";
 import { ResponsePromise } from "../../model/response";
 import { CreateClientSessionTask } from "../registration/createClientSessionTask";
@@ -35,7 +35,10 @@ export class LoginManager {
       );
 
       const isValid = run(
-        await verifyValue(loginEntity.passwordHash, loginCredentials.password)
+        await verifyValueArgon2(
+          loginEntity.passwordHash,
+          loginCredentials.password
+        )
       );
 
       if (!isValid) {
