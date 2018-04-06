@@ -1,16 +1,27 @@
 import * as fs from "fs-extra";
 
 import { ResponsePromise } from "../domain/model/response";
-import { callAsync } from "../util/failableUtil";
+import { failableAsync } from "../util/failableUtil";
 
 export class FsDataSource {
-  createDir(path: string): ResponsePromise<string> {
-    fs.mkdirp("");
-    fs.chown("");
+  public createDir(path: string): ResponsePromise<void> {
+    return failableAsync(
+      { type: "FileSystem", code: 200, title: "create dir error" },
+      () => fs.mkdirp(path)
+    );
+  }
 
-    return callAsync(async ({ success, run, failable }) => {
-      const result = run(await failable());
-      return success("");
-    });
+  public remove(path: string): ResponsePromise<void> {
+    return failableAsync(
+      { type: "FileSystem", code: 201, title: "delete file error" },
+      () => fs.remove(path)
+    );
+  }
+
+  public chmod(path: string): ResponsePromise<void> {
+    return failableAsync(
+      { type: "FileSystem", code: 202, title: "chmod error" },
+      () => fs.chmod(path, 0o750)
+    );
   }
 }
