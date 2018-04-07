@@ -18,10 +18,11 @@ export class FsDataSource {
     );
   }
 
-  public chmod(path: string): ResponsePromise<void> {
+  // 0o750
+  public chmod(path: string, mode: number = 0o750): ResponsePromise<void> {
     return failableAsync(
       { type: "FileSystem", code: 202, title: "chmod error" },
-      () => fs.chmod(path, 0o750)
+      () => fs.chmod(path, mode)
     );
   }
 }
