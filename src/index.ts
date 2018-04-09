@@ -4,6 +4,7 @@ import { ClientRepo } from "./data/client/clienRepo";
 import { container } from "./ioc/ioc";
 import * as Server from "./server";
 import { logInfo } from "./util/loggerUtil";
+import { CreateFullDefectListRepo } from "./data/create_full_defect_list/createFullDefectListRepo";
 
 Error.stackTraceLimit = Infinity;
 
@@ -66,9 +67,11 @@ async function test(server: Hapi.Server): Promise<any> {
 
   // form.pipe(converter);
 
-  const result = await container.get(ClientRepo).getForAndSurnameById(2);
+  // const result = await container.get(CreateFullDefectListRepo).test();
 
-  logInfo("Result", result.isSuccess ? result.data.forename : result);
+  container.get(CreateFullDefectListRepo).test();
+
+  // logInfo("Result", result.isSuccess ? result.data.forename : result);
 }
 
 async function start(): Promise<any> {

@@ -29,7 +29,7 @@
     "pg-promise": "^8.2.2",
     "redis": "^2.8.0",
     "reflect-metadata": "^0.1.12",
-    "then-busboy": "^2.3.3",
+    "then-busboy": "^2.3.4",
     "uuid": "^3.2.1"
   },
   "devDependencies": {
@@ -48,12 +48,12 @@
     "gulp-shell": "^0.6.5",
     "node-gyp": "^3.6.2",
     "nodemon": "^1.17.3",
-    "pino": "^4.16.0",
+    "pino": "^4.16.1",
     "prettier": "^1.11.1",
     "ts-node": "^5.0.1",
     "tslint": "latest",
     "tslint-config-prettier": "^1.10.0",
     "tslint-immutable": "^4.5.3",
-    "typescript": "^2.9.0-dev.20180405"
+    "typescript": "^2.9.0-dev.20180409"
   }
 }

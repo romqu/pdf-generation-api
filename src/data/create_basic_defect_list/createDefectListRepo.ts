@@ -18,7 +18,7 @@ export class CreateDefectListRepo {
     return callAsync(async ({ success, run }) => {
       const result = run(
         await this.disk.queryOne<IReturnedId>(
-          "/data/create_defect_list/sql/createDefectList.sql",
+          "/data/create_defect_list/sql/createBasicDefectList.sql",
           {
             dLname: entity.name,
             clientId: entity.clientId,

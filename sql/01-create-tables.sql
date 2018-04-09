@@ -149,7 +149,7 @@ CREATE TABLE defect(
 CREATE TABLE defect_image(
 
 	id BIGSERIAL,
-	name VARCHAR(50) NOT NULL,
+	name VARCHAR(255) NOT NULL,
 	position SMALLINT NOT NULL,
 
 	defect_id BIGINT NOT NULL,
