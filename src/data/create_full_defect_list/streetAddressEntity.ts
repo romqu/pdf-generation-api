@@ -1,3 +1,6 @@
+import { DeepReadonly } from "../../util/deepReadOnlyUtil";
+import { FloorEntity } from "./floorEntity";
+
 export class StreetAddressEntity {
   public readonly id: number;
   public readonly postalCode: number;
@@ -5,6 +8,7 @@ export class StreetAddressEntity {
   public readonly number: number;
   public readonly additional: string;
   public readonly defectListId: number;
+  public readonly floorEntityList: DeepReadonly<FloorEntity[]>;
 
   constructor(
     id: number,
@@ -13,7 +17,8 @@ export class StreetAddressEntity {
     // tslint:disable-next-line:variable-name
     number: number,
     additional: string,
-    defectListId: number
+    defectListId: number,
+    floorEntityList: DeepReadonly<FloorEntity[]>
   ) {
     this.id = id;
     this.postalCode = postalCode;
@@ -21,5 +26,6 @@ export class StreetAddressEntity {
     this.number = number;
     this.additional = additional;
     this.defectListId = defectListId;
+    this.floorEntityList = floorEntityList;
   }
 }
