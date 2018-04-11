@@ -55,6 +55,24 @@ export class CreateFullDefectListRepo {
         ) + returningId
       );
 
+      const viewParticipantValues = entity.streetAddressEntity.viewParticipantEntityList.map(
+        viewParticipant => ({
+          forename: viewParticipant.forename,
+          surname: viewParticipant.surname,
+          phone_number: viewParticipant.phoneNumber,
+          e_mail: viewParticipant.email,
+          company_name: viewParticipant.companyName,
+          street_address_id: sARowId.id
+        })
+      );
+
+      await t.none(
+        this.pgMain.helpers.insert(
+          viewParticipantValues,
+          FloorEntity.getColumnSet(this.pgMain)
+        )
+      );
+
       const floorValues = entity.streetAddressEntity.floorEntityList.map(
         floor => ({
           name: floor.name,
