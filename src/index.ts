@@ -1,10 +1,13 @@
 import * as Hapi from "hapi";
 
-import { ClientRepo } from "./data/client/clienRepo";
+import { CreateFullDefectListRepo } from "./data/create_full_defect_list/createFullDefectListRepo";
+import { DefectListEntity } from "./data/create_full_defect_list/defectListEntity";
+import { FloorEntity } from "./data/create_full_defect_list/floorEntity";
+import { LivingUnitEntity } from "./data/create_full_defect_list/livingUnitEntity";
+import { StreetAddressEntity } from "./data/create_full_defect_list/streetAddressEntity";
 import { container } from "./ioc/ioc";
 import * as Server from "./server";
 import { logInfo } from "./util/loggerUtil";
-import { CreateFullDefectListRepo } from "./data/create_full_defect_list/createFullDefectListRepo";
 
 Error.stackTraceLimit = Infinity;
 
@@ -69,7 +72,23 @@ async function test(server: Hapi.Server): Promise<any> {
 
   // const result = await container.get(CreateFullDefectListRepo).test();
 
-  container.get(CreateFullDefectListRepo).test();
+  container
+    .get(CreateFullDefectListRepo)
+    .test(
+      new DefectListEntity(
+        0,
+        "347931649sadwqddwq",
+        1,
+        new StreetAddressEntity(0, 12345, "qrwwqq", 45, "av", 0, [
+          new FloorEntity(0, "EG", 0, [
+            new LivingUnitEntity(0, 45, 0),
+            new LivingUnitEntity(0, 35, 0)
+          ]),
+          new FloorEntity(0, "EG", 0, []),
+          new FloorEntity(0, "OG", 0, [new LivingUnitEntity(0, 45, 0)])
+        ])
+      )
+    );
 
   // logInfo("Result", result.isSuccess ? result.data.forename : result);
 }
@@ -79,6 +98,7 @@ async function start(): Promise<any> {
     const server = await Server.init();
     server.start();
     logInfo("server started successful");
+
     await test(server);
   } catch (err) {
     logInfo(err);
