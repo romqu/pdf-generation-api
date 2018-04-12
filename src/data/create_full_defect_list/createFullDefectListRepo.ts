@@ -8,9 +8,11 @@ import { TYPES } from "../../ioc/types";
 import { logInfo } from "../../util/loggerUtil";
 import { generateUuidv4 } from "../../util/uuidv4Util";
 import { IReturnedId } from "../diskDataSource";
+import { DefectEntity } from "./defectEntity";
 import { DefectListEntity } from "./defectListEntity";
 import { FloorEntity } from "./floorEntity";
 import { LivingUnitEntity } from "./livingUnitEntity";
+import { RoomEntity } from "./roomEntity";
 import { StreetAddressEntity } from "./streetAddressEntity";
 
 @provide(CreateFullDefectListRepo)
@@ -94,10 +96,15 @@ export class CreateFullDefectListRepo {
         floor_id: number;
       }> = [];
 
+      const tempRoomEntityListList: [RoomEntity[]] = [[]];
+
       for (let i = 0; i < floorInsertIdList.length; i++) {
         const floorId = floorInsertIdList[i];
+
         for (const livingUnit of entity.streetAddressEntity.floorEntityList[i]
           .livingUnitEntityList) {
+          tempRoomEntityListList.push(livingUnit.roomEntityList);
+
           livingUnitValues.push({
             number: livingUnit.number,
             floor_id: floorId
@@ -113,6 +120,30 @@ export class CreateFullDefectListRepo {
         [],
         (row: IReturnedId) => +row.id
       );
+
+      const roomValues: Array<{
+        name: string;
+        number: number;
+        location_description: string;
+        living_unit_id: number;
+      }> = [];
+
+      const tempDefectEntiyListList: [DefectEntity[]] = [[]];
+
+      for (let i = 0; i < livingUnitInsertIdList.length; i++) {
+        const livingUnitId = livingUnitInsertIdList[i];
+
+        tempRoomEntityListList[i].forEach(roomEntity => {
+          tempDefectEntiyListList.push(roomEntity.defectEntityList);
+
+          roomValues.push({
+            name: roomEntity.name,
+            number: roomEntity.number,
+            location_description: roomEntity.locationDescription,
+            living_unit_id: livingUnitId
+          });
+        });
+      }
 
       logInfo("result", livingUnitInsertIdList);
 
