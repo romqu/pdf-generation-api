@@ -124,7 +124,7 @@ CREATE TABLE room(
 
 	CONSTRAINT room_pk PRIMARY KEY (id),
     CONSTRAINT living_unit_fk FOREIGN KEY (living_unit_id )
-        REFERENCES client (id)
+        REFERENCES living_unit (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 

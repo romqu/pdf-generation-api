@@ -9,11 +9,13 @@ import { logInfo } from "../../util/loggerUtil";
 import { generateUuidv4 } from "../../util/uuidv4Util";
 import { IReturnedId } from "../diskDataSource";
 import { DefectEntity } from "./defectEntity";
+import { DefectImageEntity } from "./defectImageEntity";
 import { DefectListEntity } from "./defectListEntity";
 import { FloorEntity } from "./floorEntity";
 import { LivingUnitEntity } from "./livingUnitEntity";
 import { RoomEntity } from "./roomEntity";
 import { StreetAddressEntity } from "./streetAddressEntity";
+import { ViewParticipantEntity } from "./viewParticipantEntity";
 
 @provide(CreateFullDefectListRepo)
   .inSingletonScope()
@@ -34,6 +36,7 @@ export class CreateFullDefectListRepo {
     const returningId = "RETURNING id";
 
     this.pgDb.tx<IReturnedId>(async (t: ITask<IReturnedId>) => {
+      // insert DefectList
       const dLRowId = await t.one<IReturnedId>(
         this.pgMain.helpers.insert(
           {
@@ -44,6 +47,7 @@ export class CreateFullDefectListRepo {
         ) + returningId
       );
 
+      // insert StreetAddress
       const sARowId = await t.one<IReturnedId>(
         this.pgMain.helpers.insert(
           {
@@ -57,6 +61,7 @@ export class CreateFullDefectListRepo {
         ) + returningId
       );
 
+      // insert ViewParticipants
       const viewParticipantValues = entity.streetAddressEntity.viewParticipantEntityList.map(
         viewParticipant => ({
           forename: viewParticipant.forename,
@@ -71,10 +76,11 @@ export class CreateFullDefectListRepo {
       await t.none(
         this.pgMain.helpers.insert(
           viewParticipantValues,
-          FloorEntity.getColumnSet(this.pgMain)
+          ViewParticipantEntity.getColumnSet(this.pgMain)
         )
       );
 
+      // insert Floors
       const floorValues = entity.streetAddressEntity.floorEntityList.map(
         floor => ({
           name: floor.name,
@@ -91,25 +97,28 @@ export class CreateFullDefectListRepo {
         (row: IReturnedId) => +row.id
       );
 
+      // insert LivingUnits
       const livingUnitValues: Array<{
         number: number;
         floor_id: number;
       }> = [];
 
       const tempRoomEntityListList: [RoomEntity[]] = [[]];
+      tempRoomEntityListList.pop();
 
       for (let i = 0; i < floorInsertIdList.length; i++) {
         const floorId = floorInsertIdList[i];
 
-        for (const livingUnit of entity.streetAddressEntity.floorEntityList[i]
-          .livingUnitEntityList) {
+        entity.streetAddressEntity.floorEntityList[
+          i
+        ].livingUnitEntityList.forEach(livingUnit => {
           tempRoomEntityListList.push(livingUnit.roomEntityList);
 
           livingUnitValues.push({
             number: livingUnit.number,
             floor_id: floorId
           });
-        }
+        });
       }
 
       const livingUnitInsertIdList = await t.map(
@@ -121,7 +130,8 @@ export class CreateFullDefectListRepo {
         (row: IReturnedId) => +row.id
       );
 
-      const roomValues: Array<{
+      // insert Rooms
+      const roomEntityValues: Array<{
         name: string;
         number: number;
         location_description: string;
@@ -129,6 +139,7 @@ export class CreateFullDefectListRepo {
       }> = [];
 
       const tempDefectEntiyListList: [DefectEntity[]] = [[]];
+      tempDefectEntiyListList.pop();
 
       for (let i = 0; i < livingUnitInsertIdList.length; i++) {
         const livingUnitId = livingUnitInsertIdList[i];
@@ -136,7 +147,7 @@ export class CreateFullDefectListRepo {
         tempRoomEntityListList[i].forEach(roomEntity => {
           tempDefectEntiyListList.push(roomEntity.defectEntityList);
 
-          roomValues.push({
+          roomEntityValues.push({
             name: roomEntity.name,
             number: roomEntity.number,
             location_description: roomEntity.locationDescription,
@@ -145,7 +156,54 @@ export class CreateFullDefectListRepo {
         });
       }
 
-      logInfo("result", livingUnitInsertIdList);
+      logInfo("here", roomEntityValues);
+
+      const roomEntitytInsertIdList = await t.map(
+        this.pgMain.helpers.insert(
+          roomEntityValues,
+          RoomEntity.getColumnSet(this.pgMain)
+        ) + returningId,
+        [],
+        (row: IReturnedId) => +row.id
+      );
+
+      // insert Defects
+      const defectEntityValues: Array<{
+        description: string;
+        measure: string;
+        company_in_charge: string;
+        done_till: string;
+        room_id: number;
+      }> = [];
+
+      const tempDefectImageEntiyListList: [DefectImageEntity[]] = [[]];
+
+      for (let i = 0; i < roomEntitytInsertIdList.length; i++) {
+        const roomEntityId = roomEntitytInsertIdList[i];
+
+        tempDefectEntiyListList[i].forEach(defectEntity => {
+          tempDefectImageEntiyListList.push(defectEntity.defectImageEntityList);
+
+          defectEntityValues.push({
+            description: defectEntity.description,
+            measure: defectEntity.measure,
+            company_in_charge: defectEntity.companyInCharge,
+            done_till: defectEntity.doneTill,
+            room_id: roomEntityId
+          });
+        });
+      }
+
+      const defectEntitytInsertIdList = await t.map(
+        this.pgMain.helpers.insert(
+          defectEntityValues,
+          DefectEntity.getColumnSet(this.pgMain)
+        ) + returningId,
+        [],
+        (row: IReturnedId) => +row.id
+      );
+
+      logInfo("result", defectEntitytInsertIdList);
 
       return { id: 1 };
     });

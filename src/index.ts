@@ -1,13 +1,16 @@
 import * as Hapi from "hapi";
 
 import { CreateFullDefectListRepo } from "./data/create_full_defect_list/createFullDefectListRepo";
+import { DefectEntity } from "./data/create_full_defect_list/defectEntity";
 import { DefectListEntity } from "./data/create_full_defect_list/defectListEntity";
 import { FloorEntity } from "./data/create_full_defect_list/floorEntity";
 import { LivingUnitEntity } from "./data/create_full_defect_list/livingUnitEntity";
+import { RoomEntity } from "./data/create_full_defect_list/roomEntity";
 import { StreetAddressEntity } from "./data/create_full_defect_list/streetAddressEntity";
 import { container } from "./ioc/ioc";
 import * as Server from "./server";
 import { logInfo } from "./util/loggerUtil";
+import { ViewParticipantEntity } from "./data/create_full_defect_list/viewParticipantEntity";
 
 Error.stackTraceLimit = Infinity;
 
@@ -79,14 +82,42 @@ async function test(server: Hapi.Server): Promise<any> {
         0,
         "347931649sadwqddwq",
         1,
-        new StreetAddressEntity(0, 12345, "qrwwqq", 45, "av", 0, [
-          new FloorEntity(0, "EG", 0, [
-            new LivingUnitEntity(0, 45, 0),
-            new LivingUnitEntity(0, 35, 0)
-          ]),
-          new FloorEntity(0, "EG", 0, []),
-          new FloorEntity(0, "OG", 0, [new LivingUnitEntity(0, 45, 0)])
-        ])
+        new StreetAddressEntity(
+          0,
+          12345,
+          "qrwwqq",
+          45,
+          "av",
+          0,
+          [
+            new FloorEntity(0, "EG", 0, [
+              new LivingUnitEntity(0, 45, 0, [
+                new RoomEntity(0, "Zimmer", 1, "DAAAA", 0, [
+                  new DefectEntity(
+                    0,
+                    "kapuut",
+                    "np",
+                    "weare",
+                    "3333-01-01",
+                    0,
+                    []
+                  )
+                ])
+              ])
+            ])
+          ],
+          [
+            new ViewParticipantEntity(
+              0,
+              "me",
+              "too",
+              123455,
+              "rrew@rewrew.de",
+              "berta ag",
+              0
+            )
+          ]
+        )
       )
     );
 

@@ -39,11 +39,10 @@ export class DefectEntity {
           new pgMain.helpers.Column("description"),
           new pgMain.helpers.Column("measure"),
           new pgMain.helpers.Column("company_in_charge"),
-          new pgMain.helpers.Column("additional"),
           new pgMain.helpers.Column("done_till"),
           new pgMain.helpers.Column("room_id")
         ],
-        new pgMain.helpers.TableName("street_address")
+        new pgMain.helpers.TableName("defect")
       );
     }
     return DefectEntity.columnSet;
