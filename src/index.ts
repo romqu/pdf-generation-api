@@ -82,6 +82,7 @@ async function test(server: Hapi.Server): Promise<any> {
         0,
         "347931649sadwqddwq",
         1,
+        new Date(),
         new StreetAddressEntity(
           0,
           12345,

@@ -43,6 +43,7 @@ CREATE TABLE defect_list(
 
 	id BIGSERIAL,
 	name VARCHAR(255) NOT NULL,
+	creation_date DATE NOT NULL,
 
 	client_id BIGINT NOT NULL,
 

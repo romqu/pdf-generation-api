@@ -3,9 +3,9 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.1-beta" last-position="0,0" last-zoom="1"
+<dbmodel pgmodeler-ver="0.9.1-beta1" last-position="0,0" last-zoom="1"
 	 default-schema="public" default-owner="postgres">
-<database name="creavisio_pdf" encoding="UTF8">
+<database name="creavisio_pdf" encoding="UTF8" is-template="false" allow-conns="true">
 </database>
 
 <schema name="public" fill-color="#e1e1e1" sql-disabled="true">
@@ -128,7 +128,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="house_address">
+<table name="street_address">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<position x="839" y="60"/>
@@ -150,7 +150,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="defect_list_id">
 		<type name="bigint" length="0"/>
 	</column>
-	<constraint name="address_pk" type="pk-constr" table="public.house_address">
+	<constraint name="address_pk" type="pk-constr" table="public.street_address">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
@@ -246,6 +246,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="name" not-null="true">
 		<type name="varchar" length="255"/>
 	</column>
+	<column name="creation_date" not-null="true">
+		<type name="date" length="0"/>
+	</column>
 	<column name="client_id">
 		<type name="bigint" length="0"/>
 	</column>
@@ -261,7 +264,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="house_address_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.house_address" table="public.view_participant">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.street_address" table="public.view_participant">
 	<columns names="house_address_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -279,7 +282,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="defect_list_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.defect_list" table="public.house_address">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.defect_list" table="public.street_address">
 	<columns names="defect_list_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -297,7 +300,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <constraint name="house_address_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.house_address" table="public.floor">
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.street_address" table="public.floor">
 	<columns names="house_address_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
@@ -316,52 +319,52 @@ CAUTION: Do not modify this file unless you know what you are doing.
 
 <relationship name="rel_client_login" type="relfk"
 	 src-table="public.client"
-	 dst-table="public.login_credentials"
+	 dst-table="public.login_credentials" reference-fk="login_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_view_participant_house_address" type="relfk"
 	 src-table="public.view_participant"
-	 dst-table="public.house_address"
+	 dst-table="public.street_address" reference-fk="house_address_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_floor_house_address" type="relfk"
 	 src-table="public.floor"
-	 dst-table="public.house_address"
+	 dst-table="public.street_address" reference-fk="house_address_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_living_unit_floor" type="relfk"
 	 src-table="public.living_unit"
-	 dst-table="public.floor"
+	 dst-table="public.floor" reference-fk="floor_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_room_living_unit" type="relfk"
 	 src-table="public.room"
-	 dst-table="public.living_unit"
+	 dst-table="public.living_unit" reference-fk="living_unit_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_defect_room" type="relfk"
 	 src-table="public.defect"
-	 dst-table="public.room"
+	 dst-table="public.room" reference-fk="room_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_defect_image_defect" type="relfk"
 	 src-table="public.defect_image"
-	 dst-table="public.defect"
+	 dst-table="public.defect" reference-fk="defect_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_login_status_login" type="relfk"
 	 src-table="public.login_status"
-	 dst-table="public.login_credentials"
+	 dst-table="public.login_credentials" reference-fk="login_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_defect_list_client" type="relfk"
 	 src-table="public.defect_list"
-	 dst-table="public.client"
+	 dst-table="public.client" reference-fk="client_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_house_address_defect_list" type="relfk"
-	 src-table="public.house_address"
-	 dst-table="public.defect_list"
+	 src-table="public.street_address"
+	 dst-table="public.defect_list" reference-fk="defect_list_fk"
 	 src-required="false" dst-required="false"/>
 
 </dbmodel>

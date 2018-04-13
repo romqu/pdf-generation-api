@@ -1,18 +1,12 @@
 import { Room } from "./room";
 
 export class LivingUnit {
-  constructor(
-    private readonly params: {
-      readonly number: number;
-      readonly rooms: Room[];
-    }
-  ) {}
+  public readonly number: number;
+  public readonly roomList: Room[];
 
-  public get number(): number {
-    return this.params.number;
-  }
-
-  public get rooms(): Room[] {
-    return this.params.rooms;
+  // tslint:disable-next-line:variable-name
+  constructor(number: number, roomList: Room[]) {
+    this.number = number;
+    this.roomList = roomList;
   }
 }

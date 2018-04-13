@@ -1,8 +1,7 @@
 export class Creator {
-  constructor(
-    private readonly params: {
-      readonly forename: string;
-      readonly surname: string;
-    }
-  ) {}
+  public readonly clientId: number;
+
+  constructor(clientId: number) {
+    this.clientId = clientId;
+  }
 }

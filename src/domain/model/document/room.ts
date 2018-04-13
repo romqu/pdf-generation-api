@@ -1,28 +1,21 @@
 import { Defect } from "./defect";
 
 export class Room {
+  public readonly name: string;
+  public readonly number: number;
+  public readonly locationDescription: string;
+  public readonly defectList: Defect[];
+
   constructor(
-    private readonly params: {
-      readonly name: string;
-      readonly number: number;
-      readonly description: string;
-      readonly defects: Defect[];
-    }
-  ) {}
-
-  public get name(): string {
-    return this.params.name;
-  }
-
-  public get number(): number {
-    return this.params.number;
-  }
-
-  public get description(): string {
-    return this.params.description;
-  }
-
-  public get defects(): Defect[] {
-    return this.params.defects;
+    name: string,
+    // tslint:disable-next-line:variable-name
+    number: number,
+    locationDescription: string,
+    defectList: Defect[]
+  ) {
+    this.name = name;
+    this.number = number;
+    this.locationDescription = locationDescription;
+    this.defectList = defectList;
   }
 }

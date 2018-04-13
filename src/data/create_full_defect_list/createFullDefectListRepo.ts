@@ -42,6 +42,7 @@ export class CreateFullDefectListRepo {
           this.pgMain.helpers.insert(
             {
               name: entity.name,
+              creation_date: entity.creationDate.toLocaleDateString(),
               client_id: entity.clientId
             },
             DefectListEntity.getColumnSet(this.pgMain)

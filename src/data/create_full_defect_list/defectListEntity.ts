@@ -7,6 +7,7 @@ export class DefectListEntity {
 
   public readonly id: number;
   public readonly name: string;
+  public readonly creationDate: Date;
   public readonly clientId: number;
   public readonly streetAddressEntity: StreetAddressEntity;
 
@@ -14,10 +15,12 @@ export class DefectListEntity {
     id: number = 0,
     name: string,
     clientId: number,
+    creationDate: Date,
     streetAddressEntity: StreetAddressEntity
   ) {
     this.id = id;
     this.name = name;
+    this.creationDate = creationDate;
     this.clientId = clientId;
     this.streetAddressEntity = streetAddressEntity;
   }
@@ -28,6 +31,7 @@ export class DefectListEntity {
       DefectListEntity.columnSet = new pgMain.helpers.ColumnSet(
         [
           new pgMain.helpers.Column("name"),
+          new pgMain.helpers.Column("creation_date"),
           new pgMain.helpers.Column("client_id")
         ],
         new pgMain.helpers.TableName("defect_list")

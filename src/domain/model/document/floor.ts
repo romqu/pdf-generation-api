@@ -1,18 +1,11 @@
 import { LivingUnit } from "./livingUnit";
 
 export class Floor {
-  constructor(
-    private readonly params: {
-      readonly name: string;
-      readonly livingUnits: LivingUnit[];
-    }
-  ) {}
+  public readonly name: string;
+  public readonly livingUnitList: LivingUnit[];
 
-  public get name(): string {
-    return this.params.name;
-  }
-
-  public get livingUnits(): LivingUnit[] {
-    return this.params.livingUnits;
+  constructor(name: string, livingUnitList: LivingUnit[]) {
+    this.name = name;
+    this.livingUnitList = livingUnitList;
   }
 }
