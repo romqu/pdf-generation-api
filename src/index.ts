@@ -7,10 +7,10 @@ import { FloorEntity } from "./data/create_full_defect_list/floorEntity";
 import { LivingUnitEntity } from "./data/create_full_defect_list/livingUnitEntity";
 import { RoomEntity } from "./data/create_full_defect_list/roomEntity";
 import { StreetAddressEntity } from "./data/create_full_defect_list/streetAddressEntity";
+import { ViewParticipantEntity } from "./data/create_full_defect_list/viewParticipantEntity";
 import { container } from "./ioc/ioc";
 import * as Server from "./server";
 import { logInfo } from "./util/loggerUtil";
-import { ViewParticipantEntity } from "./data/create_full_defect_list/viewParticipantEntity";
 
 Error.stackTraceLimit = Infinity;
 
@@ -75,9 +75,9 @@ async function test(server: Hapi.Server): Promise<any> {
 
   // const result = await container.get(CreateFullDefectListRepo).test();
 
-  container
+  const result = await container
     .get(CreateFullDefectListRepo)
-    .test(
+    .insert(
       new DefectListEntity(
         0,
         "347931649sadwqddwq",
@@ -121,7 +121,7 @@ async function test(server: Hapi.Server): Promise<any> {
       )
     );
 
-  // logInfo("Result", result.isSuccess ? result.data.forename : result);
+  logInfo("Result", result.isSuccess ? result.data : result);
 }
 
 async function start(): Promise<any> {

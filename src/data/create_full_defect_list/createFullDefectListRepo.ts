@@ -3,10 +3,10 @@ import "reflect-metadata";
 import { inject } from "inversify";
 import { IDatabase, IMain, ITask } from "pg-promise";
 
+import { ResponsePromise } from "../../domain/model/response";
 import { provide } from "../../ioc/ioc";
 import { TYPES } from "../../ioc/types";
-import { logInfo } from "../../util/loggerUtil";
-import { generateUuidv4 } from "../../util/uuidv4Util";
+import { failableAsync } from "../../util/failableUtil";
 import { IReturnedId } from "../diskDataSource";
 import { DefectEntity } from "./defectEntity";
 import { DefectImageEntity } from "./defectImageEntity";
@@ -32,180 +32,180 @@ export class CreateFullDefectListRepo {
     this.pgMain = pgMain;
   }
 
-  public test(entity: DefectListEntity): void {
+  public insert(entity: DefectListEntity): ResponsePromise<IReturnedId> {
     const returningId = "RETURNING id";
 
-    this.pgDb.tx<IReturnedId>(async (t: ITask<IReturnedId>) => {
-      // insert DefectList
-      const dLRowId = await t.one<IReturnedId>(
-        this.pgMain.helpers.insert(
-          {
-            name: generateUuidv4(),
-            client_id: entity.clientId
-          },
-          DefectListEntity.getColumnSet(this.pgMain)
-        ) + returningId
-      );
+    return failableAsync({ type: "DB", code: 100, title: "Query Error" }, () =>
+      this.pgDb.tx<IReturnedId>(async (t: ITask<IReturnedId>) => {
+        // insert DefectList
+        const dLRowId = await t.one<IReturnedId>(
+          this.pgMain.helpers.insert(
+            {
+              name: entity.name,
+              client_id: entity.clientId
+            },
+            DefectListEntity.getColumnSet(this.pgMain)
+          ) + returningId
+        );
 
-      // insert StreetAddress
-      const sARowId = await t.one<IReturnedId>(
-        this.pgMain.helpers.insert(
-          {
-            name: entity.streetAddressEntity.name,
-            postal_code: entity.streetAddressEntity.postalCode,
-            number: entity.streetAddressEntity.number,
-            additional: entity.streetAddressEntity.additional,
-            defect_list_id: dLRowId.id
-          },
-          StreetAddressEntity.getColumnSet(this.pgMain)
-        ) + returningId
-      );
+        // insert StreetAddress
+        const sARowId = await t.one<IReturnedId>(
+          this.pgMain.helpers.insert(
+            {
+              name: entity.streetAddressEntity.name,
+              postal_code: entity.streetAddressEntity.postalCode,
+              number: entity.streetAddressEntity.number,
+              additional: entity.streetAddressEntity.additional,
+              defect_list_id: dLRowId.id
+            },
+            StreetAddressEntity.getColumnSet(this.pgMain)
+          ) + returningId
+        );
 
-      // insert ViewParticipants
-      const viewParticipantValues = entity.streetAddressEntity.viewParticipantEntityList.map(
-        viewParticipant => ({
-          forename: viewParticipant.forename,
-          surname: viewParticipant.surname,
-          phone_number: viewParticipant.phoneNumber,
-          e_mail: viewParticipant.email,
-          company_name: viewParticipant.companyName,
-          street_address_id: sARowId.id
-        })
-      );
+        // insert ViewParticipants
+        const viewParticipantValues = entity.streetAddressEntity.viewParticipantEntityList.map(
+          viewParticipant => ({
+            forename: viewParticipant.forename,
+            surname: viewParticipant.surname,
+            phone_number: viewParticipant.phoneNumber,
+            e_mail: viewParticipant.email,
+            company_name: viewParticipant.companyName,
+            street_address_id: sARowId.id
+          })
+        );
 
-      await t.none(
-        this.pgMain.helpers.insert(
-          viewParticipantValues,
-          ViewParticipantEntity.getColumnSet(this.pgMain)
-        )
-      );
+        await t.none(
+          this.pgMain.helpers.insert(
+            viewParticipantValues,
+            ViewParticipantEntity.getColumnSet(this.pgMain)
+          )
+        );
 
-      // insert Floors
-      const floorValues = entity.streetAddressEntity.floorEntityList.map(
-        floor => ({
-          name: floor.name,
-          street_address_id: sARowId.id
-        })
-      );
+        // insert Floors
+        const floorValues = entity.streetAddressEntity.floorEntityList.map(
+          floor => ({
+            name: floor.name,
+            street_address_id: sARowId.id
+          })
+        );
 
-      const floorInsertIdList = await t.map(
-        this.pgMain.helpers.insert(
-          floorValues,
-          FloorEntity.getColumnSet(this.pgMain)
-        ) + returningId,
-        [],
-        (row: IReturnedId) => +row.id
-      );
+        const floorInsertIdList = await t.map(
+          this.pgMain.helpers.insert(
+            floorValues,
+            FloorEntity.getColumnSet(this.pgMain)
+          ) + returningId,
+          [],
+          (row: IReturnedId) => row
+        );
 
-      // insert LivingUnits
-      const livingUnitValues: Array<{
-        number: number;
-        floor_id: number;
-      }> = [];
+        // insert LivingUnits
+        const livingUnitValues: Array<{
+          number: number;
+          floor_id: number;
+        }> = [];
 
-      const tempRoomEntityListList: [RoomEntity[]] = [[]];
-      tempRoomEntityListList.pop();
+        const tempRoomEntityListList: [RoomEntity[]] = [[]];
+        tempRoomEntityListList.pop();
 
-      for (let i = 0; i < floorInsertIdList.length; i++) {
-        const floorId = floorInsertIdList[i];
+        for (let i = 0; i < floorInsertIdList.length; i++) {
+          const floorId = floorInsertIdList[i].id;
 
-        entity.streetAddressEntity.floorEntityList[
-          i
-        ].livingUnitEntityList.forEach(livingUnit => {
-          tempRoomEntityListList.push(livingUnit.roomEntityList);
+          entity.streetAddressEntity.floorEntityList[
+            i
+          ].livingUnitEntityList.forEach(livingUnit => {
+            tempRoomEntityListList.push(livingUnit.roomEntityList);
 
-          livingUnitValues.push({
-            number: livingUnit.number,
-            floor_id: floorId
+            livingUnitValues.push({
+              number: livingUnit.number,
+              floor_id: floorId
+            });
           });
-        });
-      }
+        }
 
-      const livingUnitInsertIdList = await t.map(
-        this.pgMain.helpers.insert(
-          livingUnitValues,
-          LivingUnitEntity.getColumnSet(this.pgMain)
-        ) + returningId,
-        [],
-        (row: IReturnedId) => +row.id
-      );
+        const livingUnitInsertIdList = await t.map(
+          this.pgMain.helpers.insert(
+            livingUnitValues,
+            LivingUnitEntity.getColumnSet(this.pgMain)
+          ) + returningId,
+          [],
+          (row: IReturnedId) => row
+        );
 
-      // insert Rooms
-      const roomEntityValues: Array<{
-        name: string;
-        number: number;
-        location_description: string;
-        living_unit_id: number;
-      }> = [];
+        // insert Rooms
+        const roomEntityValues: Array<{
+          name: string;
+          number: number;
+          location_description: string;
+          living_unit_id: number;
+        }> = [];
 
-      const tempDefectEntiyListList: [DefectEntity[]] = [[]];
-      tempDefectEntiyListList.pop();
+        const tempDefectEntiyListList: [DefectEntity[]] = [[]];
+        tempDefectEntiyListList.pop();
 
-      for (let i = 0; i < livingUnitInsertIdList.length; i++) {
-        const livingUnitId = livingUnitInsertIdList[i];
+        for (let i = 0; i < livingUnitInsertIdList.length; i++) {
+          const livingUnitId = livingUnitInsertIdList[i].id;
 
-        tempRoomEntityListList[i].forEach(roomEntity => {
-          tempDefectEntiyListList.push(roomEntity.defectEntityList);
+          tempRoomEntityListList[i].forEach(roomEntity => {
+            tempDefectEntiyListList.push(roomEntity.defectEntityList);
 
-          roomEntityValues.push({
-            name: roomEntity.name,
-            number: roomEntity.number,
-            location_description: roomEntity.locationDescription,
-            living_unit_id: livingUnitId
+            roomEntityValues.push({
+              name: roomEntity.name,
+              number: roomEntity.number,
+              location_description: roomEntity.locationDescription,
+              living_unit_id: livingUnitId
+            });
           });
-        });
-      }
+        }
 
-      logInfo("here", roomEntityValues);
+        const roomEntitytInsertIdList = await t.map(
+          this.pgMain.helpers.insert(
+            roomEntityValues,
+            RoomEntity.getColumnSet(this.pgMain)
+          ) + returningId,
+          [],
+          (row: IReturnedId) => row
+        );
 
-      const roomEntitytInsertIdList = await t.map(
-        this.pgMain.helpers.insert(
-          roomEntityValues,
-          RoomEntity.getColumnSet(this.pgMain)
-        ) + returningId,
-        [],
-        (row: IReturnedId) => +row.id
-      );
+        // insert Defects
+        const defectEntityValues: Array<{
+          description: string;
+          measure: string;
+          company_in_charge: string;
+          done_till: string;
+          room_id: number;
+        }> = [];
 
-      // insert Defects
-      const defectEntityValues: Array<{
-        description: string;
-        measure: string;
-        company_in_charge: string;
-        done_till: string;
-        room_id: number;
-      }> = [];
+        const tempDefectImageEntiyListList: [DefectImageEntity[]] = [[]];
 
-      const tempDefectImageEntiyListList: [DefectImageEntity[]] = [[]];
+        for (let i = 0; i < roomEntitytInsertIdList.length; i++) {
+          const roomEntityId = roomEntitytInsertIdList[i].id;
 
-      for (let i = 0; i < roomEntitytInsertIdList.length; i++) {
-        const roomEntityId = roomEntitytInsertIdList[i];
+          tempDefectEntiyListList[i].forEach(defectEntity => {
+            tempDefectImageEntiyListList.push(
+              defectEntity.defectImageEntityList
+            );
 
-        tempDefectEntiyListList[i].forEach(defectEntity => {
-          tempDefectImageEntiyListList.push(defectEntity.defectImageEntityList);
-
-          defectEntityValues.push({
-            description: defectEntity.description,
-            measure: defectEntity.measure,
-            company_in_charge: defectEntity.companyInCharge,
-            done_till: defectEntity.doneTill,
-            room_id: roomEntityId
+            defectEntityValues.push({
+              description: defectEntity.description,
+              measure: defectEntity.measure,
+              company_in_charge: defectEntity.companyInCharge,
+              done_till: defectEntity.doneTill,
+              room_id: roomEntityId
+            });
           });
-        });
-      }
+        }
 
-      const defectEntitytInsertIdList = await t.map(
-        this.pgMain.helpers.insert(
-          defectEntityValues,
-          DefectEntity.getColumnSet(this.pgMain)
-        ) + returningId,
-        [],
-        (row: IReturnedId) => +row.id
-      );
+        const defectEntitytInsertIdList = await t.map(
+          this.pgMain.helpers.insert(
+            defectEntityValues,
+            DefectEntity.getColumnSet(this.pgMain)
+          ) + returningId,
+          [],
+          (row: IReturnedId) => row
+        );
 
-      logInfo("result", defectEntitytInsertIdList);
-
-      return { id: 1 };
-    });
+        return { id: dLRowId.id };
+      })
+    );
   }
 }
