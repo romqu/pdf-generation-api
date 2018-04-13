@@ -2,6 +2,7 @@ import { ClientRepo } from "../../../data/client/clienRepo";
 import { DirectoryRepo } from "../../../data/directory/directoryRepo";
 import { callAsync } from "../../../util/failableUtil";
 import { getSha256Hash } from "../../../util/hashUtil";
+import { DefectList } from "../../model/document/defectList";
 import { ResponsePromise } from "../../model/response";
 
 export class CreateDefectListManager {
@@ -13,9 +14,11 @@ export class CreateDefectListManager {
     this.directoryRepo = directoryRepo;
   }
 
-  public execute(): ResponsePromise<number> {
+  public execute(defectList: DefectList): ResponsePromise<number> {
     return callAsync(async ({ success, run, failure }) => {
-      const client = run(await this.clientRepo.getForAndSurnameById(1));
+      const client = run(
+        await this.clientRepo.getForAndSurnameById(defectList.creator.clientId)
+      );
 
       const folderHashName = getSha256Hash();
 
