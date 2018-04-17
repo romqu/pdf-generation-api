@@ -29,6 +29,7 @@ export const uploadImagesHandler = async (
 
   try {
     let part;
+    // tslint:disable-next-line:no-conditional-assignment
     while ((part = await result)) {
       value.push(part);
 
