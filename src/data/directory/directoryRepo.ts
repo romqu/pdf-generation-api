@@ -1,6 +1,10 @@
 import { ResponsePromise } from "../../domain/model/response";
+import { provide } from "../../ioc/ioc";
 import { FsDataSource } from "../fsDataSource";
 
+@provide(DirectoryRepo)
+  .inSingletonScope()
+  .done()
 export class DirectoryRepo {
   private readonly fsDataSource: FsDataSource;
 
@@ -12,7 +16,7 @@ export class DirectoryRepo {
     return this.fsDataSource.createDir(path);
   }
 
-  public changeMode(path: string): ResponsePromise<void> {
-    return this.fsDataSource.chmod(path);
+  public changeMode(path: string, mode: number = 0o600): ResponsePromise<void> {
+    return this.fsDataSource.chmod(path, mode);
   }
 }

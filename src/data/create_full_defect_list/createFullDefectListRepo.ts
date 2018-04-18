@@ -7,6 +7,7 @@ import { ResponsePromise } from "../../domain/model/response";
 import { provide } from "../../ioc/ioc";
 import { TYPES } from "../../ioc/types";
 import { failableAsync } from "../../util/failableUtil";
+import { logInfo } from "../../util/loggerUtil";
 import { IReturnedId } from "../diskDataSource";
 import { DefectEntity } from "./defectEntity";
 import { DefectImageEntity } from "./defectImageEntity";
@@ -16,6 +17,7 @@ import { LivingUnitEntity } from "./livingUnitEntity";
 import { RoomEntity } from "./roomEntity";
 import { StreetAddressEntity } from "./streetAddressEntity";
 import { ViewParticipantEntity } from "./viewParticipantEntity";
+import { performance } from "perf_hooks";
 
 @provide(CreateFullDefectListRepo)
   .inSingletonScope()
@@ -35,14 +37,19 @@ export class CreateFullDefectListRepo {
   public insert(entity: DefectListEntity): ResponsePromise<IReturnedId> {
     const returningId = "RETURNING id";
 
+    const NS_PER_SEC = 1e9;
+    const MS_PER_NS = 1e-6;
+
     return failableAsync({ type: "DB", code: 100, title: "Query Error" }, () =>
       this.pgDb.tx<IReturnedId>(async (t: ITask<IReturnedId>) => {
+        const begin = process.hrtime();
+
         // insert DefectList
         const dLRowId = await t.one<IReturnedId>(
           this.pgMain.helpers.insert(
             {
               name: entity.name,
-              creation_date: entity.creationDate.toLocaleDateString(),
+              creation_date: entity.creationDate,
               client_id: entity.clientId
             },
             DefectListEntity.getColumnSet(this.pgMain)
@@ -203,6 +210,43 @@ export class CreateFullDefectListRepo {
           ) + returningId,
           [],
           (row: IReturnedId) => row
+        );
+
+        // insert Defects
+        const defectImageEntityValues: Array<{
+          name: string;
+          original_name: string;
+          position: number;
+          defect_id: number;
+        }> = [];
+
+        for (let i = 0; i < defectEntitytInsertIdList.length; i++) {
+          const defectEntityId = defectEntitytInsertIdList[i].id;
+
+          tempDefectImageEntiyListList[i].forEach(defectImageEntity => {
+            defectImageEntityValues.push({
+              name: defectImageEntity.name,
+              original_name: defectImageEntity.originalName,
+              position: defectImageEntity.position,
+              defect_id: defectEntityId
+            });
+          });
+        }
+
+        await t.map(
+          this.pgMain.helpers.insert(
+            defectImageEntityValues,
+            DefectImageEntity.getColumnSet(this.pgMain)
+          ) + returningId,
+          [],
+          (row: IReturnedId) => row
+        );
+
+        const diff = process.hrtime(begin);
+
+        console.log(
+          `Benchmark took ${(diff[0] * NS_PER_SEC + diff[1]) *
+            MS_PER_NS} milliseconds`
         );
 
         return { id: dLRowId.id };

@@ -1,8 +1,12 @@
 import * as fs from "fs-extra";
 
 import { ResponsePromise } from "../domain/model/response";
+import { provide } from "../ioc/ioc";
 import { failableAsync } from "../util/failableUtil";
 
+@provide(FsDataSource)
+  .inSingletonScope()
+  .done()
 export class FsDataSource {
   public createDir(path: string): ResponsePromise<void> {
     return failableAsync(
@@ -18,8 +22,8 @@ export class FsDataSource {
     );
   }
 
-  // 0o750
-  public chmod(path: string, mode: number = 0o750): ResponsePromise<void> {
+  // 0o600
+  public chmod(path: string, mode: number = 0o600): ResponsePromise<void> {
     return failableAsync(
       { type: "FileSystem", code: 202, title: "chmod error" },
       () => fs.chmod(path, mode)

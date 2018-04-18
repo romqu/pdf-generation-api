@@ -7,7 +7,7 @@ export class DefectListEntity {
 
   public readonly id: number;
   public readonly name: string;
-  public readonly creationDate: Date;
+  public readonly creationDate: string;
   public readonly clientId: number;
   public readonly streetAddressEntity: StreetAddressEntity;
 
@@ -15,7 +15,7 @@ export class DefectListEntity {
     id: number = 0,
     name: string,
     clientId: number,
-    creationDate: Date,
+    creationDate: string,
     streetAddressEntity: StreetAddressEntity
   ) {
     this.id = id;

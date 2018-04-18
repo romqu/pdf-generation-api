@@ -91,7 +91,7 @@ export class TransformToDefectListEntityTask {
         0,
         defectListName,
         defectList.creator.clientId,
-        defectList.creationDate,
+        defectList.creationDate.toLocaleDateString().replace(/-/g, "/"),
         new StreetAddressEntity(
           0,
           streetAddress.postalCode,

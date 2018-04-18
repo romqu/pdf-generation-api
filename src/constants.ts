@@ -52,3 +52,5 @@ export const enum ErrorKey {
   ARGON2_HASH_VERIFY = "ARGON2_HASH_VERIFY",
   EMAIL_EXISTS = "EMAIL_EXISTS"
 }
+
+export const UPLOAD_FOLDER_BASE_PATH = "./uploads/";

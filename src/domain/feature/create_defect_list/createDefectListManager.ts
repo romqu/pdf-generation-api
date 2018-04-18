@@ -72,6 +72,8 @@ export class CreateDefectListManager {
         )
       );
 
+      // console.log("HERE", defectEntityList);
+
       const defectListEntityId = run(
         await this.createFullDefectListRepo.insert(defectEntityList)
       );
