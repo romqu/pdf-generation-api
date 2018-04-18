@@ -1,14 +1,14 @@
 export class ViewParticipant {
   public readonly forename: string;
   public readonly surname: string;
-  public readonly phoneNumber: string;
+  public readonly phoneNumber: number;
   public readonly email: string;
   public readonly companyName: string;
 
   constructor(
     forename: string,
     surname: string,
-    phoneNumber: string,
+    phoneNumber: number,
     email: string,
     companyName: string
   ) {

@@ -6,9 +6,13 @@ import { LivingUnitEntity } from "../../../data/create_full_defect_list/livingUn
 import { RoomEntity } from "../../../data/create_full_defect_list/roomEntity";
 import { StreetAddressEntity } from "../../../data/create_full_defect_list/streetAddressEntity";
 import { ViewParticipantEntity } from "../../../data/create_full_defect_list/viewParticipantEntity";
+import { provide } from "../../../ioc/ioc";
 import { DefectList } from "../../model/document/defectList";
 import { Response } from "../../model/response";
 
+@provide(TransformToDefectListEntityTask)
+  .inSingletonScope()
+  .done()
 export class TransformToDefectListEntityTask {
   public execute(
     defectList: DefectList,
