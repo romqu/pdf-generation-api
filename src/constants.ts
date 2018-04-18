@@ -53,4 +53,7 @@ export const enum ErrorKey {
   EMAIL_EXISTS = "EMAIL_EXISTS"
 }
 
-export const UPLOAD_FOLDER_BASE_PATH = "./uploads/";
+export const enum Folder {
+  UPLOAD_FOLDER_BASE_PATH = "./uploads/",
+  IMAGES_FOLDER_NAME = "images"
+}
