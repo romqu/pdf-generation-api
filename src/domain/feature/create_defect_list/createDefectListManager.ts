@@ -8,6 +8,7 @@ import { getSha256Hash } from "../../../util/hashUtil";
 import { DefectList } from "../../model/document/defectList";
 import { ResponsePromise } from "../../model/response";
 import { CreateDefectImageEntityListTask } from "./createDefectImageEntityListTask";
+import { TransformToDefectListEntityTask } from "./transformToDefectListEntityTask";
 
 @provide(CreateDefectListManager)
   .inSingletonScope()
@@ -17,15 +18,18 @@ export class CreateDefectListManager {
   private readonly createDefectImageEntityListTask: CreateDefectImageEntityListTask;
   private readonly directoryRepo: DirectoryRepo;
   private readonly createFullDefectListRepo: CreateFullDefectListRepo;
+  private readonly transformToDefectListEntityTask: TransformToDefectListEntityTask;
 
   constructor(
     clientRepo: ClientRepo,
     createDefectImageEntityListTask: CreateDefectImageEntityListTask,
+    transformToDefectListEntityTask: TransformToDefectListEntityTask,
     directoryRepo: DirectoryRepo,
     createFullDefectListRepo: CreateFullDefectListRepo
   ) {
     this.clientRepo = clientRepo;
     this.createDefectImageEntityListTask = createDefectImageEntityListTask;
+    this.transformToDefectListEntityTask = transformToDefectListEntityTask;
     this.directoryRepo = directoryRepo;
     this.createFullDefectListRepo = createFullDefectListRepo;
   }
@@ -60,8 +64,18 @@ export class CreateDefectListManager {
 
       const folderHashName = getSha256Hash();
 
-      // transform into DefecListEntity
-      // save into db
+      const defectEntityList = run(
+        this.transformToDefectListEntityTask.execute(
+          defectList,
+          folderHashName,
+          allDefectImagesEntityListMap
+        )
+      );
+
+      const defectListEntityId = run(
+        await this.createFullDefectListRepo.insert(defectEntityList)
+      );
+
       // create directories: list + image
 
       return success(1);
