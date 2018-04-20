@@ -15,7 +15,6 @@ import { StreetAddress } from "./domain/model/document/streetAddress";
 import { ViewParticipant } from "./domain/model/document/viewParticipant";
 import * as Server from "./server";
 import { logInfo } from "./util/loggerUtil";
-import { init } from "./database";
 
 Error.stackTraceLimit = Infinity;
 
@@ -80,8 +79,8 @@ async function test(server: Hapi.Server): Promise<any> {
     JSON.stringify(
       Serialize(
         new DefectList(
-          "",
-          "",
+          "list",
+          "08/08/2011",
           new Creator(1),
           new StreetAddress(
             "abcd",

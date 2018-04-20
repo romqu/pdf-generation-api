@@ -1,21 +1,21 @@
-import 'reflect-metadata';
+import "reflect-metadata";
 
-import { inject } from 'inversify';
-import { IDatabase, IMain, ITask } from 'pg-promise';
+import { inject } from "inversify";
+import { IDatabase, IMain, ITask } from "pg-promise";
 
-import { ResponsePromise } from '../../domain/model/response';
-import { provide } from '../../ioc/ioc';
-import { TYPES } from '../../ioc/types';
-import { failableAsync } from '../../util/failableUtil';
-import { IReturnedId } from '../diskDataSource';
-import { DefectEntity } from './defectEntity';
-import { DefectImageEntity } from './defectImageEntity';
-import { DefectListEntity } from './defectListEntity';
-import { FloorEntity } from './floorEntity';
-import { LivingUnitEntity } from './livingUnitEntity';
-import { RoomEntity } from './roomEntity';
-import { StreetAddressEntity } from './streetAddressEntity';
-import { ViewParticipantEntity } from './viewParticipantEntity';
+import { ResponsePromise } from "../../domain/model/response";
+import { provide } from "../../ioc/ioc";
+import { TYPES } from "../../ioc/types";
+import { failableAsync } from "../../util/failableUtil";
+import { IReturnedId } from "../diskDataSource";
+import { DefectEntity } from "./defectEntity";
+import { DefectImageEntity } from "./defectImageEntity";
+import { DefectListEntity } from "./defectListEntity";
+import { FloorEntity } from "./floorEntity";
+import { LivingUnitEntity } from "./livingUnitEntity";
+import { RoomEntity } from "./roomEntity";
+import { StreetAddressEntity } from "./streetAddressEntity";
+import { ViewParticipantEntity } from "./viewParticipantEntity";
 
 @provide(CreateFullDefectListRepo)
   .inSingletonScope()
@@ -33,7 +33,7 @@ export class CreateFullDefectListRepo {
   }
 
   public insert(entity: DefectListEntity): ResponsePromise<IReturnedId> {
-    const returningId = "RETURNING id";
+    const returningId = " RETURNING id;";
 
     const NS_PER_SEC = 1e9;
     const MS_PER_NS = 1e-6;
@@ -182,6 +182,7 @@ export class CreateFullDefectListRepo {
         }> = [];
 
         const tempDefectImageEntiyListList: [DefectImageEntity[]] = [[]];
+        tempDefectImageEntiyListList.pop();
 
         for (let i = 0; i < roomEntitytInsertIdList.length; i++) {
           const roomEntityId = roomEntitytInsertIdList[i].id;
@@ -224,12 +225,8 @@ export class CreateFullDefectListRepo {
           tempDefectImageEntiyListList[i].forEach(defectImageEntity => {
             defectImageEntityValues.push({
               name: defectImageEntity.name,
-              
               original_name: defectImageEntity.originalName,
-                          position: defectImageEntity.position,
-
-
-
+              position: defectImageEntity.position,
               defect_id: defectEntityId
             });
           });

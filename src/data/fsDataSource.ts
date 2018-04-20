@@ -1,8 +1,8 @@
 import * as fs from "fs-extra";
 
-import { ResponsePromise } from "../domain/model/response";
+import { Response, ResponsePromise } from "../domain/model/response";
 import { provide } from "../ioc/ioc";
-import { failableAsync } from "../util/failableUtil";
+import { failable, failableAsync } from "../util/failableUtil";
 
 @provide(FsDataSource)
   .inSingletonScope()
@@ -23,10 +23,20 @@ export class FsDataSource {
   }
 
   // 0o600
-  public chmod(path: string, mode: number = 0o600): ResponsePromise<void> {
+  public chmod(path: string, mode: number): ResponsePromise<void> {
     return failableAsync(
       { type: "FileSystem", code: 202, title: "chmod error" },
       () => fs.chmod(path, mode)
+    );
+  }
+
+  public createWriteStream(
+    path: string,
+    mode: number
+  ): Response<fs.WriteStream> {
+    return failable(
+      { type: "FileSystem", code: 203, title: "write stream error" },
+      () => fs.createWriteStream(path, { mode })
     );
   }
 }

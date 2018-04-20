@@ -3,10 +3,10 @@ import { Deserialize } from "cerialize";
 import fs = require("fs");
 import { Lifecycle, Request, ResponseToolkit } from "hapi";
 
-import { Creator } from "../../../domain/model/document/creator";
-import { logInfo } from "../../../util/loggerUtil";
-import { generateUuidv4 } from "../../../util/uuidv4Util";
+import { CreateDefectListManager } from "../../../domain/feature/create_defect_list/createDefectListManager";
 import { DefectList } from "../../../domain/model/document/defectList";
+import { container } from "../../../ioc/ioc";
+import { logInfo } from "../../../util/loggerUtil";
 
 const imageFilter = (fileName: string): boolean => {
   // accept image only
@@ -16,6 +16,8 @@ const imageFilter = (fileName: string): boolean => {
 
   return true;
 };
+
+const manager = container.get(CreateDefectListManager);
 
 export const uploadImagesHandler = async (
   request: Request,
@@ -36,12 +38,14 @@ export const uploadImagesHandler = async (
     while ((part = await result)) {
       value.push(part);
 
-      part = await result;
-
       if (part.length) {
-        logInfo(
-          "JSON",
-          Deserialize(JSON.parse(part[1]), DefectList)!.streetAddress.postalCode
+        const resultt = await manager.execute(
+          Deserialize(JSON.parse(part[1]), DefectList)!
+        );
+
+        console.log(
+          "Result",
+          resultt.isSuccess ? resultt.data.entries() : resultt.error.message
         );
       } else {
         part.pipe(fs.createWriteStream("/tmp/BBBBBBBBB_" + part.filename));
@@ -51,8 +55,6 @@ export const uploadImagesHandler = async (
     logInfo("Error", err);
     return err;
   }
-
-  logInfo("RESULT", result.isClosed);
 
   return value;
 };
@@ -89,4 +91,3 @@ export const uploadImagesHandler = async (
 //       resolve("end");
 //     });
 //   });
-}

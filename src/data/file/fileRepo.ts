@@ -1,20 +1,25 @@
+import { WriteStream } from "fs-extra";
+
 import { FsModeOctal } from "../../constants";
-import { ResponsePromise } from "../../domain/model/response";
+import { Response, ResponsePromise } from "../../domain/model/response";
 import { provide } from "../../ioc/ioc";
 import { FsDataSource } from "../fsDataSource";
 
-@provide(DirectoryRepo)
+@provide(FileRepo)
   .inSingletonScope()
   .done()
-export class DirectoryRepo {
+export class FileRepo {
   private readonly fsDataSource: FsDataSource;
 
   constructor(fsDataSource: FsDataSource) {
     this.fsDataSource = fsDataSource;
   }
 
-  public createDirectory(path: string): ResponsePromise<void> {
-    return this.fsDataSource.createDir(path);
+  public createFile(
+    path: string,
+    mode: FsModeOctal.DEFAULT
+  ): Response<WriteStream> {
+    return this.fsDataSource.createWriteStream(path, mode);
   }
 
   public changeMode(

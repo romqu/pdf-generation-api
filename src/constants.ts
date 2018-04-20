@@ -57,3 +57,7 @@ export const enum Folder {
   UPLOAD_FOLDER_BASE_PATH = "./uploads/",
   IMAGES_FOLDER_NAME = "images"
 }
+
+export const enum FsModeOctal {
+  DEFAULT = 0o600
+}
