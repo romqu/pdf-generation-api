@@ -1,8 +1,10 @@
+import { autoserializeAs, autoserializeAsArray } from "cerialize";
+
 import { Room } from "./room";
 
 export class LivingUnit {
-  public readonly number: number;
-  public readonly roomList: Room[];
+  @autoserializeAs(Number) public readonly number: number;
+  @autoserializeAsArray(Room) public readonly roomList: Room[];
 
   // tslint:disable-next-line:variable-name
   constructor(number: number, roomList: Room[]) {

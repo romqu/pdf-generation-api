@@ -4,6 +4,8 @@ import { Lifecycle, Request, ResponseToolkit } from "hapi";
 
 import { logInfo } from "../../../util/loggerUtil";
 import { generateUuidv4 } from "../../../util/uuidv4Util";
+import { Deserialize } from "cerialize";
+import { Creator } from "../../../domain/model/document/creator";
 
 const imageFilter = (fileName: string): boolean => {
   // accept image only
@@ -34,10 +36,11 @@ export const uploadImagesHandler = async (
       value.push(part);
 
       if (part.length) {
-        logInfo("1", "1");
+        console.log(Deserialize(JSON.parse(part[1]), Creator)!.clientId);
+        while (true) {}
       } else {
-        logInfo("2", "2");
-        part.pipe(fs.createWriteStream("/tmp/BBBBBBBBB_" + part.filename));
+        logInfo("", "HERE");
+        // part.pipe(fs.createWriteStream("/tmp/BBBBBBBBB_" + part.filename));
       }
     }
   } catch (err) {

@@ -1,23 +1,21 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 
-import { inject } from "inversify";
-import { IDatabase, IMain, ITask } from "pg-promise";
+import { inject } from 'inversify';
+import { IDatabase, IMain, ITask } from 'pg-promise';
 
-import { ResponsePromise } from "../../domain/model/response";
-import { provide } from "../../ioc/ioc";
-import { TYPES } from "../../ioc/types";
-import { failableAsync } from "../../util/failableUtil";
-import { logInfo } from "../../util/loggerUtil";
-import { IReturnedId } from "../diskDataSource";
-import { DefectEntity } from "./defectEntity";
-import { DefectImageEntity } from "./defectImageEntity";
-import { DefectListEntity } from "./defectListEntity";
-import { FloorEntity } from "./floorEntity";
-import { LivingUnitEntity } from "./livingUnitEntity";
-import { RoomEntity } from "./roomEntity";
-import { StreetAddressEntity } from "./streetAddressEntity";
-import { ViewParticipantEntity } from "./viewParticipantEntity";
-import { performance } from "perf_hooks";
+import { ResponsePromise } from '../../domain/model/response';
+import { provide } from '../../ioc/ioc';
+import { TYPES } from '../../ioc/types';
+import { failableAsync } from '../../util/failableUtil';
+import { IReturnedId } from '../diskDataSource';
+import { DefectEntity } from './defectEntity';
+import { DefectImageEntity } from './defectImageEntity';
+import { DefectListEntity } from './defectListEntity';
+import { FloorEntity } from './floorEntity';
+import { LivingUnitEntity } from './livingUnitEntity';
+import { RoomEntity } from './roomEntity';
+import { StreetAddressEntity } from './streetAddressEntity';
+import { ViewParticipantEntity } from './viewParticipantEntity';
 
 @provide(CreateFullDefectListRepo)
   .inSingletonScope()
@@ -226,8 +224,12 @@ export class CreateFullDefectListRepo {
           tempDefectImageEntiyListList[i].forEach(defectImageEntity => {
             defectImageEntityValues.push({
               name: defectImageEntity.name,
+              
               original_name: defectImageEntity.originalName,
-              position: defectImageEntity.position,
+                          position: defectImageEntity.position,
+
+
+
               defect_id: defectEntityId
             });
           });

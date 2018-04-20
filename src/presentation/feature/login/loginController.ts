@@ -6,6 +6,8 @@ import { serializeObject, serializeSafeObject } from "../../../util/jsonUtil";
 import { ErrorModel } from "../../model/errorModel";
 import { ResponseModel } from "../../model/responseModel";
 
+import "reflect-metadata";
+
 @provide(LoginController)
   .inSingletonScope()
   .done()

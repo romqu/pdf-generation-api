@@ -1,12 +1,15 @@
+import { autoserializeAs, autoserializeAsArray } from "cerialize";
+
 import { Floor } from "./floor";
 import { ViewParticipant } from "./viewParticipant";
 
 export class StreetAddress {
-  public readonly name: string;
-  public readonly number: number;
-  public readonly additional: string;
-  public readonly postalCode: number;
-  public readonly floorList: Floor[];
+  @autoserializeAs(String) public readonly name: string;
+  @autoserializeAs(Number) public readonly number: number;
+  @autoserializeAs(String) public readonly additional: string;
+  @autoserializeAs(Number) public readonly postalCode: number;
+  @autoserializeAsArray(Floor) public readonly floorList: Floor[];
+  @autoserializeAsArray(ViewParticipant)
   public readonly viewParticipantList: ViewParticipant[];
 
   constructor(

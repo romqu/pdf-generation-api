@@ -1,10 +1,13 @@
+import { autoserializeAs, autoserializeAsArray } from "cerialize";
+
 import { Defect } from "./defect";
 
 export class Room {
-  public readonly name: string;
-  public readonly number: number;
+  @autoserializeAs(String) public readonly name: string;
+  @autoserializeAs(Number) public readonly number: number;
+  @autoserializeAs(String, "location_description")
   public readonly locationDescription: string;
-  public readonly defectList: Defect[];
+  @autoserializeAsArray(Defect) public readonly defectList: Defect[];
 
   constructor(
     name: string,

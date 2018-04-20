@@ -1,15 +1,19 @@
+import { autoserializeAs, autoserializeAsJson } from "cerialize";
+
 import { Creator } from "./creator";
 import { StreetAddress } from "./streetAddress";
 
 export class DefectList {
-  public readonly name: string;
-  public readonly creationDate: Date;
-  public readonly creator: Creator;
+  @autoserializeAs(String) public readonly name: string;
+  @autoserializeAs(String, "creation_date")
+  public readonly creationDate: string;
+  @autoserializeAs(Creator) public readonly creator: Creator;
+  @autoserializeAs(StreetAddress, "street_address")
   public readonly streetAddress: StreetAddress;
 
   constructor(
     name: string,
-    creationDate: Date,
+    creationDate: string,
     creator: Creator,
     streetAddress: StreetAddress
   ) {

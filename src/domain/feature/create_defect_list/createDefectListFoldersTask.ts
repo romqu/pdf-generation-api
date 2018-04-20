@@ -19,21 +19,24 @@ export class CreateDefectListFoldersTask {
   public execute(
     defectListName: string,
     defectImageNamesList: string[]
-  ): ResponsePromise<void> {
+  ): ResponsePromise<string> {
     return callAsync(async ({ success, run }) => {
       const folderPathToCreate = defectListName
         .slice(0, 4)
         .split("")
         .map(char => char + "/")
         .join("")
-        .concat(defectListName, Folder.IMAGES_FOLDER_NAME)
         .replace(/^/, Folder.UPLOAD_FOLDER_BASE_PATH);
 
-      run(await this.directoryRepo.createDirectory(folderPathToCreate));
-
-      return success(
-        run(await this.directoryRepo.changeMode(folderPathToCreate))
+      const folderPathWithImagesFolder = folderPathToCreate.concat(
+        defectListName,
+        Folder.IMAGES_FOLDER_NAME
       );
+
+      run(await this.directoryRepo.createDirectory(folderPathWithImagesFolder));
+      run(await this.directoryRepo.changeMode(folderPathWithImagesFolder));
+
+      return success(folderPathToCreate);
     });
   }
 }

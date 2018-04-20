@@ -1,9 +1,11 @@
+import { autoserializeAs } from "cerialize";
+
 export class ViewParticipant {
-  public readonly forename: string;
-  public readonly surname: string;
-  public readonly phoneNumber: number;
-  public readonly email: string;
-  public readonly companyName: string;
+  @autoserializeAs(String) public readonly forename: string;
+  @autoserializeAs(String) public readonly surname: string;
+  @autoserializeAs(Number) public readonly phoneNumber: number;
+  @autoserializeAs(String) public readonly email: string;
+  @autoserializeAs(String) public readonly companyName: string;
 
   constructor(
     forename: string,

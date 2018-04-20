@@ -1,13 +1,13 @@
 import { ClientRepo } from "../../../data/client/clienRepo";
 import { CreateFullDefectListRepo } from "../../../data/create_full_defect_list/createFullDefectListRepo";
 import { DefectImageEntity } from "../../../data/create_full_defect_list/defectImageEntity";
-import { DirectoryRepo } from "../../../data/directory/directoryRepo";
 import { provide } from "../../../ioc/ioc";
 import { callAsync } from "../../../util/failableUtil";
 import { getSha256Hash } from "../../../util/hashUtil";
 import { DefectList } from "../../model/document/defectList";
 import { ResponsePromise } from "../../model/response";
 import { CreateDefectImageEntityListTask } from "./createDefectImageEntityListTask";
+import { CreateDefectListFoldersTask } from "./createDefectListFoldersTask";
 import { TransformToDefectListEntityTask } from "./transformToDefectListEntityTask";
 
 @provide(CreateDefectListManager)
@@ -16,25 +16,25 @@ import { TransformToDefectListEntityTask } from "./transformToDefectListEntityTa
 export class CreateDefectListManager {
   private readonly clientRepo: ClientRepo;
   private readonly createDefectImageEntityListTask: CreateDefectImageEntityListTask;
-  private readonly directoryRepo: DirectoryRepo;
   private readonly createFullDefectListRepo: CreateFullDefectListRepo;
+  private readonly createDefectListFoldersTask: CreateDefectListFoldersTask;
   private readonly transformToDefectListEntityTask: TransformToDefectListEntityTask;
 
   constructor(
     clientRepo: ClientRepo,
     createDefectImageEntityListTask: CreateDefectImageEntityListTask,
     transformToDefectListEntityTask: TransformToDefectListEntityTask,
-    directoryRepo: DirectoryRepo,
+    createDefectListFoldersTask: CreateDefectListFoldersTask,
     createFullDefectListRepo: CreateFullDefectListRepo
   ) {
     this.clientRepo = clientRepo;
     this.createDefectImageEntityListTask = createDefectImageEntityListTask;
     this.transformToDefectListEntityTask = transformToDefectListEntityTask;
-    this.directoryRepo = directoryRepo;
+    this.createDefectListFoldersTask = createDefectListFoldersTask;
     this.createFullDefectListRepo = createFullDefectListRepo;
   }
 
-  public execute(defectList: DefectList): ResponsePromise<number> {
+  public execute(defectList: DefectList): ResponsePromise<Map<string, string>> {
     return callAsync(async ({ success, run, failure }) => {
       const client = run(
         await this.clientRepo.getForAndSurnameById(defectList.creator.clientId)
@@ -62,6 +62,17 @@ export class CreateDefectListManager {
         )
       );
 
+      const allDefectImageNamesMap: Map<string, string> = new Map();
+
+      allDefectImagesEntityListMap.forEach(defectImageEntityList =>
+        defectImageEntityList.forEach(defectImageEntity =>
+          allDefectImageNamesMap.set(
+            defectImageEntity.originalName,
+            defectImageEntity.name
+          )
+        )
+      );
+
       const folderHashName = getSha256Hash();
 
       const defectEntityList = run(
@@ -72,15 +83,15 @@ export class CreateDefectListManager {
         )
       );
 
-      // console.log("HERE", defectEntityList);
-
       const defectListEntityId = run(
         await this.createFullDefectListRepo.insert(defectEntityList)
       );
 
-      // create directories: list + image
+      const folderPath = run(
+        await this.createDefectListFoldersTask.execute(folderHashName, [])
+      );
 
-      return success(1);
+      return success(allDefectImageNamesMap);
     });
   }
 }

@@ -1,11 +1,12 @@
+import * as FormData from "form-data";
+import * as fs from "fs-extra";
 import * as Hapi from "hapi";
+import { Stream } from "stream";
 
-import { CreateDefectListFoldersTask } from "./domain/feature/create_defect_list/createDefectListFoldersTask";
-import { container } from "./ioc/ioc";
 import * as Server from "./server";
-import { getSha256Hash } from "./util/hashUtil";
 import { logInfo } from "./util/loggerUtil";
-import { generateUuidv4 } from "./util/uuidv4Util";
+import { Serialize } from "cerialize";
+import { Creator } from "./domain/model/document/creator";
 
 Error.stackTraceLimit = Infinity;
 
@@ -17,59 +18,48 @@ async function test(server: Hapi.Server): Promise<any> {
   //   payload:
   //     '{"loginCredentials":{"e_mail":"hello@hello.de","password":"password"},"client":{"forename":"zfzu","surname":"Meier"}}'
   // });
-
   // const r = await server.inject({
   //   app: {},
   //   method: "POST",
   //   url: "127.0.0.1:3000/login",
   //   payload: '{"e_mail":"hello@hello.de","password":"password"}'
   // });
+  const converter = new Stream.Writable();
+  converter.data = [];
+  converter._write = (
+    chunk: any,
+    encoding: string,
+    callback: (err?: Error) => void
+  ): void => {
+    converter.data.push(chunk);
+    callback();
+  };
+  converter.on("finish", async () => {
+    const payload = Buffer.concat(converter.data);
+    const req = {
+      app: {},
+      method: "POST",
+      url: "/images",
+      headers: form.getHeaders(),
+      payload
+    };
+    const result = await server.inject(req);
+    // logInfo("result", result.result);
+  });
+  const form = new FormData();
+  const s = fs.createReadStream("./assets/images/mangel.jpg");
+  const file = fs.readFileSync("./assets/images/mangel.jpg");
 
-  // const converter = new Stream.Writable();
-  // converter.data = [];
+  form.append("json", JSON.stringify(Serialize(new Creator(1), Creator)), {
+    contentType: "application/json"
+  });
 
-  // converter._write = (
-  //   chunk: any,
-  //   encoding: string,
-  //   callback: (err?: Error) => void
-  // ): void => {
-  //   converter.data.push(chunk);
-  //   callback();
-  // };
-
-  // converter.on("finish", async () => {
-  //   const payload = Buffer.concat(converter.data);
-
-  //   const req = {
-  //     app: {},
-  //     method: "POST",
-  //     url: "/images",
-  //     headers: form.getHeaders(),
-  //     payload
-  //   };
-
-  //   const result = await server.inject(req);
-
-  //   // logInfo("result", result.result);
-  // });
-
-  // const form = new FormData();
-
-  // // const s = fs.createReadStream("./assets/images/mangel.jpg");
-  // const file = fs.readFileSync("./assets/images/mangel.jpg");
-
-  // form.append("json", JSON.stringify({ json: "json" }), {
-  //   contentType: "application/json"
-  // });
-
-  // for (let i = 0; i < 2; i++) {
-  //   form.append("images", fs.createReadStream("./assets/images/mangel.jpg"));
-  // }
-
-  // form.pipe(converter);
+  for (let i = 0; i < 1; i++) {
+    form.append("images", fs.createReadStream("./assets/images/mangel.jpg"));
+  }
+  form.pipe(converter);
 
   // const result = await container.get(CreateFullDefectListRepo).test();
-
   // const result = await container
   //   .get(CreateFullDefectListRepo)
   //   .insert(
@@ -116,28 +106,20 @@ async function test(server: Hapi.Server): Promise<any> {
   //       )
   //     )
   //   );
-
   // const range = (n: number): number[] =>
   //   Array.from({ length: n }, (_, key) => key);
-
   // const defectImageList = range(3).map(
   //   _ => new DefectImage("ab", 0, "ewqdwqdwq.jpg")
   // );
-
   // const defectList = range(3).map(
   //   _ => new Defect("Bla", "iwqd", "AG", "1995/01/01", defectImageList)
   // );
-
   // const roomList = range(3).map(_ => new Room("wqd", 1, "wqdwqd", defectList));
-
   // const livingUnitList = range(3).map(_ => new LivingUnit(1, roomList));
-
   // const floorList = range(3).map(_ => new Floor("EG", livingUnitList));
-
   // const viewParticipantList = range(10).map(
   //   _ => new ViewParticipant("Bern", "Me", 12345, "wqdwqd@wdwqd.de", "adsadsa")
   // );
-
   // const result = await container
   //   .get(CreateDefectListManager)
   //   .execute(
@@ -155,11 +137,9 @@ async function test(server: Hapi.Server): Promise<any> {
   //       )
   //     )
   //   );
-
-  container
-    .get(CreateDefectListFoldersTask)
-    .execute(getSha256Hash(), [generateUuidv4()]);
-
+  // container
+  //   .get(CreateDefectListFoldersTask)
+  //   .execute(getSha256Hash(), [generateUuidv4()]);
   // logInfo("Result", result.isSuccess ? result.data : result);
 }
 

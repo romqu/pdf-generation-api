@@ -1,4 +1,4 @@
-import { StreetAddressEntity } from "./streetAddressEntity";
+import { StreetAddressEntity } from '../create_full_defect_list/streetAddressEntity';
 
 export class CreateDefectListEntity {
   public readonly id: number;
