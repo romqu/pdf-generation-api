@@ -1,4 +1,5 @@
 import * as bluebird from "bluebird";
+import * as pgMonitor from "pg-monitor";
 import { IDatabase, IMain, IOptions, TConfig } from "pg-promise";
 import * as pgPromise from "pg-promise";
 import * as redis from "redis";
@@ -18,6 +19,8 @@ export function init(): IDatabaseClients {
     user: "roman",
     password: "roman"
   };
+
+  pgMonitor.attach(initOptions);
 
   const pgpMain: IMain = pgPromise(initOptions);
 

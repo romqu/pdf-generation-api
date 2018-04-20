@@ -3,9 +3,12 @@ import { autoserializeAs } from "cerialize";
 export class ViewParticipant {
   @autoserializeAs(String) public readonly forename: string;
   @autoserializeAs(String) public readonly surname: string;
-  @autoserializeAs(Number) public readonly phoneNumber: number;
-  @autoserializeAs(String) public readonly email: string;
-  @autoserializeAs(String) public readonly companyName: string;
+  @autoserializeAs(Number, "phone_number")
+  public readonly phoneNumber: number;
+  @autoserializeAs(String, "e_mail")
+  public readonly email: string;
+  @autoserializeAs(String, "company_name")
+  public readonly companyName: string;
 
   constructor(
     forename: string,

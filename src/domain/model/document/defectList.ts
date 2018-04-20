@@ -1,4 +1,4 @@
-import { autoserializeAs, autoserializeAsJson } from "cerialize";
+import { autoserializeAs } from "cerialize";
 
 import { Creator } from "./creator";
 import { StreetAddress } from "./streetAddress";

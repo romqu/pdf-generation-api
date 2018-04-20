@@ -4,7 +4,7 @@ import { LivingUnit } from "./livingUnit";
 
 export class Floor {
   @autoserializeAs(String) public readonly name: string;
-  @autoserializeAsArray(LivingUnit)
+  @autoserializeAsArray(LivingUnit, "living_unit_list")
   public readonly livingUnitList: LivingUnit[];
 
   constructor(name: string, livingUnitList: LivingUnit[]) {

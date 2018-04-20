@@ -14,12 +14,6 @@ const thirdPartyDependencies = new ContainerModule((bind): void => {
   bind<RedisClient>(TYPES.RedisClient).toConstantValue(dbClients.redisClient);
 });
 
-// const applicationDependencies = new ContainerModule((bind): void => {
-//   bind(DiskDataSource)
-//     .toSelf()
-//     .inSingletonScope();
-// });
-
 const container = new Container();
 
 const provide = makeFluentProvideDecorator(container);

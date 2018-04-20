@@ -9,7 +9,7 @@ export class Defect {
   public readonly companyInCharge: string;
   @autoserializeAs(String, "done_till")
   public readonly doneTill: string;
-  @autoserializeAsArray(DefectImage)
+  @autoserializeAsArray(DefectImage, "defect_image_list")
   public readonly defectImageList: DefectImage[];
 
   constructor(

@@ -7,7 +7,8 @@ export class Room {
   @autoserializeAs(Number) public readonly number: number;
   @autoserializeAs(String, "location_description")
   public readonly locationDescription: string;
-  @autoserializeAsArray(Defect) public readonly defectList: Defect[];
+  @autoserializeAsArray(Defect, "defect_list")
+  public readonly defectList: Defect[];
 
   constructor(
     name: string,

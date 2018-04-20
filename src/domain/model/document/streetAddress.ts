@@ -7,9 +7,11 @@ export class StreetAddress {
   @autoserializeAs(String) public readonly name: string;
   @autoserializeAs(Number) public readonly number: number;
   @autoserializeAs(String) public readonly additional: string;
-  @autoserializeAs(Number) public readonly postalCode: number;
-  @autoserializeAsArray(Floor) public readonly floorList: Floor[];
-  @autoserializeAsArray(ViewParticipant)
+  @autoserializeAs(Number, "postal_code")
+  public readonly postalCode: number;
+  @autoserializeAsArray(Floor, "floor_list")
+  public readonly floorList: Floor[];
+  @autoserializeAsArray(ViewParticipant, "view_participant_list")
   public readonly viewParticipantList: ViewParticipant[];
 
   constructor(
