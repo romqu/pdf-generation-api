@@ -1,10 +1,8 @@
 import { ServerRoute } from "hapi";
-import * as Joi from "joi";
-import { Readable } from "stream";
 
-import { uploadImagesHandler } from "./uploadImagesHandler";
+import { createFullDefectListHandler } from "./createFullDefectListHandler";
 
-export function uploadImagesRoute(): ServerRoute {
+export function createFullDefectListRoute(): ServerRoute {
   return {
     method: "POST",
     path: "/images",
@@ -22,6 +20,6 @@ export function uploadImagesRoute(): ServerRoute {
       //   }
       // }
     },
-    handler: uploadImagesHandler
+    handler: createFullDefectListHandler
   };
 }

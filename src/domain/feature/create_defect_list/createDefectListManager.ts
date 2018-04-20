@@ -9,7 +9,6 @@ import { ResponsePromise } from "../../model/response";
 import { CreateDefectImageEntityListTask } from "./createDefectImageEntityListTask";
 import { CreateDefectListFoldersTask } from "./createDefectListFoldersTask";
 import { TransformToDefectListEntityTask } from "./transformToDefectListEntityTask";
-import { logInfo } from "../../../util/loggerUtil";
 
 @provide(CreateDefectListManager)
   .inSingletonScope()

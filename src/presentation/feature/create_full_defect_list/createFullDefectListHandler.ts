@@ -1,10 +1,8 @@
 import parse = require("await-busboy");
-import { Deserialize } from "cerialize";
 import fs = require("fs");
 import { Lifecycle, Request, ResponseToolkit } from "hapi";
 
 import { CreateDefectListManager } from "../../../domain/feature/create_defect_list/createDefectListManager";
-import { DefectList } from "../../../domain/model/document/defectList";
 import { container } from "../../../ioc/ioc";
 import { logInfo } from "../../../util/loggerUtil";
 
@@ -19,7 +17,7 @@ const imageFilter = (fileName: string): boolean => {
 
 const manager = container.get(CreateDefectListManager);
 
-export const uploadImagesHandler = async (
+export const createFullDefectListHandler = async (
   request: Request,
   h: ResponseToolkit
 ): Promise<Lifecycle.ReturnValue> => {
@@ -39,14 +37,9 @@ export const uploadImagesHandler = async (
       value.push(part);
 
       if (part.length) {
-        const resultt = await manager.execute(
-          Deserialize(JSON.parse(part[1]), DefectList)!
-        );
-
-        console.log(
-          "Result",
-          resultt.isSuccess ? resultt.data.entries() : resultt.error.message
-        );
+        // const resultt = await manager.execute(
+        //   Deserialize(JSON.parse(part[1]), DefectList)!
+        // );
       } else {
         part.pipe(fs.createWriteStream("/tmp/BBBBBBBBB_" + part.filename));
       }

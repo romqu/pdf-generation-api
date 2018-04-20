@@ -99,7 +99,7 @@ async function test(server: Hapi.Server): Promise<any> {
     }
   );
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 3; i++) {
     form.append("images", fs.createReadStream("./assets/images/mangel.jpg"));
   }
   form.pipe(converter);
