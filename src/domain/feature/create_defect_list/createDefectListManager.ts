@@ -34,7 +34,9 @@ export class CreateDefectListManager {
     this.createFullDefectListRepo = createFullDefectListRepo;
   }
 
-  public execute(defectList: DefectList): ResponsePromise<Map<string, string>> {
+  public execute(
+    defectList: DefectList
+  ): ResponsePromise<ICreateDefectListResponse> {
     return callAsync(async ({ success, run, failure }) => {
       const client = run(
         await this.clientRepo.getForAndSurnameById(defectList.creator.clientId)
@@ -91,7 +93,15 @@ export class CreateDefectListManager {
         await this.createDefectListFoldersTask.execute(folderHashName, [])
       );
 
-      return success(allDefectImageNamesMap);
+      return success({
+        allDefectImageNamesMap,
+        defectListFolderName: folderPath
+      });
     });
   }
+}
+
+export interface ICreateDefectListResponse {
+  readonly allDefectImageNamesMap: Map<string, string>;
+  readonly defectListFolderName: string;
 }

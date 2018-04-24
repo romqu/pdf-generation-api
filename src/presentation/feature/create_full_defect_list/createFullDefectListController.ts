@@ -1,9 +1,13 @@
 import { CreateDefectImageFilesTask } from "../../../domain/feature/create_defect_list/createDefectImageFilesTask";
-import { CreateDefectListManager } from "../../../domain/feature/create_defect_list/createDefectListManager";
+import {
+  CreateDefectListManager,
+  ICreateDefectListResponse
+} from "../../../domain/feature/create_defect_list/createDefectListManager";
 import { DefectList } from "../../../domain/model/document/defectList";
 import { provide } from "../../../ioc/ioc";
 import { callAsync, matchResponse } from "../../../util/failableUtil";
 import { parseDeserializeSafeObject } from "../../../util/jsonUtil";
+import { CreatePdfManager } from "../../../domain/feature/create_pdf/createPdfManager";
 
 @provide(CreateFullDefectListController)
   .inSingletonScope()
@@ -11,36 +15,44 @@ import { parseDeserializeSafeObject } from "../../../util/jsonUtil";
 export class CreateFullDefectListController {
   private readonly createDefectImageFilesTask: CreateDefectImageFilesTask;
   private readonly createDefectListManager: CreateDefectListManager;
+  private readonly createPdfManager: CreatePdfManager;
 
   constructor(
     createDefectImageFilesTask: CreateDefectImageFilesTask,
-    createDefectListManager: CreateDefectListManager
+    createDefectListManager: CreateDefectListManager,
+    createPdfManager: CreatePdfManager
   ) {
     this.createDefectImageFilesTask = createDefectImageFilesTask;
     this.createDefectListManager = createDefectListManager;
+    this.createPdfManager = createPdfManager;
   }
 
   public async execute(data: any): Promise<string> {
-    let map: Map<string, string>;
+    let createDefectListResponse: ICreateDefectListResponse;
     const response = await callAsync<string>(async ({ success, run }) => {
       let part: any;
       // tslint:disable-next-line:no-conditional-assignment
       while ((part = await data)) {
         if (part.length) {
-          map = run(
+          createDefectListResponse = run(
             await this.createDefectListManager.execute(
               parseDeserializeSafeObject(part[1], DefectList)
             )
           );
         } else {
-          const result = run(
+          run(
             this.createDefectImageFilesTask.execute(
-              "/tmp/" + map.get(part.filename),
+              createDefectListResponse.defectListFolderName,
+              createDefectListResponse.allDefectImageNamesMap.get(
+                part.filename
+              )!,
               part
             )
           );
         }
       }
+
+      this.createPdfManager.execute();
 
       // create actual pdf document
 

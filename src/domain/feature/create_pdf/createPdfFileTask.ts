@@ -3,10 +3,10 @@ import { provide } from "../../../ioc/ioc";
 import { call } from "../../../util/failableUtil";
 import { Response } from "../../model/response";
 
-@provide(CreateDefectImageFilesTask)
+@provide(CreatePdfFileTask)
   .inSingletonScope()
   .done()
-export class CreateDefectImageFilesTask {
+export class CreatePdfFileTask {
   private readonly fileRepo: FileRepo;
 
   constructor(fileRepo: FileRepo) {
@@ -15,11 +15,13 @@ export class CreateDefectImageFilesTask {
 
   public execute(
     basePath: string,
-    imageName: string,
-    part: any
+    pdfName: string,
+    pdfKitDocument: any
   ): Response<boolean> {
     return call(({ success, run }) => {
-      part.pipe(run(this.fileRepo.createFile(basePath + imageName)));
+      pdfKitDocument.pipe(run(this.fileRepo.createFile(basePath + pdfName)));
+
+      pdfKitDocument.end();
 
       return success(true);
     });

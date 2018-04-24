@@ -1,3 +1,4 @@
+import parse = require("await-busboy");
 import * as fs from "fs-extra";
 import { Lifecycle, Request, ResponseToolkit } from "hapi";
 
@@ -10,9 +11,11 @@ export const createFullDefectListHandler = async (
   request: Request,
   h: ResponseToolkit
 ): Promise<Lifecycle.ReturnValue> => {
-  // const data = request.payload;
+  const data = request.payload;
 
-  // const result = parse(data);
+  console.log(data);
+
+  const result = parse(data);
 
   // await controller.execute(result);
 
@@ -22,12 +25,14 @@ export const createFullDefectListHandler = async (
     "/home/roman/Downloads/annual_report_2009.pdf"
   );
 
-  return h
-    .response(stream)
-    .type("application/pdf")
-    .header("Content-type", "application/pdf")
-    .header("Content-length", stream.readableLength.toString())
-    .header("Content-Encoding", "none");
+  // return h
+  //   .response(stream)
+  //   .type("application/pdf")
+  //   .header("Content-type", "application/pdf")
+  //   .header("Content-length", docStat.toString())
+  //   .header("Content-Encoding", "none");
+
+  return data;
 };
 
 // const imageFilter = (fileName: string): boolean => {
