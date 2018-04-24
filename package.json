@@ -55,6 +55,6 @@
     "tslint": "latest",
     "tslint-config-prettier": "^1.12.0",
     "tslint-immutable": "^4.5.4",
-    "typescript": "^2.9.0-dev.20180420"
+    "typescript": "^2.9.0-dev.20180422"
   }
 }

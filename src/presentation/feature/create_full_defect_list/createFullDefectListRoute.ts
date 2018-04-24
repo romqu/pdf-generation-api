@@ -5,7 +5,7 @@ import { createFullDefectListHandler } from "./createFullDefectListHandler";
 export function createFullDefectListRoute(): ServerRoute {
   return {
     method: "POST",
-    path: "/images",
+    path: "/defect-lists",
     options: {
       auth: false,
       payload: {

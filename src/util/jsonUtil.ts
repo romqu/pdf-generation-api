@@ -1,21 +1,19 @@
 import { Deserialize, Serialize } from "cerialize";
-import * as stream from "stream";
+import { JsonObject, SerializableType } from "cerialize/dist/util";
 
 import { Response } from "../domain/model/response";
 import { failable, matchResponse } from "./failableUtil";
 
-export function serializeSafeObject(
-  data: object,
-  // tslint:disable-next-line:ban-types
-  type: Function
+export function serializeSafeObject<T extends object>(
+  data: T,
+  type: SerializableType<T>
 ): string {
-  return stringifyObject(Serialize(data, type));
+  return stringifyObject(Serialize<T>(data, type));
 }
 
-export function serializeObject(
-  data: object,
-  // tslint:disable-next-line:ban-types
-  type: Function
+export function serializeObject<T extends object>(
+  data: T,
+  type: SerializableType<T>
 ): Response<string> {
   return failable<string>(
     { type: "SERIALIZE", code: 105, title: "Serialize Object Error" },
@@ -23,14 +21,22 @@ export function serializeObject(
   );
 }
 
-export function deserializeObject<T>(
-  data: any,
+export function deserializeSafeObject<T>(
+  data: JsonObject,
   // tslint:disable-next-line:ban-types
-  type: Function
+  type: SerializableType<T>
+): T {
+  return Deserialize(data, type)!;
+}
+
+export function deserializeObject<T>(
+  data: JsonObject,
+  // tslint:disable-next-line:ban-types
+  type: SerializableType<T>
 ): Response<T> {
   return failable<T>(
     { type: "DESERIALIZE", code: 105, title: "Deserialize Object Error" },
-    () => Deserialize(data, type)
+    () => Deserialize(data, type)!
   );
 }
 
@@ -44,10 +50,16 @@ export function stringifyDeserializeObject<T>(
 
 export function parseDeserializeObject<T>(
   data: any,
-  // tslint:disable-next-line:ban-types
-  type: Function
+  type: SerializableType<T>
 ): Response<T> {
   return deserializeObject(JSON.parse(data), type);
+}
+
+export function parseDeserializeSafeObject<T>(
+  data: any,
+  type: SerializableType<T>
+): T {
+  return deserializeSafeObject(JSON.parse(data), type);
 }
 
 export function parseStringifyDeserializeObject<T>(
@@ -63,12 +75,11 @@ export function stringifyObject(data: any): string {
 }
 
 export function deserializePayload<T>(
-  payload: stream.Readable | Buffer | string | object,
-  // tslint:disable-next-line:ban-types
-  type: Function
+  payload: any,
+  type: SerializableType<T>
 ): Response<T> {
   return matchResponse<T, Response<T>>(
-    deserializeObject<T>(payload, type),
+    parseDeserializeObject<T>(payload, type),
     (data): Response<T> => ({ isSuccess: true, data }),
     (error): Response<T> => {
       return { isSuccess: false, error };

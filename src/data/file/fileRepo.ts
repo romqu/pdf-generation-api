@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { WriteStream } from "fs-extra";
 
 import { FsModeOctal } from "../../constants";
@@ -17,7 +19,7 @@ export class FileRepo {
 
   public createFile(
     path: string,
-    mode: FsModeOctal.DEFAULT
+    mode: number = FsModeOctal.DEFAULT
   ): Response<WriteStream> {
     return this.fsDataSource.createWriteStream(path, mode);
   }

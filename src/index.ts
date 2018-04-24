@@ -63,7 +63,7 @@ async function test(server: Hapi.Server): Promise<any> {
     const req = {
       app: {},
       method: "POST",
-      url: "/images",
+      url: "/pdf",
       headers: form.getHeaders(),
       payload
     };
@@ -161,9 +161,10 @@ async function start(): Promise<any> {
   try {
     const server = await Server.init();
     server.start();
+
     logInfo("server started successful");
 
-    await test(server);
+    // await test(server);
   } catch (err) {
     logInfo(err);
   }

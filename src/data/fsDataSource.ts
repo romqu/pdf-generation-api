@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import * as fs from "fs-extra";
 
 import { Response, ResponsePromise } from "../domain/model/response";
