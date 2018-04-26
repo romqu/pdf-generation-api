@@ -38,7 +38,7 @@ export async function init(): Promise<Hapi.Server> {
 }
 
 function registerExtEvents(server: Hapi.Server): void {
-  server.ext("onPreResponse", async (request, h): Promise<
+  server.ext("onPreResponse", async (request, _): Promise<
     Lifecycle.ReturnValue
   > => {
     const response = request.response;
@@ -70,29 +70,3 @@ async function registerPlugins(server: Hapi.Server): Promise<any> {
 
   server.auth.default("simple");
 }
-
-// function data(): void {
-//   const creator = new Creator("Mike", "Meener");
-//   const address = new Address("Musterstraße", 1, "a");
-//   const participant = new Participant(
-//     "Max",
-//     "Mustermann",
-//     "1234567",
-//     "max@mustermann.de",
-//     "Mustermann AG"
-//   );
-//   const image = new Image("mangel-border.jpg");
-//   const defect = new Defect("Ist kaputt", "Bernd", "", [{ ...image }]);
-//   const room = new Room("Wohnzimmer", 1, "Links neben der Küche", [
-//     { ...defect }
-//   ]);
-//   const livingUnit = new LivingUnit(1, [{ ...room }]);
-//   const floor = new Floor("EG", [{ ...livingUnit }]);
-//   const defectList = new DefectList(
-//     "1.1.1111",
-//     creator,
-//     address,
-//     [{ ...participant }],
-//     [{ ...floor }]
-//   );
-// }
