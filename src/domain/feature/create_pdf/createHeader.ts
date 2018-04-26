@@ -1,12 +1,12 @@
-import { defaultDocTableLayout } from "../constants";
-import { DocEntry } from "../model/pdfmake/docEntry";
-import { DocImage } from "../model/pdfmake/docImage";
-import { DocLine } from "../model/pdfmake/docLine";
-import { DocMargin } from "../model/pdfmake/docMargin";
-import { DocTable } from "../model/pdfmake/docTable";
-import { DocTableBody } from "../model/pdfmake/docTableBody";
-import { DocTableBodyRow } from "../model/pdfmake/docTableBodyRow";
-import { DocText } from "../model/pdfmake/docText";
+import { defaultDocTableLayout } from "../../../constants";
+import { DocEntry } from "../../model/pdfmake/docEntry";
+import { DocImage } from "../../model/pdfmake/docImage";
+import { DocLine } from "../../model/pdfmake/docLine";
+import { DocMargin } from "../../model/pdfmake/docMargin";
+import { DocTable } from "../../model/pdfmake/docTable";
+import { DocTableBody } from "../../model/pdfmake/docTableBody";
+import { DocTableBodyRow } from "../../model/pdfmake/docTableBodyRow";
+import { DocText } from "../../model/pdfmake/docText";
 
 export const createHeader = (): object[] => {
   const headerLeft = new DocTable({

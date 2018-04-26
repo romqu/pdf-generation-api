@@ -1,15 +1,14 @@
-import fs = require("fs");
 import PdfPrinter = require("pdfmake");
 
 import { provide } from "../../../ioc/ioc";
+import { call } from "../../../util/failableUtil";
 import { DefectList } from "../../model/document/defectList";
 import { Doc } from "../../model/pdfmake/doc";
+import { Response } from "../../model/response";
 import { CreateDoc } from "./createDoc";
 import { createFooter } from "./createFooter";
 import { createHeader } from "./createHeader";
 import { CreatePdfFileTask } from "./createPdfFileTask";
-import { Response } from "../../model/response";
-import { call } from "../../../util/failableUtil";
 
 const fonts = {
   Roboto: {
@@ -35,25 +34,23 @@ export class CreatePdfManager {
 
   public execute(defectList: DefectList, folderPath: string): Response<string> {
     return call(({ success, run }) => {
+      const createDoc: CreateDoc = new CreateDoc({
+        imageBasePath: "./assets/images/"
+      });
+
+      const pdfPrinter = new PdfPrinter(fonts);
+
+      const doc = new Doc({
+        docHeader: createHeader,
+        docBody: createDoc.execute(defectList),
+        docFooter: createFooter
+      });
+
+      const pdfDoc = pdfPrinter.createPdfKitDocument(doc.docDefinition());
+
+      run(this.createPdfFileTask.execute(folderPath, "test.pdf", pdfDoc));
+
       return success(folderPath);
     });
-
-    const createDoc: CreateDoc = new CreateDoc({
-      imageBasePath: "./assets/images/"
-    });
-
-    const pdfPrinter = new PdfPrinter(fonts);
-
-    const doc = new Doc({
-      docHeader: createHeader,
-      docBody: createDoc.execute(),
-      docFooter: createFooter
-    });
-
-    const pdfDoc = pdfPrinter.createPdfKitDocument(doc.docDefinition());
-
-    pdfDoc.pipe(fs.createWriteStream("./pdfs/prototype.pdf"));
-
-    pdfDoc.end();
   }
 }

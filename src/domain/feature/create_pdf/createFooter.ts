@@ -1,6 +1,5 @@
-import { DocEntry } from "../model/pdfmake/docEntry";
-import { DocMargin } from "../model/pdfmake/docMargin";
-import { DocText } from "../model/pdfmake/docText";
+import { DocMargin } from "../../model/pdfmake/docMargin";
+import { DocText } from "../../model/pdfmake/docText";
 
 export function createFooter(currentPage: number, pageCount: number): object {
   return new DocText({

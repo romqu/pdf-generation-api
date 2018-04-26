@@ -1,14 +1,14 @@
-import { defaultDocMargin, defaultDocTableLayout } from "../constants";
-import { createDefectTextTable } from "../create_pdf/createDefectTextTable";
-import { Defect } from "../model/defect";
-import { DocEntry } from "../model/pdfmake/docEntry";
-import { DocImage } from "../model/pdfmake/docImage";
-import { DocLine } from "../model/pdfmake/docLine";
-import { DocMargin } from "../model/pdfmake/docMargin";
-import { DocTable } from "../model/pdfmake/docTable";
-import { DocTableBody } from "../model/pdfmake/docTableBody";
-import { DocTableBodyRow } from "../model/pdfmake/docTableBodyRow";
-import { DocText } from "../model/pdfmake/docText";
+import { defaultDocMargin, defaultDocTableLayout } from "../../../constants";
+import { Defect } from "../../model/document/defect";
+import { DocEntry } from "../../model/pdfmake/docEntry";
+import { DocImage } from "../../model/pdfmake/docImage";
+import { DocLine } from "../../model/pdfmake/docLine";
+import { DocMargin } from "../../model/pdfmake/docMargin";
+import { DocTable } from "../../model/pdfmake/docTable";
+import { DocTableBody } from "../../model/pdfmake/docTableBody";
+import { DocTableBodyRow } from "../../model/pdfmake/docTableBodyRow";
+import { DocText } from "../../model/pdfmake/docText";
+import { createDefectTextTable } from "./createDefectTextTable";
 
 export function createDefectEntry(
   defect: Defect,
@@ -37,14 +37,14 @@ export function createDefectEntry(
   const defectTextTableEntry: DocEntry = createDefectTextTable(defect);
 
   // 3 - images
-  for (let i = 0; i < defect.images.length; i++) {
-    if (defect.images.length === 1) {
+  for (let i = 0; i < defect.defectImageList.length; i++) {
+    if (defect.defectImageList.length === 1) {
       defectFirstImageTableRow.addEntryList([
         new DocEntry({
           docModels: [
             new DocImage({
               margin: defaultDocMargin,
-              imageUrl: imageBasePath + defect.images[i].name,
+              imageUrl: imageBasePath + defect.defectImageList[i].name,
               fit: [200, 150]
             })
           ]
@@ -67,7 +67,7 @@ export function createDefectEntry(
           docModels: [
             new DocImage({
               margin: defaultDocMargin,
-              imageUrl: imageBasePath + defect.images[i].name,
+              imageUrl: imageBasePath + defect.defectImageList[i].name,
               fit: [200, 150]
             })
           ]
@@ -84,7 +84,7 @@ export function createDefectEntry(
           docModels: [
             new DocImage({
               margin: defaultDocMargin,
-              imageUrl: imageBasePath + defect.images[i].name,
+              imageUrl: imageBasePath + defect.defectImageList[i].name,
               fit: [200, 150]
             })
           ]

@@ -1,9 +1,9 @@
-import { DocEntry } from "../model/pdfmake/docEntry";
-import { DocLine } from "../model/pdfmake/docLine";
-import { DocMargin } from "../model/pdfmake/docMargin";
-import { DocStack } from "../model/pdfmake/docStack";
-import { DocText } from "../model/pdfmake/docText";
-import { Room } from "../model/room";
+import { Room } from "../../model/document/room";
+import { DocEntry } from "../../model/pdfmake/docEntry";
+import { DocLine } from "../../model/pdfmake/docLine";
+import { DocMargin } from "../../model/pdfmake/docMargin";
+import { DocStack } from "../../model/pdfmake/docStack";
+import { DocText } from "../../model/pdfmake/docText";
 
 export function createRoomEntry(room: Room): DocEntry {
   return new DocEntry({
@@ -21,7 +21,7 @@ export function createRoomEntry(room: Room): DocEntry {
                 docMargin: new DocMargin({ top: 1 })
               }),
               new DocText({
-                text: room.description,
+                text: room.locationDescription,
                 docMargin: new DocMargin({ top: 5 })
               })
             ]

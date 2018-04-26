@@ -1,10 +1,10 @@
-import { Floor } from "../model/floor";
-import { LivingUnit } from "../model/livingUnit";
-import { DocEntry } from "../model/pdfmake/docEntry";
-import { DocLine } from "../model/pdfmake/docLine";
-import { DocMargin } from "../model/pdfmake/docMargin";
-import { DocStack } from "../model/pdfmake/docStack";
-import { DocText } from "../model/pdfmake/docText";
+import { Floor } from "../../model/document/floor";
+import { LivingUnit } from "../../model/document/livingUnit";
+import { DocEntry } from "../../model/pdfmake/docEntry";
+import { DocLine } from "../../model/pdfmake/docLine";
+import { DocMargin } from "../../model/pdfmake/docMargin";
+import { DocStack } from "../../model/pdfmake/docStack";
+import { DocText } from "../../model/pdfmake/docText";
 
 export function createFloorAndLivingUnitEntry(
   floor: Floor,

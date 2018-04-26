@@ -13,17 +13,15 @@ export const createFullDefectListHandler = async (
 ): Promise<Lifecycle.ReturnValue> => {
   const data = request.payload;
 
-  console.log(data);
-
   const result = parse(data);
 
   // await controller.execute(result);
 
-  const docStat = await fs.stat("/home/roman/Downloads/annual_report_2009.pdf");
+  // const docStat = await fs.stat("/home/roman/Downloads/annual_report_2009.pdf");
 
-  const stream = fs.createReadStream(
-    "/home/roman/Downloads/annual_report_2009.pdf"
-  );
+  // const stream = fs.createReadStream(
+  //   "/home/roman/Downloads/annual_report_2009.pdf"
+  // );
 
   // return h
   //   .response(stream)
@@ -32,7 +30,7 @@ export const createFullDefectListHandler = async (
   //   .header("Content-length", docStat.toString())
   //   .header("Content-Encoding", "none");
 
-  return data;
+  return result;
 };
 
 // const imageFilter = (fileName: string): boolean => {

@@ -1,11 +1,10 @@
-import { createDefectEntry } from "./create_pdf/createDefectEntry";
-import { createFloorAndLivingUnitEntry } from "./create_pdf/createFloorAndLivingUnitEntry";
-import { createParticipantsEntry } from "./create_pdf/createParticipantsEntry";
-import { createRoomEntry } from "./create_pdf/createRoomEntry";
-import { createTestData } from "./create_pdf/createTestData";
-import { logger } from "./logger";
-import { DefectList } from "./model/defectList";
-import { DocEntry } from "./model/pdfmake/docEntry";
+import { DefectList } from "../../model/document/defectList";
+import { DocEntry } from "../../model/pdfmake/docEntry";
+import { createDefectEntry } from "./createDefectEntry";
+import { createFloorAndLivingUnitEntry } from "./createFloorAndLivingUnitEntry";
+import { createParticipantsEntry } from "./createParticipantsEntry";
+import { createRoomEntry } from "./createRoomEntry";
+import { createTestData } from "./createTestData";
 
 export class CreateDoc {
   constructor(
@@ -14,7 +13,7 @@ export class CreateDoc {
     }
   ) {}
 
-  public execute(): DocEntry {
+  public execute(defectList: DefectList): DocEntry {
     const defects: DefectList = createTestData();
     return this.createDoc({ defectList: defects });
   }
@@ -22,14 +21,14 @@ export class CreateDoc {
   private createDoc(params: { defectList: DefectList }): DocEntry {
     const docEntry: DocEntry = new DocEntry();
 
-    logger.info(params.defectList);
-
     docEntry.addDocModel(
-      createParticipantsEntry(params.defectList.participantList)
+      createParticipantsEntry(
+        params.defectList.streetAddress.viewParticipantList
+      )
     );
 
-    for (const floor of params.defectList.floors) {
-      for (const livingUnit of floor.livingUnits) {
+    for (const floor of params.defectList.streetAddress.floorList) {
+      for (const livingUnit of floor.livingUnitList) {
         const livingUnitEntry: DocEntry = createFloorAndLivingUnitEntry(
           floor,
           livingUnit
@@ -37,16 +36,16 @@ export class CreateDoc {
 
         docEntry.addDocModel(livingUnitEntry);
 
-        for (const room of livingUnit.rooms) {
+        for (const room of livingUnit.roomList) {
           const roomEntry: DocEntry = createRoomEntry(room);
           const defectEntries: DocEntry[] = [];
 
           docEntry.addDocModel(roomEntry);
 
-          for (let i = 0; i < room.defects.length; i++) {
+          for (let i = 0; i < room.defectList.length; i++) {
             defectEntries.push(
               createDefectEntry(
-                room.defects[i],
+                room.defectList[i],
                 this.params.imageBasePath,
                 i + 1
               )

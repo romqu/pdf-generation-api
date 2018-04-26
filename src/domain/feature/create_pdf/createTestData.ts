@@ -1,86 +1,33 @@
-import { Creator } from "../model/creator";
-import { Defect } from "../model/defect";
-import { DefectList } from "../model/defectList";
-import { Floor } from "../model/floor";
-import { Image } from "../model/image";
-import { LivingUnit } from "../model/livingUnit";
-import { Participant } from "../model/participant";
-import { Room } from "../model/room";
+import { Creator } from "../../model/document/creator";
+import { Defect } from "../../model/document/defect";
+import { DefectImage } from "../../model/document/defectImage";
+import { DefectList } from "../../model/document/defectList";
+import { Floor } from "../../model/document/floor";
+import { LivingUnit } from "../../model/document/livingUnit";
+import { Room } from "../../model/document/room";
+import { StreetAddress } from "../../model/document/streetAddress";
+import { ViewParticipant } from "../../model/document/viewParticipant";
 
 export function createTestData(): DefectList {
-  const imageList: Image[] = [];
-  const defectList: Defect[] = [];
-  const roomList: Room[] = [];
-  const livingUnitList: LivingUnit[] = [];
-  const floorList: Floor[] = [];
-  const participantList: Participant[] = [];
+  const range = (n: number): number[] =>
+    Array.from({ length: n }, (_, key) => key);
+  const defectImageList = range(1).map(
+    _ => new DefectImage("", 0, "mangel.jpg")
+  );
+  const defectList = range(1).map(
+    _ => new Defect("Bla", "iwqd", "AG", "1995/01/01", defectImageList)
+  );
+  const roomList = range(1).map(_ => new Room("wqd", 1, "wqdwqd", defectList));
+  const livingUnitList = range(1).map(_ => new LivingUnit(1, roomList));
+  const floorList = range(1).map(_ => new Floor("EG", livingUnitList));
+  const viewParticipantList = range(1).map(
+    _ => new ViewParticipant("Bern", "Me", 12345, "wqdwqd@wdwqd.de", "adsadsa")
+  );
 
-  for (let i = 0; i < 2; i++) {
-    imageList.push(new Image({ name: "mangel-border.jpg" }));
-  }
-
-  for (let i = 0; i < 2; i++) {
-    defectList.push(
-      new Defect({
-        description: "Fenster defekt",
-        personInCharge: "Bernd",
-        doneTill: "1.11.111",
-        images: imageList
-      })
-    );
-  }
-
-  for (let i = 0; i < 1; i++) {
-    roomList.push(
-      new Room({
-        name: "Wohnzimmer",
-        number: i,
-        description: "Befindet sich links, nqeben der Küche.",
-        defects: defectList
-      })
-    );
-  }
-
-  for (let i = 0; i < 1; i++) {
-    livingUnitList.push(
-      new LivingUnit({
-        number: i,
-        rooms: roomList
-      })
-    );
-  }
-
-  for (let i = 0; i < 1; i++) {
-    floorList.push(
-      new Floor({
-        name: "EG",
-        livingUnits: livingUnitList
-      })
-    );
-  }
-
-  for (let i = 0; i < 10; i++) {
-    participantList.push(
-      new Participant({
-        forename: "Max",
-        surname: "Mustermann",
-        phoneNumber: "1234567",
-        email: "max@mustermann.de",
-        companyName: "Mustermann AG"
-      })
-    );
-  }
-
-  return new DefectList({
-    date: "01.11.1111",
-    creator: new Creator({
-      forename: "Max",
-      surname: "Mustermann"
-    }),
-    streetName: "Staße",
-    houseNumber: 1,
-    additional: "a",
-    participantList: [...participantList],
-    floors: floorList
-  });
+  return new DefectList(
+    "list",
+    "08/08/2011",
+    new Creator(1),
+    new StreetAddress("abcd", 1, "ab", 1234567, floorList, viewParticipantList)
+  );
 }

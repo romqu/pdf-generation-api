@@ -38,8 +38,8 @@
     "@types/boom": "^7.2.0",
     "@types/form-data": "^2.2.1",
     "@types/fs-extra": "^5.0.2",
-    "@types/hapi": "^17.0.10",
-    "@types/joi": "^13.0.7",
+    "@types/hapi": "^17.0.11",
+    "@types/joi": "^13.0.8",
     "@types/node": "^9.6.6",
     "@types/pino": "latest",
     "@types/redis": "^2.8.6",
@@ -55,6 +55,6 @@
     "tslint": "latest",
     "tslint-config-prettier": "^1.12.0",
     "tslint-immutable": "^4.5.4",
-    "typescript": "^2.9.0-dev.20180424"
+    "typescript": "^2.9.0-dev.20180426"
   }
 }

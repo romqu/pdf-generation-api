@@ -7,7 +7,6 @@ export function createFullDefectListRoute(): ServerRoute {
     method: "POST",
     path: "/defect-lists",
     options: {
-      auth: false,
       payload: {
         output: "stream",
         parse: false,

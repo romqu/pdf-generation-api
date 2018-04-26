@@ -1,15 +1,15 @@
-import { defaultDocTableLayout } from "../constants";
-import { Participant } from "../model/participant";
-import { DocEntry } from "../model/pdfmake/docEntry";
-import { DocLine } from "../model/pdfmake/docLine";
-import { DocMargin } from "../model/pdfmake/docMargin";
-import { DocTable } from "../model/pdfmake/docTable";
-import { DocTableBody } from "../model/pdfmake/docTableBody";
-import { DocTableBodyRow } from "../model/pdfmake/docTableBodyRow";
-import { DocText } from "../model/pdfmake/docText";
+import { defaultDocTableLayout } from "../../../constants";
+import { ViewParticipant } from "../../model/document/viewParticipant";
+import { DocEntry } from "../../model/pdfmake/docEntry";
+import { DocLine } from "../../model/pdfmake/docLine";
+import { DocMargin } from "../../model/pdfmake/docMargin";
+import { DocTable } from "../../model/pdfmake/docTable";
+import { DocTableBody } from "../../model/pdfmake/docTableBody";
+import { DocTableBodyRow } from "../../model/pdfmake/docTableBodyRow";
+import { DocText } from "../../model/pdfmake/docText";
 
 export function createParticipantsEntry(
-  participantList: Participant[]
+  participantList: ViewParticipant[]
 ): DocEntry {
   const rows: DocTableBodyRow[] = [];
   const row: DocTableBodyRow = new DocTableBodyRow();
@@ -117,7 +117,7 @@ export function createParticipantsEntry(
                       docModels: [
                         new DocText({
                           docMargin: new DocMargin({ left: 3, top: 2 }),
-                          text: participant.phoneNumber
+                          text: participant.phoneNumber.toString()
                         })
                       ]
                     })

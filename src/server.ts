@@ -3,10 +3,12 @@ import * as Hapi from "hapi";
 import * as AuthBearer from "hapi-auth-bearer-token";
 
 import { Lifecycle } from "hapi";
+import { authenticateClientHandler } from "./presentation/feature/authenticate_client/authenticateClienHandler";
 import { createFullDefectListRoute } from "./presentation/feature/create_full_defect_list/createFullDefectListRoute";
 import { downloadPdfRoute } from "./presentation/feature/download_pdf/downloadPdfRoute";
 import { loginRoute } from "./presentation/feature/login/loginRoute";
 import { registrationRoute } from "./presentation/feature/registration/registrationRoute";
+import { testRoute } from "./presentation/feature/test/testRoute";
 
 export async function init(): Promise<Hapi.Server> {
   const server = new Hapi.Server({
@@ -52,6 +54,7 @@ function registerExtEvents(server: Hapi.Server): void {
 }
 
 function registerRoutes(server: Hapi.Server): void {
+  server.route(testRoute());
   server.route(registrationRoute());
   server.route(loginRoute());
   server.route(createFullDefectListRoute());
@@ -62,16 +65,7 @@ async function registerPlugins(server: Hapi.Server): Promise<any> {
   await server.register(AuthBearer);
 
   server.auth.strategy("simple", "bearer-access-token", {
-    validate: async (request: any, token: any, h: any): Promise<any> => {
-      // here is where you validate your token
-      // comparing with token from your database for example
-      const isValid = token === "1234";
-
-      const credentials = { token };
-      const artifacts = { test: "info" };
-
-      return { isValid, credentials, artifacts };
-    }
+    validate: authenticateClientHandler
   });
 
   server.auth.default("simple");

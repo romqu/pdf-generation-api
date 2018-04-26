@@ -36,9 +36,7 @@ export class ClientSessionRepo {
     return callAsync(async ({ success, run }) => {
       const result = run(await this.memoryDataSource.get({ key: params.key }));
 
-      const client = run<ClientSessionEntity>(
-        parseDeserializeObject(result, ClientSessionEntity)
-      );
+      const client = run(parseDeserializeObject(result, ClientSessionEntity));
 
       return success(client);
     });

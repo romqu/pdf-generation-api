@@ -1,11 +1,11 @@
-import { defaultDocTableLayout } from "../constants";
-import { Defect } from "../model/defect";
-import { DocEntry } from "../model/pdfmake/docEntry";
-import { DocMargin } from "../model/pdfmake/docMargin";
-import { DocTable } from "../model/pdfmake/docTable";
-import { DocTableBody } from "../model/pdfmake/docTableBody";
-import { DocTableBodyRow } from "../model/pdfmake/docTableBodyRow";
-import { DocText } from "../model/pdfmake/docText";
+import { defaultDocTableLayout } from "../../../constants";
+import { Defect } from "../../model/document/defect";
+import { DocEntry } from "../../model/pdfmake/docEntry";
+import { DocMargin } from "../../model/pdfmake/docMargin";
+import { DocTable } from "../../model/pdfmake/docTable";
+import { DocTableBody } from "../../model/pdfmake/docTableBody";
+import { DocTableBodyRow } from "../../model/pdfmake/docTableBodyRow";
+import { DocText } from "../../model/pdfmake/docText";
 
 const description: string = "Beschreibung";
 const personInCharge: string = "Verantwortlicher";
@@ -24,7 +24,7 @@ export function createDefectTextTable(defect: Defect): DocEntry {
         rightText = defect.description;
         break;
       case personInCharge:
-        rightText = defect.personInCharge;
+        rightText = defect.companyInCharge;
         break;
       case doneTill:
         rightText = defect.doneTill;

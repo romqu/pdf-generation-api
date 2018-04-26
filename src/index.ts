@@ -4,6 +4,7 @@ import * as fs from "fs-extra";
 import * as Hapi from "hapi";
 import { Stream } from "stream";
 
+import { AuthenticateClientManager } from "./domain/feature/authenticate_client/authenticateClientManager";
 import { Creator } from "./domain/model/document/creator";
 import { Defect } from "./domain/model/document/defect";
 import { DefectImage } from "./domain/model/document/defectImage";
@@ -13,6 +14,7 @@ import { LivingUnit } from "./domain/model/document/livingUnit";
 import { Room } from "./domain/model/document/room";
 import { StreetAddress } from "./domain/model/document/streetAddress";
 import { ViewParticipant } from "./domain/model/document/viewParticipant";
+import { container } from "./ioc/ioc";
 import * as Server from "./server";
 import { logInfo } from "./util/loggerUtil";
 
@@ -163,6 +165,12 @@ async function start(): Promise<any> {
     server.start();
 
     logInfo("server started successful");
+
+    const result = await container
+      .get(AuthenticateClientManager)
+      .execute("1234");
+
+    logInfo("Result", result.isSuccess ? result.data : result);
 
     // await test(server);
   } catch (err) {
