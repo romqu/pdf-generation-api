@@ -166,12 +166,6 @@ async function start(): Promise<any> {
 
     logInfo("server started successful");
 
-    const result = await container
-      .get(AuthenticateClientManager)
-      .execute("1234");
-
-    logInfo("Result", result.isSuccess ? result.data : result);
-
     // await test(server);
   } catch (err) {
     logInfo(err);
