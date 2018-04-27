@@ -2,9 +2,14 @@ import { RegistrationManager } from "../../../domain/feature/registration/regist
 import { RegistrationData } from "../../../domain/model/registrationData";
 import { provide } from "../../../ioc/ioc";
 import { callAsync, matchResponse } from "../../../util/failableUtil";
-import { serializeObject, serializeSafeObject } from "../../../util/jsonUtil";
+import {
+  serializeObject,
+  serializeSafeObject,
+  deserializePayload
+} from "../../../util/jsonUtil";
 import { ErrorModel } from "../../model/errorModel";
 import { ResponseModel } from "../../model/responseModel";
+import { Payload } from "./registrationHandler";
 
 @provide(RegistrationController)
   .inSingletonScope()
@@ -16,31 +21,33 @@ export class RegistrationController {
     this.manager = manager;
   }
 
-  public async execute(registrationData: RegistrationData): Promise<string> {
+  public async execute_(payload: Payload): Promise<string> {
     const response = await callAsync<string>(async ({ success, run }) => {
-      const dat = run(await this.manager.execute(registrationData));
+      const registrationData = run(
+        deserializePayload<RegistrationData>(payload, RegistrationData)
+      );
+      const managerResponse = run(await this.manager.execute(registrationData));
 
-      const res = run(
-        serializeObject(new ResponseModel(true, dat, []), ResponseModel)
+      const serializeResponse = run(
+        serializeObject(
+          new ResponseModel(true, managerResponse, []),
+          ResponseModel
+        )
       );
 
-      return success(res);
+      return success(serializeResponse);
     });
 
-    const result = matchResponse(
+    return matchResponse(
       response,
-      (data): string => {
-        return data;
-      },
-      (error): string => {
-        const model = new ResponseModel(false, {}, [
-          new ErrorModel("", "", error.type, error.message)
-        ]);
-
-        return serializeSafeObject(model, ResponseModel);
-      }
+      data => data,
+      error =>
+        serializeSafeObject(
+          new ResponseModel(false, {}, [
+            new ErrorModel("", "", error.type, error.message)
+          ]),
+          ResponseModel
+        )
     );
-
-    return result;
   }
 }
