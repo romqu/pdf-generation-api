@@ -3,11 +3,11 @@ import {
   CreateDefectListManager,
   ICreateDefectListResponse
 } from "../../../domain/feature/create_defect_list/createDefectListManager";
+import { CreatePdfManager } from "../../../domain/feature/create_pdf/createPdfManager";
 import { DefectList } from "../../../domain/model/document/defectList";
 import { provide } from "../../../ioc/ioc";
 import { callAsync, matchResponse } from "../../../util/failableUtil";
 import { parseDeserializeSafeObject } from "../../../util/jsonUtil";
-import { CreatePdfManager } from "../../../domain/feature/create_pdf/createPdfManager";
 
 @provide(CreateFullDefectListController)
   .inSingletonScope()
@@ -52,13 +52,13 @@ export class CreateFullDefectListController {
         }
       }
 
-      this.createPdfManager.execute();
+      // this.createPdfManager.execute();
 
       // create actual pdf document
 
       return success("./pdfs/lukas_jakobs_pdf_prototype.pdf");
     });
 
-    return matchResponse(response, value => value, error => "");
+    return matchResponse(response, value => value, _ => "");
   }
 }

@@ -4,9 +4,9 @@ import { AuthenticateClientController } from "./authenticateClientController";
 const controller = container.get(AuthenticateClientController);
 
 export async function authenticateClientHandler(
-  request: any,
+  __: any,
   token: any,
-  h: any
+  _: any
 ): Promise<any> {
   const isValid = await controller.execute(token);
 

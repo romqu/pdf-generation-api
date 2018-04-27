@@ -1,12 +1,17 @@
+import "reflect-metadata";
+
 import { LoginManager } from "../../../domain/feature/login/loginManager";
 import { LoginCredentials } from "../../../domain/model/loginCredentials";
 import { provide } from "../../../ioc/ioc";
 import { callAsync, matchResponse } from "../../../util/failableUtil";
-import { serializeObject, serializeSafeObject } from "../../../util/jsonUtil";
+import {
+  deserializePayload,
+  serializeObject,
+  serializeSafeObject
+} from "../../../util/jsonUtil";
 import { ErrorModel } from "../../model/errorModel";
+import { Payload } from "../../model/payload";
 import { ResponseModel } from "../../model/responseModel";
-
-import "reflect-metadata";
 
 @provide(LoginController)
   .inSingletonScope()
@@ -18,31 +23,33 @@ export class LoginController {
     this.manager = manager;
   }
 
-  public async execute(loginCredentials: LoginCredentials): Promise<string> {
+  public async execute(payload: Payload): Promise<string> {
     const response = await callAsync<string>(async ({ success, run }) => {
-      const dat = run(await this.manager.execute(loginCredentials));
+      const loginCredentials = run(
+        deserializePayload<LoginCredentials>(payload, LoginCredentials)
+      );
+      const managerResponse = run(await this.manager.execute(loginCredentials));
 
-      const res = run(
-        serializeObject(new ResponseModel(true, dat, []), ResponseModel)
+      const serializeResponse = run(
+        serializeObject(
+          new ResponseModel(true, managerResponse, []),
+          ResponseModel
+        )
       );
 
-      return success(res);
+      return success(serializeResponse);
     });
 
-    const result = matchResponse(
+    return matchResponse(
       response,
-      (data): string => {
-        return data;
-      },
-      (error): string => {
-        const model = new ResponseModel(false, {}, [
-          new ErrorModel("", "", error.type, error.message)
-        ]);
-
-        return serializeSafeObject(model, ResponseModel);
-      }
+      data => data,
+      error =>
+        serializeSafeObject(
+          new ResponseModel(false, {}, [
+            new ErrorModel("", "", error.type, error.message)
+          ]),
+          ResponseModel
+        )
     );
-
-    return result;
   }
 }

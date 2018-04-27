@@ -3,13 +3,13 @@ import { RegistrationData } from "../../../domain/model/registrationData";
 import { provide } from "../../../ioc/ioc";
 import { callAsync, matchResponse } from "../../../util/failableUtil";
 import {
+  deserializePayload,
   serializeObject,
-  serializeSafeObject,
-  deserializePayload
+  serializeSafeObject
 } from "../../../util/jsonUtil";
 import { ErrorModel } from "../../model/errorModel";
+import { Payload } from "../../model/payload";
 import { ResponseModel } from "../../model/responseModel";
-import { Payload } from "./registrationHandler";
 
 @provide(RegistrationController)
   .inSingletonScope()

@@ -15,6 +15,6 @@ export class AuthenticateClientController {
   public async execute(token: string): Promise<boolean> {
     const response = await this.authenticateClientManager.execute(token);
 
-    return matchResponse<boolean, boolean>(response, data => data, _ => false);
+    return matchResponse(response, data => data, _ => false);
   }
 }
