@@ -5,7 +5,7 @@ import { createDefectListHandler } from "./createDefectListHandler";
 export function createDefectListRoute(): ServerRoute {
   return {
     method: "POST",
-    path: "/defect-list",
+    path: "/defect-lists",
     options: {
       payload: {
         output: "stream",
