@@ -9,10 +9,10 @@ import { provide } from "../../../ioc/ioc";
 import { callAsync, matchResponse } from "../../../util/failableUtil";
 import { parseDeserializeSafeObject } from "../../../util/jsonUtil";
 
-@provide(CreateFullDefectListController)
+@provide(CreateDefectListController)
   .inSingletonScope()
   .done()
-export class CreateFullDefectListController {
+export class CreateDefectListController {
   private readonly createDefectImageFilesTask: CreateDefectImageFilesTask;
   private readonly createDefectListManager: CreateDefectListManager;
   private readonly createPdfManager: CreatePdfManager;

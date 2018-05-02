@@ -4,7 +4,7 @@ import * as AuthBearer from "hapi-auth-bearer-token";
 
 import { Lifecycle } from "hapi";
 import { authenticateClientHandler } from "./presentation/feature/authenticate_client/authenticateClienHandler";
-import { createFullDefectListRoute } from "./presentation/feature/create_full_defect_list/createFullDefectListRoute";
+import { createDefectListRoute } from "./presentation/feature/create_defect_list/createDefectListRoute";
 import { downloadPdfRoute } from "./presentation/feature/download_pdf/downloadPdfRoute";
 import { loginRoute } from "./presentation/feature/login/loginRoute";
 import { registrationRoute } from "./presentation/feature/registration/registrationRoute";
@@ -57,7 +57,7 @@ function registerRoutes(server: Hapi.Server): void {
   server.route(testRoute());
   server.route(registrationRoute());
   server.route(loginRoute());
-  server.route(createFullDefectListRoute());
+  server.route(createDefectListRoute());
   server.route(downloadPdfRoute());
 }
 

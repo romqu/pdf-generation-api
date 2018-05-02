@@ -1,8 +1,8 @@
 import { ServerRoute } from "hapi";
 
-import { createFullDefectListHandler } from "./createFullDefectListHandler";
+import { createDefectListHandler } from "./createDefectListHandler";
 
-export function createFullDefectListRoute(): ServerRoute {
+export function createDefectListRoute(): ServerRoute {
   return {
     method: "POST",
     path: "/defect-list",
@@ -14,6 +14,6 @@ export function createFullDefectListRoute(): ServerRoute {
         maxBytes: 1024 * 1024 * 50
       }
     },
-    handler: createFullDefectListHandler
+    handler: createDefectListHandler
   };
 }
