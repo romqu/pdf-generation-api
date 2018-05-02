@@ -1,6 +1,6 @@
 import { ClientRepo } from "../../../data/client/clienRepo";
-import { CreateFullDefectListRepo } from "../../../data/create_full_defect_list/createFullDefectListRepo";
-import { DefectImageEntity } from "../../../data/create_full_defect_list/defectImageEntity";
+import { DefectImageEntity } from "../../../data/defect_list/defectImageEntity";
+import { DefectListRepo } from "../../../data/defect_list/defectListRepo";
 import { provide } from "../../../ioc/ioc";
 import { callAsync } from "../../../util/failableUtil";
 import { getSha256Hash } from "../../../util/hashUtil";
@@ -9,6 +9,7 @@ import { ResponsePromise } from "../../model/response";
 import { CreateDefectImageEntityListTask } from "./createDefectImageEntityListTask";
 import { CreateDefectListFoldersTask } from "./createDefectListFoldersTask";
 import { TransformToDefectListEntityTask } from "./transformToDefectListEntityTask";
+import { IReturnedId } from "../../../data/diskDataSource";
 
 @provide(CreateDefectListManager)
   .inSingletonScope()
@@ -16,7 +17,7 @@ import { TransformToDefectListEntityTask } from "./transformToDefectListEntityTa
 export class CreateDefectListManager {
   private readonly clientRepo: ClientRepo;
   private readonly createDefectImageEntityListTask: CreateDefectImageEntityListTask;
-  private readonly createFullDefectListRepo: CreateFullDefectListRepo;
+  private readonly defectListRepo: DefectListRepo;
   private readonly createDefectListFoldersTask: CreateDefectListFoldersTask;
   private readonly transformToDefectListEntityTask: TransformToDefectListEntityTask;
 
@@ -25,13 +26,13 @@ export class CreateDefectListManager {
     createDefectImageEntityListTask: CreateDefectImageEntityListTask,
     transformToDefectListEntityTask: TransformToDefectListEntityTask,
     createDefectListFoldersTask: CreateDefectListFoldersTask,
-    createFullDefectListRepo: CreateFullDefectListRepo
+    defectListRepo: DefectListRepo
   ) {
     this.clientRepo = clientRepo;
     this.createDefectImageEntityListTask = createDefectImageEntityListTask;
     this.transformToDefectListEntityTask = transformToDefectListEntityTask;
     this.createDefectListFoldersTask = createDefectListFoldersTask;
-    this.createFullDefectListRepo = createFullDefectListRepo;
+    this.defectListRepo = defectListRepo;
   }
 
   public execute(
@@ -85,9 +86,17 @@ export class CreateDefectListManager {
         )
       );
 
-      const defectListEntityId = run(
-        await this.createFullDefectListRepo.insert(defectEntityList)
-      );
+      let defectListEntityId: IReturnedId;
+
+      if (defectEntityList.streetAddressEntity.floorEntityList.length === 0) {
+        defectListEntityId = run(
+          await this.defectListRepo.insertBasic(defectEntityList)
+        );
+      } else {
+        defectListEntityId = run(
+          await this.defectListRepo.insert(defectEntityList)
+        );
+      }
 
       const folderPath = run(
         await this.createDefectListFoldersTask.execute(folderHashName, [])

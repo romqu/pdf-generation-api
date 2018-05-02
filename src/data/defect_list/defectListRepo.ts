@@ -17,10 +17,10 @@ import { RoomEntity } from "./roomEntity";
 import { StreetAddressEntity } from "./streetAddressEntity";
 import { ViewParticipantEntity } from "./viewParticipantEntity";
 
-@provide(CreateFullDefectListRepo)
+@provide(DefectListRepo)
   .inSingletonScope()
   .done()
-export class CreateFullDefectListRepo {
+export class DefectListRepo {
   private readonly pgDb: IDatabase<any>;
   private readonly pgMain: IMain;
 
@@ -239,6 +239,73 @@ export class CreateFullDefectListRepo {
           ) + returningId,
           [],
           (row: IReturnedId) => row
+        );
+
+        const diff = process.hrtime(begin);
+
+        console.log(
+          `Benchmark took ${(diff[0] * NS_PER_SEC + diff[1]) *
+            MS_PER_NS} milliseconds`
+        );
+
+        return { id: dLRowId.id };
+      })
+    );
+  }
+
+  public insertBasic(entity: DefectListEntity): ResponsePromise<IReturnedId> {
+    const returningId = " RETURNING id;";
+
+    const NS_PER_SEC = 1e9;
+    const MS_PER_NS = 1e-6;
+
+    return failableAsync({ type: "DB", code: 100, title: "Query Error" }, () =>
+      this.pgDb.tx<IReturnedId>(async (t: ITask<IReturnedId>) => {
+        const begin = process.hrtime();
+
+        // insert DefectList
+        const dLRowId = await t.one<IReturnedId>(
+          this.pgMain.helpers.insert(
+            {
+              name: entity.name,
+              creation_date: entity.creationDate,
+              client_id: entity.clientId
+            },
+            DefectListEntity.getColumnSet(this.pgMain)
+          ) + returningId
+        );
+
+        // insert StreetAddress
+        const sARowId = await t.one<IReturnedId>(
+          this.pgMain.helpers.insert(
+            {
+              name: entity.streetAddressEntity.name,
+              postal_code: entity.streetAddressEntity.postalCode,
+              number: entity.streetAddressEntity.number,
+              additional: entity.streetAddressEntity.additional,
+              defect_list_id: dLRowId.id
+            },
+            StreetAddressEntity.getColumnSet(this.pgMain)
+          ) + returningId
+        );
+
+        // insert ViewParticipants
+        const viewParticipantValues = entity.streetAddressEntity.viewParticipantEntityList.map(
+          viewParticipant => ({
+            forename: viewParticipant.forename,
+            surname: viewParticipant.surname,
+            phone_number: viewParticipant.phoneNumber,
+            e_mail: viewParticipant.email,
+            company_name: viewParticipant.companyName,
+            street_address_id: sARowId.id
+          })
+        );
+
+        await t.none(
+          this.pgMain.helpers.insert(
+            viewParticipantValues,
+            ViewParticipantEntity.getColumnSet(this.pgMain)
+          )
         );
 
         const diff = process.hrtime(begin);

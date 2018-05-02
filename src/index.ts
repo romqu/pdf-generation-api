@@ -4,19 +4,13 @@ import * as fs from "fs-extra";
 import * as Hapi from "hapi";
 import { Stream } from "stream";
 
-import { AuthenticateClientManager } from "./domain/feature/authenticate_client/authenticateClientManager";
-import { Creator } from "./domain/model/document/creator";
-import { Defect } from "./domain/model/document/defect";
-import { DefectImage } from "./domain/model/document/defectImage";
 import { DefectList } from "./domain/model/document/defectList";
-import { Floor } from "./domain/model/document/floor";
-import { LivingUnit } from "./domain/model/document/livingUnit";
-import { Room } from "./domain/model/document/room";
-import { StreetAddress } from "./domain/model/document/streetAddress";
-import { ViewParticipant } from "./domain/model/document/viewParticipant";
-import { container } from "./ioc/ioc";
 import * as Server from "./server";
+import { createTestDataFull, createTestDataBasic } from "./util/defectListUtil";
 import { logInfo } from "./util/loggerUtil";
+import { container } from "./ioc/ioc";
+import { TransformToDefectListEntityTask } from "./domain/feature/create_defect_list/transformToDefectListEntityTask";
+import { CreateDefectListManager } from "./domain/feature/create_defect_list/createDefectListManager";
 
 Error.stackTraceLimit = Infinity;
 
@@ -34,21 +28,6 @@ async function test(server: Hapi.Server): Promise<any> {
   //   url: "127.0.0.1:3000/login",
   //   payload: '{"e_mail":"hello@hello.de","password":"password"}'
   // });
-
-  const range = (n: number): number[] =>
-    Array.from({ length: n }, (_, key) => key);
-  const defectImageList = range(1).map(
-    _ => new DefectImage("", 0, "mangel.jpg")
-  );
-  const defectList = range(1).map(
-    _ => new Defect("Bla", "iwqd", "AG", "1995/01/01", defectImageList)
-  );
-  const roomList = range(1).map(_ => new Room("wqd", 1, "wqdwqd", defectList));
-  const livingUnitList = range(1).map(_ => new LivingUnit(1, roomList));
-  const floorList = range(1).map(_ => new Floor("EG", livingUnitList));
-  const viewParticipantList = range(1).map(
-    _ => new ViewParticipant("Bern", "Me", 12345, "wqdwqd@wdwqd.de", "adsadsa")
-  );
 
   const converter = new Stream.Writable();
   converter.data = [];
@@ -78,24 +57,7 @@ async function test(server: Hapi.Server): Promise<any> {
 
   form.append(
     "json",
-    JSON.stringify(
-      Serialize(
-        new DefectList(
-          "list",
-          "08/08/2011",
-          new Creator(1),
-          new StreetAddress(
-            "abcd",
-            1,
-            "ab",
-            1234567,
-            floorList,
-            viewParticipantList
-          )
-        ),
-        DefectList
-      )
-    ),
+    JSON.stringify(Serialize(createTestDataFull(), DefectList)),
     {
       contentType: "application/json"
     }
@@ -165,6 +127,12 @@ async function start(): Promise<any> {
     server.start();
 
     logInfo("server started successful");
+
+    const r = await container
+      .get(CreateDefectListManager)
+      .execute(createTestDataBasic());
+
+    logInfo("r", r.isSuccess ? r.data : r.error);
 
     // await test(server);
   } catch (err) {

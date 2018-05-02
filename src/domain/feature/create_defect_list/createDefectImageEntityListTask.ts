@@ -1,4 +1,4 @@
-import { DefectImageEntity } from "../../../data/create_full_defect_list/defectImageEntity";
+import { DefectImageEntity } from "../../../data/defect_list/defectImageEntity";
 import { provide } from "../../../ioc/ioc";
 import { generateUuidv4 } from "../../../util/uuidv4Util";
 import { DefectImage } from "../../model/document/defectImage";
