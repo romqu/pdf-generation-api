@@ -2,13 +2,18 @@ import * as Boom from "boom";
 import * as Hapi from "hapi";
 import * as AuthBearer from "hapi-auth-bearer-token";
 
-import { Lifecycle } from "hapi";
+import { Lifecycle, Request } from "hapi";
 import { authenticateClientHandler } from "./presentation/feature/authenticate_client/authenticateClienHandler";
 import { createDefectListRoute } from "./presentation/feature/create_defect_list/createDefectListRoute";
 import { downloadPdfRoute } from "./presentation/feature/download_pdf/downloadPdfRoute";
 import { loginRoute } from "./presentation/feature/login/loginRoute";
 import { registrationRoute } from "./presentation/feature/registration/registrationRoute";
 import { testRoute } from "./presentation/feature/test/testRoute";
+import { logInfo } from "./util/loggerUtil";
+import { boomToResponseModel } from "./util/responseUtil";
+import { serializeToJsonObject } from "./util/jsonUtil";
+import { ResponseModel } from "./presentation/model/responseModel";
+import { Serialize } from "cerialize";
 
 export async function init(): Promise<Hapi.Server> {
   const server = new Hapi.Server({
@@ -16,7 +21,7 @@ export async function init(): Promise<Hapi.Server> {
     port: 3000,
     routes: {
       validate: {
-        failAction: async (request, h, err): Promise<Hapi.Lifecycle.Method> => {
+        failAction: async (_, __, err): Promise<Hapi.Lifecycle.Method> => {
           if (process.env.NODE_ENV === "production") {
             throw Boom.badRequest(`Invalid request payload input`);
           } else {
@@ -44,9 +49,15 @@ function registerExtEvents(server: Hapi.Server): void {
     const response = request.response;
 
     if (response instanceof Boom) {
-      return response;
+      return serializeToJsonObject(
+        boomToResponseModel(response),
+        ResponseModel
+      );
     } else if (response === null) {
-      return Boom.internal();
+      return serializeToJsonObject(
+        boomToResponseModel(Boom.internal()),
+        ResponseModel
+      );
     } else {
       return response.source;
     }

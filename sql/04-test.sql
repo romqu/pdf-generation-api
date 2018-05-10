@@ -1,6 +1,3 @@
--- CREATE ROLE roman WITH PASSWORD 'roman' LOGIN CREATEDB;
--- CREATE DATABASE roman OWNER=roman;
-
 CREATE TABLE login_credentials(
 
 	id BIGSERIAL,
@@ -79,14 +76,48 @@ CREATE TABLE view_participant(
 	e_mail VARCHAR(255) NOT NULL,
 	company_name VARCHAR(255) NOT NULL,
 
-	street_address_id BIGINT NOT NULL,
+	defect_list_id BIGINT NOT NULL,
 
 	CONSTRAINT participant_pk PRIMARY KEY (id),
-    CONSTRAINT street_address_fk FOREIGN KEY (street_address_id)
-        REFERENCES street_address (id)
+    CONSTRAINT defect_list_fk FOREIGN KEY (defect_list_id)
+        REFERENCES defect_list (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE defect(
+
+	id BIGSERIAL,
+	description TEXT NOT NULL,
+	measure TEXT NOT NULL,
+	company_in_charge VARCHAR(50) NOT NULL,
+	done_till DATE NOT NULL,
+
+	defect_list_id BIGINT NOT NULL,
+
+	CONSTRAINT defect_pk PRIMARY KEY (id),
+    CONSTRAINT defect_list_fk FOREIGN KEY (defect_list_id)
+        REFERENCES defect_list (id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE defect_mappings(
+
+	defect_id BIGINT NOT NULL,
+	floor_id BIGINT NOT NULL,
+	living_unit_id BIGINT NOT NULL,
+
+	CONSTRAINT defect_fk FOREIGN KEY (defect_id)
+        REFERENCES defect (id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+
+    CONSTRAINT floor_fk FOREIGN KEY (floor_id)
+        REFERENCES floor (id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+
+	CONSTRAINT living_unit_fk FOREIGN KEY (living_unit_id )
+        REFERENCES living_unit (id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 CREATE TABLE floor(
 
@@ -130,21 +161,7 @@ CREATE TABLE room(
 );
 
 
-CREATE TABLE defect(
 
-	id BIGSERIAL,
-	description TEXT NOT NULL,
-	measure TEXT NOT NULL,
-	company_in_charge VARCHAR(50) NOT NULL,
-	done_till DATE NOT NULL,
-
-	room_id BIGINT NOT NULL,
-
-	CONSTRAINT defect_pk PRIMARY KEY (id),
-    CONSTRAINT room_fk FOREIGN KEY (room_id)
-        REFERENCES room (id)
-        ON DELETE CASCADE ON UPDATE CASCADE
-);
 
 
 CREATE TABLE defect_image(
@@ -161,50 +178,3 @@ CREATE TABLE defect_image(
         REFERENCES defect (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-
--- street address, view participants
-
--- new floor, new living unit, new room, new defect, new defect images -> 1
--- floor, living unit, room, new defect, new defect
--- floor, living unit, room, (new defect, new defect) - nt 
-
-
--- 1. defect_list
--- 1.1 view_participant
--- 1.2 street_address
-
--- 1.2. defect 
--- 1.2.2 floor
--- 1.2.3 living_unit
--- 1.2.4 room
--- 1.2.5 defect_information
--- 1.2.6 defect_image
-
--- SELECT
---     *
--- FROM
---     defect_list
--- 	INNER JOIN street_address ON street_address.defect_list_id = defect_list.id
--- 	INNER JOIN defect ON defect.defect_list_id = defect_list.id
---     INNER JOIN floor ON floor.defect_id = defect.id
---     INNER JOIN living_unit ON living_unit.defect_id = defect.id
---     INNER JOIN room ON room.defect_id = defect.id
---     INNER JOIN defect_information ON defect_information.defect_id = defect.id
--- 	INNER JOIN defect_image ON defect_image.defect_id = defect.id
---     WHERE
---         defect_list.client_id = ?;
-
-
--- SELECT
---     *
--- FROM
---     street_address
---     INNER JOIN floor ON floor.street_address_id = street_address.id
---     INNER JOIN living_unit ON living_unit.floor_id = floor.id
---     INNER JOIN room ON room.id = living_unit.id
---     INNER JOIN defect ON defect.room_id = room.id
---     INNER JOIN defect_image ON defect_image.defect_id = defect.id
---     WHERE
---         street_address.client_id = ?;
-

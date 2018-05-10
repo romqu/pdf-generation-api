@@ -10,8 +10,8 @@ END TRANSACTION;
 
 BEGIN
     TRANSACTION;
-    INSERT INTO defect_list(name, client_id)
-    VALUES ('9743017409730921', 1);
+    INSERT INTO defect_list(name, creation_date, client_id)
+    VALUES ('listname', '01/01/3333', 1);
     INSERT INTO street_address (postal_code, name, number, additional, defect_list_id)
     VALUES (11345, 'Musterstraße', 1, 'a', 1);
     INSERT INTO view_participant (forename, surname, phone_number, e_mail, company_name, street_address_id)
@@ -24,7 +24,7 @@ BEGIN
     VALUES ('Wohnzimmer', 1, 'Links, neben der Küche', 1);
     INSERT INTO defect (description, measure, company_in_charge, done_till, room_id)
     VALUES ('KAPUTTT.', 'NOOOO.', 'MEEEE', '01/01/3333', 1);
-    INSERT INTO defect_image (name, defect_id)
-    VALUES ('mangel.jpg', 1);
+    INSERT INTO defect_image (name, original_name, position, defect_id)
+    VALUES ('mangel.jpg','mangel.jpg', 0, 1),('mangel2.jpg', 'mangel2.jpg', 0, 1);
 END TRANSACTION;
 

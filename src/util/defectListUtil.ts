@@ -7,6 +7,14 @@ import { LivingUnit } from "../domain/model/document/livingUnit";
 import { Room } from "../domain/model/document/room";
 import { StreetAddress } from "../domain/model/document/streetAddress";
 import { ViewParticipant } from "../domain/model/document/viewParticipant";
+import { DefectImageEntity } from "../data/defect_list/defectImageEntity";
+import { DefectEntity } from "../data/defect_list/defectEntity";
+import { RoomEntity } from "../data/defect_list/roomEntity";
+import { LivingUnitEntity } from "../data/defect_list/livingUnitEntity";
+import { FloorEntity } from "../data/defect_list/floorEntity";
+import { ViewParticipantEntity } from "../data/defect_list/viewParticipantEntity";
+import { StreetAddressEntity } from "../data/defect_list/streetAddressEntity";
+import { DefectListEntity } from "../data/defect_list/defectListEntity";
 
 const range = (n: number): number[] =>
   Array.from({ length: n }, (_, key) => key);
@@ -31,6 +39,57 @@ export function createTestDataFull(): DefectList {
     new Creator(1),
     new StreetAddress("abcd", 1, "ab", 1234567, floorList, viewParticipantList)
   );
+}
+
+export function createTestDataFullEntity(): FloorEntity[] {
+  const viewParticipantList = range(1).map(
+    _ =>
+      new ViewParticipantEntity(
+        0,
+        "Bern",
+        "Me",
+        12345,
+        "wqdwqd@wdwqd.de",
+        "adsadsa",
+        0
+      )
+  );
+
+  const defectImageList = range(1).map(
+    _ => new DefectImageEntity(0, "", "pic", 0, 0)
+  );
+  const defectList = range(1).map(
+    _ =>
+      new DefectEntity(0, "Bla", "iwqd", "AG", "1995/01/01", 0, defectImageList)
+  );
+  const roomList = range(1).map(
+    _ => new RoomEntity(0, "wqd", 1, "wqdwqd", 0, defectList)
+  );
+  const livingUnitList = range(1).map(
+    _ => new LivingUnitEntity(0, 1, 0, roomList)
+  );
+  const floorList = range(1).map(
+    _ => new FloorEntity(0, "EG", 0, livingUnitList)
+  );
+
+  return floorList;
+
+  // return new DefectListEntity(
+  //   0,
+  //   "list",
+  //   0,
+  //   "08/08/2011",
+  //   new StreetAddressEntity(
+  //     0,
+  //     1232,
+  //     "abcd",
+  //     1,
+  //     "ab",
+  //     0,
+  //     floorList,
+  //     viewParticipantList
+  //   )
+  // );
 }
 
 export function createTestDataBasic(): DefectList {

@@ -1,4 +1,4 @@
-import { Deserialize, Serialize } from "cerialize";
+import { Deserialize, Serialize, serializeAs } from "cerialize";
 import { JsonObject, SerializableType } from "cerialize/dist/util";
 
 import { Response } from "../domain/model/response";
@@ -85,4 +85,11 @@ export function deserializePayload<T>(
       return { isSuccess: false, error };
     }
   );
+}
+
+export function serializeToJsonObject<T extends object>(
+  data: T,
+  type: SerializableType<T>
+): JsonObject {
+  return Serialize(data, type)!;
 }

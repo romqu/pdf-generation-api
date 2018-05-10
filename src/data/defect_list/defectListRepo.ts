@@ -6,8 +6,8 @@ import { IDatabase, IMain, ITask } from "pg-promise";
 import { ResponsePromise } from "../../domain/model/response";
 import { provide } from "../../ioc/ioc";
 import { TYPES } from "../../ioc/types";
-import { failableAsync } from "../../util/failableUtil";
-import { IReturnedId } from "../diskDataSource";
+import { callAsync, failableAsync } from "../../util/failableUtil";
+import { IReturnedId, DiskDataSource } from "../diskDataSource";
 import { DefectEntity } from "./defectEntity";
 import { DefectImageEntity } from "./defectImageEntity";
 import { DefectListEntity } from "./defectListEntity";
@@ -16,6 +16,7 @@ import { LivingUnitEntity } from "./livingUnitEntity";
 import { RoomEntity } from "./roomEntity";
 import { StreetAddressEntity } from "./streetAddressEntity";
 import { ViewParticipantEntity } from "./viewParticipantEntity";
+import { logInfo } from "../../util/loggerUtil";
 
 @provide(DefectListRepo)
   .inSingletonScope()
@@ -23,13 +24,16 @@ import { ViewParticipantEntity } from "./viewParticipantEntity";
 export class DefectListRepo {
   private readonly pgDb: IDatabase<any>;
   private readonly pgMain: IMain;
+  private readonly disk: DiskDataSource;
 
   constructor(
     @inject(TYPES.PgpDb) pgDb: IDatabase<any>,
-    @inject(TYPES.PgpMain) pgMain: IMain
+    @inject(TYPES.PgpMain) pgMain: IMain,
+    disk: DiskDataSource
   ) {
     this.pgDb = pgDb;
     this.pgMain = pgMain;
+    this.disk = disk;
   }
 
   public insert(entity: DefectListEntity): ResponsePromise<IReturnedId> {
@@ -320,60 +324,19 @@ export class DefectListRepo {
     );
   }
 
-  private insertBasicPart(
-    entity: DefectListEntity
-  ): ResponsePromise<IReturnedId> {
-    const returningId = " RETURNING id;";
+  public test(): ResponsePromise<any> {
+    return callAsync(async ({ success, run }) => {
+      const result = run(
+        await this.disk.queryOne<any>("/data/defect_list/sql/testGet.sql", {
+          id: 1
+        })
+      );
 
-    return failableAsync({ type: "DB", code: 100, title: "Query Error" }, () =>
-      this.pgDb.tx<IReturnedId>(async (t: ITask<IReturnedId>) => {
-        // insert DefectList
-        const dLRowId = await t.one<IReturnedId>(
-          this.pgMain.helpers.insert(
-            {
-              name: entity.name,
-              creation_date: entity.creationDate,
-              client_id: entity.clientId
-            },
-            DefectListEntity.getColumnSet(this.pgMain)
-          ) + returningId
-        );
+      const r = JSON.parse(JSON.stringify(result)).array[0];
 
-        // insert StreetAddress
-        const sARowId = await t.one<IReturnedId>(
-          this.pgMain.helpers.insert(
-            {
-              name: entity.streetAddressEntity.name,
-              postal_code: entity.streetAddressEntity.postalCode,
-              number: entity.streetAddressEntity.number,
-              additional: entity.streetAddressEntity.additional,
-              defect_list_id: dLRowId.id
-            },
-            StreetAddressEntity.getColumnSet(this.pgMain)
-          ) + returningId
-        );
+      logInfo("ID", JSON.parse(JSON.stringify(r)).replace("id", "ab"));
 
-        // insert ViewParticipants
-        const viewParticipantValues = entity.streetAddressEntity.viewParticipantEntityList.map(
-          viewParticipant => ({
-            forename: viewParticipant.forename,
-            surname: viewParticipant.surname,
-            phone_number: viewParticipant.phoneNumber,
-            e_mail: viewParticipant.email,
-            company_name: viewParticipant.companyName,
-            street_address_id: sARowId.id
-          })
-        );
-
-        await t.none(
-          this.pgMain.helpers.insert(
-            viewParticipantValues,
-            ViewParticipantEntity.getColumnSet(this.pgMain)
-          )
-        );
-
-        return { id: sARowId.id };
-      })
-    );
+      return success(result);
+    });
   }
 }

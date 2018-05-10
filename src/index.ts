@@ -11,6 +11,7 @@ import { logInfo } from "./util/loggerUtil";
 import { container } from "./ioc/ioc";
 import { TransformToDefectListEntityTask } from "./domain/feature/create_defect_list/transformToDefectListEntityTask";
 import { CreateDefectListManager } from "./domain/feature/create_defect_list/createDefectListManager";
+import { DefectListRepo } from "./data/defect_list/defectListRepo";
 
 Error.stackTraceLimit = Infinity;
 
@@ -128,9 +129,7 @@ async function start(): Promise<any> {
 
     logInfo("server started successful");
 
-    const r = await container
-      .get(CreateDefectListManager)
-      .execute(createTestDataBasic());
+    const r = await container.get(DefectListRepo).test();
 
     logInfo("r", r.isSuccess ? r.data : r.error);
 

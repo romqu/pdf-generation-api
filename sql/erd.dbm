@@ -5,26 +5,105 @@ CAUTION: Do not modify this file unless you know what you are doing.
 -->
 <dbmodel pgmodeler-ver="0.9.1-beta1" last-position="0,0" last-zoom="1"
 	 default-schema="public" default-owner="postgres">
-<database name="creavisio_pdf" encoding="UTF8" is-template="false" allow-conns="true">
+<role name="roman"
+      createdb="true"
+      inherit="true"
+      login="true"
+      encrypted="true"
+      password="********">
+</role>
+
+<database name="roman" encoding="UTF8" lc-collate="en_GB.UTF-8" lc-ctype="en_GB.UTF-8" is-template="false" allow-conns="true">
+	<role name="roman"/>
+	<tablespace name="pg_default"/>
 </database>
 
-<schema name="public" fill-color="#e1e1e1" sql-disabled="true">
+<schema name="public" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
+
+<sequence name="login_credentials_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+	<role name="roman"/>
+</sequence>
+
+<table name="login_credentials">
+	<schema name="public"/>
+	<role name="roman"/>
+	<position x="50" y="50"/>
+	<column name="id" not-null="true" sequence="public.login_credentials_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="e_mail" not-null="true">
+		<type name="character varying" length="100"/>
+	</column>
+	<column name="password_hash" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="login_pk" type="pk-constr" table="public.login_credentials">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="login_credentials_e_mail_key" type="uq-constr" table="public.login_credentials">
+		<columns names="e_mail" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="login_status_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+	<role name="roman"/>
+</sequence>
+
+<table name="login_status">
+	<schema name="public"/>
+	<role name="roman"/>
+	<position x="499.68" y="50"/>
+	<column name="id" not-null="true" sequence="public.login_status_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="is_logged_in" not-null="true">
+		<type name="boolean" length="0"/>
+	</column>
+	<column name="session_uuid">
+		<type name="character varying" length="36"/>
+	</column>
+	<column name="login_credentials_id" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="login_status_pk" type="pk-constr" table="public.login_status">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="login_status_session_uuid_key" type="uq-constr" table="public.login_status">
+		<columns names="session_uuid" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="client_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+	<role name="roman"/>
+</sequence>
 
 <table name="client">
 	<schema name="public"/>
-	<role name="postgres"/>
-	<position x="40" y="60"/>
-	<column name="id" not-null="true">
-		<type name="bigserial" length="0"/>
+	<role name="roman"/>
+	<position x="931.995" y="50"/>
+	<column name="id" not-null="true" sequence="public.client_id_seq">
+		<type name="bigint" length="0"/>
 	</column>
 	<column name="forename" not-null="true">
-		<type name="varchar" length="20"/>
+		<type name="character varying" length="20"/>
 	</column>
 	<column name="surname" not-null="true">
-		<type name="varchar" length="20"/>
+		<type name="character varying" length="20"/>
 	</column>
-	<column name="login_id">
+	<column name="login_credentials_id" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<constraint name="client_pk" type="pk-constr" table="public.client">
@@ -32,47 +111,101 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="login_credentials">
+<sequence name="defect_list_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
 	<schema name="public"/>
-	<role name="postgres"/>
-	<position x="449" y="58"/>
-	<column name="id" not-null="true">
-		<type name="bigserial" length="0"/>
+	<role name="roman"/>
+</sequence>
+
+<table name="defect_list">
+	<schema name="public"/>
+	<role name="roman"/>
+	<position x="1364.28" y="50"/>
+	<column name="id" not-null="true" sequence="public.defect_list_id_seq">
+		<type name="bigint" length="0"/>
 	</column>
-	<column name="email" not-null="true">
-		<type name="varchar" length="30"/>
+	<column name="name" not-null="true">
+		<type name="character varying" length="255"/>
 	</column>
-	<column name="password" not-null="true">
-		<type name="varchar" length="30"/>
+	<column name="creation_date" not-null="true">
+		<type name="date" length="0"/>
 	</column>
-	<constraint name="login_pk" type="pk-constr" table="public.login_credentials">
+	<column name="client_id" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="defect_list_pk" type="pk-constr" table="public.defect_list">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
+<sequence name="street_address_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+	<role name="roman"/>
+</sequence>
+
+<table name="street_address">
+	<schema name="public"/>
+	<role name="roman"/>
+	<position x="1764.3" y="50"/>
+	<column name="id" not-null="true" sequence="public.street_address_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="postal_code" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="number" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="additional">
+		<type name="character varying" length="5"/>
+	</column>
+	<column name="defect_list_id" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="street_address_pk" type="pk-constr" table="public.street_address">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<sequence name="view_participant_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+	<role name="roman"/>
+</sequence>
+
 <table name="view_participant">
 	<schema name="public"/>
-	<role name="postgres"/>
-	<position x="1360" y="40"/>
-	<column name="id" not-null="true">
-		<type name="bigserial" length="0"/>
+	<role name="roman"/>
+	<position x="50" y="278.75"/>
+	<column name="id" not-null="true" sequence="public.view_participant_id_seq">
+		<type name="bigint" length="0"/>
 	</column>
 	<column name="forename" not-null="true">
-		<type name="varchar" length="30"/>
+		<type name="character varying" length="30"/>
 	</column>
 	<column name="surname" not-null="true">
-		<type name="varchar" length="30"/>
+		<type name="character varying" length="30"/>
 	</column>
 	<column name="phone_number" not-null="true">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="e_mail" not-null="true">
-		<type name="varchar" length="255"/>
+		<type name="character varying" length="255"/>
 	</column>
 	<column name="company_name" not-null="true">
-		<type name="varchar" length="255"/>
+		<type name="character varying" length="255"/>
 	</column>
-	<column name="house_address_id">
+	<column name="street_address_id" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
 	<constraint name="participant_pk" type="pk-constr" table="public.view_participant">
@@ -80,111 +213,46 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="defect_image">
+<sequence name="floor_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
 	<schema name="public"/>
-	<role name="postgres"/>
-	<position x="1360" y="560"/>
-	<column name="id" not-null="true">
-		<type name="bigserial" length="0"/>
+	<role name="roman"/>
+</sequence>
+
+<table name="floor">
+	<schema name="public"/>
+	<role name="roman"/>
+	<position x="476.366" y="278.75"/>
+	<column name="id" not-null="true" sequence="public.floor_id_seq">
+		<type name="bigint" length="0"/>
 	</column>
 	<column name="name" not-null="true">
-		<type name="varchar" length="50"/>
+		<type name="character varying" length="20"/>
 	</column>
-	<column name="original_name" not-null="true">
-		<type name="varchar" length="255"/>
-	</column>
-	<column name="defect_id">
+	<column name="street_address_id">
 		<type name="bigint" length="0"/>
 	</column>
-	<constraint name="defect_image_pk" type="pk-constr" table="public.defect_image">
+	<constraint name="floor_pk" type="pk-constr" table="public.floor">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="defect">
+<sequence name="living_unit_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
 	<schema name="public"/>
-	<role name="postgres"/>
-	<position x="840" y="640"/>
-	<column name="id" not-null="true">
-		<type name="bigserial" length="0"/>
-	</column>
-	<column name="description" not-null="true">
-		<type name="text" length="0"/>
-	</column>
-	<column name="company_in_charge" not-null="true">
-		<type name="varchar" length="50"/>
-	</column>
-	<column name="done_till" not-null="true">
-		<type name="date" length="0"/>
-	</column>
-	<column name="measure" not-null="true">
-		<type name="text" length="0"/>
-	</column>
-	<column name="room_id">
-		<type name="bigint" length="0"/>
-	</column>
-	<constraint name="defect_pk" type="pk-constr" table="public.defect">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-</table>
-
-<table name="street_address">
-	<schema name="public"/>
-	<role name="postgres"/>
-	<position x="839" y="60"/>
-	<column name="id" not-null="true">
-		<type name="bigserial" length="0"/>
-	</column>
-	<column name="postal_code" not-null="true">
-		<type name="integer" length="0"/>
-	</column>
-	<column name="street_name" not-null="true">
-		<type name="varchar" length="255"/>
-	</column>
-	<column name="house_number" not-null="true">
-		<type name="integer" length="0"/>
-	</column>
-	<column name="additional">
-		<type name="varchar" length="5"/>
-	</column>
-	<column name="defect_list_id">
-		<type name="bigint" length="0"/>
-	</column>
-	<constraint name="address_pk" type="pk-constr" table="public.street_address">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-</table>
-
-<table name="room">
-	<schema name="public"/>
-	<role name="postgres"/>
-	<position x="840" y="440"/>
-	<column name="id" not-null="true">
-		<type name="bigserial" length="0"/>
-	</column>
-	<column name="name" not-null="true">
-		<type name="varchar" length="30"/>
-	</column>
-	<column name="number" not-null="true">
-		<type name="integer" length="0"/>
-	</column>
-	<column name="location_description" not-null="true">
-		<type name="text" length="0"/>
-	</column>
-	<column name="living_unit_id">
-		<type name="bigint" length="0"/>
-	</column>
-	<constraint name="room_pk" type="pk-constr" table="public.room">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-</table>
+	<role name="roman"/>
+</sequence>
 
 <table name="living_unit">
 	<schema name="public"/>
-	<role name="postgres"/>
-	<position x="1380" y="320"/>
-	<column name="id" not-null="true">
-		<type name="bigserial" length="0"/>
+	<role name="roman"/>
+	<position x="894.604" y="278.75"/>
+	<column name="id" not-null="true" sequence="public.living_unit_id_seq">
+		<type name="bigint" length="0"/>
 	</column>
 	<column name="number" not-null="true">
 		<type name="integer" length="0"/>
@@ -197,174 +265,223 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="floor">
+<sequence name="room_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
 	<schema name="public"/>
-	<role name="postgres"/>
-	<position x="840" y="260"/>
-	<column name="id" not-null="true">
-		<type name="bigserial" length="0"/>
-	</column>
-	<column name="name" not-null="true">
-		<type name="varchar" length="20"/>
-	</column>
-	<column name="house_address_id">
+	<role name="roman"/>
+</sequence>
+
+<table name="room">
+	<schema name="public"/>
+	<role name="roman"/>
+	<position x="1209.4" y="278.75"/>
+	<column name="id" not-null="true" sequence="public.room_id_seq">
 		<type name="bigint" length="0"/>
 	</column>
-	<constraint name="floor_pk" type="pk-constr" table="public.floor">
+	<column name="name" not-null="true">
+		<type name="character varying" length="30"/>
+	</column>
+	<column name="number" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="location_description" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="living_unit_id" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="room_pk" type="pk-constr" table="public.room">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<table name="login_status">
+<sequence name="defect_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
 	<schema name="public"/>
-	<role name="postgres"/>
-	<position x="417" y="482"/>
-	<column name="id" not-null="true">
-		<type name="bigserial" length="0"/>
-	</column>
-	<column name="is_logged_in" not-null="true">
-		<type name="bool" length="0"/>
-	</column>
-	<column name="session_uuid">
-		<type name="char" length="36"/>
-	</column>
-	<column name="login_id">
+	<role name="roman"/>
+</sequence>
+
+<table name="defect">
+	<schema name="public"/>
+	<role name="roman"/>
+	<position x="1642.48" y="278.75"/>
+	<column name="id" not-null="true" sequence="public.defect_id_seq">
 		<type name="bigint" length="0"/>
 	</column>
-	<constraint name="login_status_pk" type="pk-constr" table="public.login_status">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-</table>
-
-<table name="defect_list">
-	<schema name="public"/>
-	<role name="postgres"/>
-	<position x="41" y="385"/>
-	<column name="id" not-null="true">
-		<type name="bigserial" length="0"/>
+	<column name="description" not-null="true">
+		<type name="text" length="0"/>
 	</column>
-	<column name="name" not-null="true">
-		<type name="varchar" length="255"/>
+	<column name="measure" not-null="true">
+		<type name="text" length="0"/>
 	</column>
-	<column name="creation_date" not-null="true">
+	<column name="company_in_charge" not-null="true">
+		<type name="character varying" length="50"/>
+	</column>
+	<column name="done_till" not-null="true">
 		<type name="date" length="0"/>
 	</column>
-	<column name="client_id">
+	<column name="room_id" not-null="true">
 		<type name="bigint" length="0"/>
 	</column>
-	<constraint name="defect_list_pk" type="pk-constr" table="public.defect_list">
+	<constraint name="defect_pk" type="pk-constr" table="public.defect">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
 </table>
 
-<constraint name="login_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.login_credentials" table="public.client">
-	<columns names="login_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
+<sequence name="defect_image_id_seq"
+	 start="1" increment="1"
+	 min-value="1" max-value="9223372036854775807"
+	 cache="1" cycle="false">
+	<schema name="public"/>
+	<role name="roman"/>
+</sequence>
 
-<constraint name="house_address_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.street_address" table="public.view_participant">
-	<columns names="house_address_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
+<table name="defect_image">
+	<schema name="public"/>
+	<role name="roman"/>
+	<position x="50" y="524.5"/>
+	<column name="id" not-null="true" sequence="public.defect_image_id_seq">
+		<type name="bigint" length="0"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="original_name" not-null="true">
+		<type name="character varying" length="255"/>
+	</column>
+	<column name="position" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="defect_id" not-null="true">
+		<type name="bigint" length="0"/>
+	</column>
+	<constraint name="defect_image_pk" type="pk-constr" table="public.defect_image">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
 
-<constraint name="defect_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.defect" table="public.defect_image">
-	<columns names="defect_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="room_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.room" table="public.defect">
-	<columns names="room_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="defect_list_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.defect_list" table="public.street_address">
-	<columns names="defect_list_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="living_unit_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.living_unit" table="public.room">
-	<columns names="living_unit_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="floor_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.floor" table="public.living_unit">
-	<columns names="floor_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="house_address_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.street_address" table="public.floor">
-	<columns names="house_address_id" ref-type="src-columns"/>
-	<columns names="id" ref-type="dst-columns"/>
-</constraint>
-
-<constraint name="login_fk" type="fk-constr" comparison-type="MATCH FULL"
+<constraint name="login_credentials_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.login_credentials" table="public.login_status">
-	<columns names="login_id" ref-type="src-columns"/>
+	<columns names="login_credentials_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<constraint name="client_fk" type="fk-constr" comparison-type="MATCH FULL"
+<constraint name="login_credentials_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.login_credentials" table="public.client">
+	<columns names="login_credentials_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="client_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
 	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.client" table="public.defect_list">
 	<columns names="client_id" ref-type="src-columns"/>
 	<columns names="id" ref-type="dst-columns"/>
 </constraint>
 
-<relationship name="rel_client_login" type="relfk"
+<constraint name="defect_list_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.defect_list" table="public.street_address">
+	<columns names="defect_list_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="street_address_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.street_address" table="public.view_participant">
+	<columns names="street_address_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="street_address_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.street_address" table="public.floor">
+	<columns names="street_address_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="floor_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.floor" table="public.living_unit">
+	<columns names="floor_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="living_unit_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.living_unit" table="public.room">
+	<columns names="living_unit_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="room_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.room" table="public.defect">
+	<columns names="room_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="defect_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="CASCADE" del-action="CASCADE" ref-table="public.defect" table="public.defect_image">
+	<columns names="defect_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_login_status_login_credentials" type="relfk"
+	 custom-color="#bad6ff"
+	 src-table="public.login_status"
+	 dst-table="public.login_credentials" reference-fk="login_credentials_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_client_login_credentials" type="relfk"
+	 custom-color="#c14b97"
 	 src-table="public.client"
-	 dst-table="public.login_credentials" reference-fk="login_fk"
+	 dst-table="public.login_credentials" reference-fk="login_credentials_fk"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_view_participant_house_address" type="relfk"
+<relationship name="rel_defect_list_client" type="relfk"
+	 custom-color="#5ab3e0"
+	 src-table="public.defect_list"
+	 dst-table="public.client" reference-fk="client_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_street_address_defect_list" type="relfk"
+	 custom-color="#99b924"
+	 src-table="public.street_address"
+	 dst-table="public.defect_list" reference-fk="defect_list_fk"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_view_participant_street_address" type="relfk"
+	 custom-color="#5ffa2e"
 	 src-table="public.view_participant"
-	 dst-table="public.street_address" reference-fk="house_address_fk"
+	 dst-table="public.street_address" reference-fk="street_address_fk"
 	 src-required="false" dst-required="false"/>
 
-<relationship name="rel_floor_house_address" type="relfk"
+<relationship name="rel_floor_street_address" type="relfk"
+	 custom-color="#da4af5"
 	 src-table="public.floor"
-	 dst-table="public.street_address" reference-fk="house_address_fk"
+	 dst-table="public.street_address" reference-fk="street_address_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_living_unit_floor" type="relfk"
+	 custom-color="#88e7ed"
 	 src-table="public.living_unit"
 	 dst-table="public.floor" reference-fk="floor_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_room_living_unit" type="relfk"
+	 custom-color="#f1066f"
 	 src-table="public.room"
 	 dst-table="public.living_unit" reference-fk="living_unit_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_defect_room" type="relfk"
+	 custom-color="#c9bf46"
 	 src-table="public.defect"
 	 dst-table="public.room" reference-fk="room_fk"
 	 src-required="false" dst-required="false"/>
 
 <relationship name="rel_defect_image_defect" type="relfk"
+	 custom-color="#9e3600"
 	 src-table="public.defect_image"
 	 dst-table="public.defect" reference-fk="defect_fk"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="rel_login_status_login" type="relfk"
-	 src-table="public.login_status"
-	 dst-table="public.login_credentials" reference-fk="login_fk"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="rel_defect_list_client" type="relfk"
-	 src-table="public.defect_list"
-	 dst-table="public.client" reference-fk="client_fk"
-	 src-required="false" dst-required="false"/>
-
-<relationship name="rel_house_address_defect_list" type="relfk"
-	 src-table="public.street_address"
-	 dst-table="public.defect_list" reference-fk="defect_list_fk"
 	 src-required="false" dst-required="false"/>
 
 </dbmodel>
