@@ -129,9 +129,9 @@ async function start(): Promise<any> {
 
     logInfo("server started successful");
 
-    const r = await container.get(DefectListRepo).test();
+    // const r = await container.get(DefectListRepo).test();
 
-    logInfo("r", r.isSuccess ? r.data : r.error);
+    // logInfo("r", r.isSuccess ? r.data : r.error);
 
     // await test(server);
   } catch (err) {

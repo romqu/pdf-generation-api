@@ -1,11 +1,11 @@
 import { ClientEntity } from "../../data/client/clientEntity";
 import { ClientSessionEntity } from "../../data/client_session/clientSessionEntity";
 import { LoginCredentialsEntity } from "../../data/login_credentials/loginCredentialsEntity";
-import { LoginCredentials } from "../../domain/model/loginCredentials";
-import { Client } from "../model/client";
+import { ClientIn } from "../../presentation/model/clientIn";
+import { LoginIn } from "../../presentation/model/loginIn";
 
 export function clientToClientEntity(
-  client: Client,
+  client: ClientIn,
   loginCredentialsId: number
 ): ClientEntity {
   return new ClientEntity(
@@ -16,15 +16,15 @@ export function clientToClientEntity(
   );
 }
 
-export function loginCredentialsToLoginCredentialsEntity(
-  loginCredentials: LoginCredentials,
+export function loginInToLoginCredentialsEntity(
+  loginCredentials: LoginIn,
   passwordHash: string
 ): LoginCredentialsEntity {
   return new LoginCredentialsEntity(0, loginCredentials.email, passwordHash);
 }
 
 export function loginCredentialsToClientSessionEntity(
-  loginCredentials: LoginCredentials,
+  loginCredentials: LoginIn,
   uuid: string,
   id: number
 ): ClientSessionEntity {

@@ -1,6 +1,6 @@
 import { deserializeAs } from "cerialize";
 
-export class Client {
+export class ClientIn {
   @deserializeAs(String) public readonly forename: string;
   @deserializeAs(String) public readonly surname: string;
 

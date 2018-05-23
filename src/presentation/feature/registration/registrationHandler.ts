@@ -9,5 +9,5 @@ export async function registrationHandler(
   request: Request,
   _: ResponseToolkit
 ): Promise<Lifecycle.ReturnValue> {
-  return await controller.execute_(request.payload);
+  return await controller.execute(request.payload);
 }

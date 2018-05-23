@@ -1,8 +1,9 @@
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
 import { provide } from "../../../ioc/ioc";
+import { RegistrationIn } from "../../../presentation/model/registrationIn";
+import { RegistrationOut } from "../../../presentation/model/registrationOut";
 import { callAsync } from "../../../util/failableUtil";
-import { loginCredentialsToLoginCredentialsEntity } from "../../mapper/modelMapper";
-import { RegistrationData } from "../../model/registrationData";
+import { loginInToLoginCredentialsEntity } from "../../mapper/modelMapper";
 import { ResponsePromise } from "../../model/response";
 import { CreateClientSessionTask } from "./createClientSessionTask";
 import { CreateClientTask } from "./createClientTask";
@@ -33,11 +34,11 @@ export class RegistrationManager {
     this.loginCredentialsRepo = loginCredentialsRepo;
   }
 
-  public execute(registrationData: RegistrationData): ResponsePromise<string> {
+  public execute(
+    registrationIn: RegistrationIn
+  ): ResponsePromise<RegistrationOut> {
     return callAsync(async ({ failure, success, run }) => {
-      const loginCredentials = registrationData.loginCredentials;
-
-      const client = registrationData.client;
+      const { loginCredentials, client } = registrationIn;
 
       const doesEmailExist = run(
         await this.doesEmailExistTask.execute(loginCredentials.email)
@@ -59,23 +60,24 @@ export class RegistrationManager {
 
       const loginCredentialsId = run(
         await this.loginCredentialsRepo.insert(
-          loginCredentialsToLoginCredentialsEntity(
-            loginCredentials,
-            passwordHash
-          )
+          loginInToLoginCredentialsEntity(loginCredentials, passwordHash)
         )
       );
 
-      run(await this.createClientTask.execute(client, loginCredentialsId));
+      const clientId = run(
+        await this.createClientTask.execute(client, loginCredentialsId)
+      );
 
-      const result = run(
+      const sessionToken = run(
         await this.createClientSessionTask.execute(
           loginCredentials,
           loginCredentialsId
         )
       );
 
-      return success(result);
+      return success(
+        new RegistrationOut(sessionToken, clientId, loginCredentialsId)
+      );
     });
   }
 }

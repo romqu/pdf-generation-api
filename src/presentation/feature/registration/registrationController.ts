@@ -1,14 +1,16 @@
+import { JsonObject } from "cerialize/dist/util";
+
 import { RegistrationManager } from "../../../domain/feature/registration/registrationManager";
-import { RegistrationData } from "../../../domain/model/registrationData";
 import { provide } from "../../../ioc/ioc";
 import { callAsync, matchResponse } from "../../../util/failableUtil";
 import {
   deserializePayload,
-  serializeObject,
-  serializeSafeObject
+  serializeData,
+  unsafeSerializeData
 } from "../../../util/jsonUtil";
-import { ErrorModel } from "../../model/errorModel";
+import { ErrorOut } from "../../model/errorOut";
 import { Payload } from "../../model/payload";
+import { RegistrationIn } from "../../model/registrationIn";
 import { ResponseModel } from "../../model/responseModel";
 
 @provide(RegistrationController)
@@ -21,15 +23,15 @@ export class RegistrationController {
     this.manager = manager;
   }
 
-  public async execute_(payload: Payload): Promise<string> {
-    const response = await callAsync<string>(async ({ success, run }) => {
+  public async execute(payload: Payload): Promise<JsonObject> {
+    const response = await callAsync<JsonObject>(async ({ success, run }) => {
       const registrationData = run(
-        deserializePayload<RegistrationData>(payload, RegistrationData)
+        deserializePayload<RegistrationIn>(payload, RegistrationIn)
       );
       const managerResponse = run(await this.manager.execute(registrationData));
 
       const serializeResponse = run(
-        serializeObject(
+        serializeData(
           new ResponseModel(true, managerResponse, []),
           ResponseModel
         )
@@ -42,9 +44,9 @@ export class RegistrationController {
       response,
       data => data,
       error =>
-        serializeSafeObject(
-          new ResponseModel(false, {}, [
-            new ErrorModel("", "", error.type, error.message)
+        unsafeSerializeData(
+          new ResponseModel(false, null, [
+            new ErrorOut("", "", error.type, error.message)
           ]),
           ResponseModel
         )

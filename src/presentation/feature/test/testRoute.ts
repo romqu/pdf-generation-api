@@ -7,7 +7,7 @@ export function testRoute(): ServerRoute {
   return {
     method: "GET",
     path: "/test",
-    options: {},
+    options: { auth: false },
     handler: testHandler
   };
 }

@@ -1,5 +1,5 @@
 import { serializeAs } from "cerialize";
-export class ErrorModel {
+export class ErrorOut {
   // http error code
   @serializeAs(String) public readonly status: string;
   // application-specific error code

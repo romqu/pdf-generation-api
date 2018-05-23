@@ -1,6 +1,6 @@
 import { deserializeAs } from "cerialize";
 
-export class LoginCredentials {
+export class LoginIn {
   @deserializeAs(String, "e_mail")
   public readonly email: string;
   @deserializeAs(String, "password")

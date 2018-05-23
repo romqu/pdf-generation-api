@@ -1,9 +1,10 @@
 import { ResponsePromise } from "../../domain/model/response";
 import { provide } from "../../ioc/ioc";
 import { callAsync } from "../../util/failableUtil";
-import { deserializeObject } from "../../util/jsonUtil";
+import { deserializeObject, deserializeData } from "../../util/jsonUtil";
 import { DiskDataSource, IReturnedId } from "../diskDataSource";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
+import { logInfo } from "../../util/loggerUtil";
 
 @provide(LoginCredentialsRepo)
   .inSingletonScope()
@@ -56,10 +57,7 @@ export class LoginCredentialsRepo {
       );
 
       const entity = run(
-        deserializeObject<LoginCredentialsEntity>(
-          result,
-          LoginCredentialsEntity
-        )
+        deserializeData<LoginCredentialsEntity>(result, LoginCredentialsEntity)
       );
 
       return success(entity);

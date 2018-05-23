@@ -2,18 +2,17 @@ import * as Boom from "boom";
 import * as Hapi from "hapi";
 import * as AuthBearer from "hapi-auth-bearer-token";
 
-import { Lifecycle, Request } from "hapi";
+import { Lifecycle } from "hapi";
 import { authenticateClientHandler } from "./presentation/feature/authenticate_client/authenticateClienHandler";
 import { createDefectListRoute } from "./presentation/feature/create_defect_list/createDefectListRoute";
 import { downloadPdfRoute } from "./presentation/feature/download_pdf/downloadPdfRoute";
 import { loginRoute } from "./presentation/feature/login/loginRoute";
 import { registrationRoute } from "./presentation/feature/registration/registrationRoute";
 import { testRoute } from "./presentation/feature/test/testRoute";
+import { ResponseModel } from "./presentation/model/responseModel";
+import { serializeToJsonObject } from "./util/jsonUtil";
 import { logInfo } from "./util/loggerUtil";
 import { boomToResponseModel } from "./util/responseUtil";
-import { serializeToJsonObject } from "./util/jsonUtil";
-import { ResponseModel } from "./presentation/model/responseModel";
-import { Serialize } from "cerialize";
 
 export async function init(): Promise<Hapi.Server> {
   const server = new Hapi.Server({

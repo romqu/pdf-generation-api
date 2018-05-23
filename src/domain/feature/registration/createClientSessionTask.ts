@@ -1,6 +1,6 @@
 import { ClientSessionRepo } from "../../../data/client_session/clientSessionRepo";
-import { LoginCredentials } from "../../../domain/model/loginCredentials";
 import { provide } from "../../../ioc/ioc";
+import { LoginIn } from "../../../presentation/model/loginIn";
 import { generateUuidv4 } from "../../../util/uuidv4Util";
 import { loginCredentialsToClientSessionEntity } from "../../mapper/modelMapper";
 import { ResponsePromise } from "../../model/response";
@@ -9,10 +9,6 @@ import { ResponsePromise } from "../../model/response";
   .inSingletonScope()
   .done()
 export class CreateClientSessionTask {
-  // create uuidv4
-  // insert ClientSessionEntity into redis
-  // return uuidv4
-
   private readonly clientSessionRepo: ClientSessionRepo;
 
   constructor(clientSessionRepo: ClientSessionRepo) {
@@ -20,7 +16,7 @@ export class CreateClientSessionTask {
   }
 
   public execute(
-    loginCredentials: LoginCredentials,
+    loginCredentials: LoginIn,
     id: number
   ): ResponsePromise<string> {
     return this.clientSessionRepo.insert({

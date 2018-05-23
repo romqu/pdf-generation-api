@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
          Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="0.9.1-beta1" last-position="0,0" last-zoom="1"
+<dbmodel pgmodeler-ver="0.9.1-beta1" last-position="0,18" last-zoom="1"
 	 default-schema="public" default-owner="postgres">
 <role name="roman"
       createdb="true"
@@ -224,7 +224,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="floor">
 	<schema name="public"/>
 	<role name="roman"/>
-	<position x="476.366" y="278.75"/>
+	<position x="468.366" y="315.75"/>
 	<column name="id" not-null="true" sequence="public.floor_id_seq">
 		<type name="bigint" length="0"/>
 	</column>

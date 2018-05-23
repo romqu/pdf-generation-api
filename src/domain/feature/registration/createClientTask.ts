@@ -1,7 +1,7 @@
 import { ClientRepo } from "../../../data/client/clienRepo";
 import { provide } from "../../../ioc/ioc";
+import { ClientIn } from "../../../presentation/model/clientIn";
 import { clientToClientEntity } from "../../mapper/modelMapper";
-import { Client } from "../../model/client";
 import { ResponsePromise } from "../../model/response";
 
 @provide(CreateClientTask)
@@ -15,7 +15,7 @@ export class CreateClientTask {
   }
 
   public execute(
-    client: Client,
+    client: ClientIn,
     loginCredentialsId: number
   ): ResponsePromise<number> {
     return this.repo.insert(clientToClientEntity(client, loginCredentialsId));
