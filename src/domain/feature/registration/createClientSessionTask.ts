@@ -17,11 +17,13 @@ export class CreateClientSessionTask {
 
   public execute(
     loginCredentials: LoginIn,
+    isGuest: boolean,
     id: number
   ): ResponsePromise<string> {
     return this.clientSessionRepo.insert({
       value: loginCredentialsToClientSessionEntity(
         loginCredentials,
+        isGuest,
         generateUuidv4(),
         id
       )

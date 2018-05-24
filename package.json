@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "argon2": "^0.17.3",
+    "argon2": "latest",
     "await-busboy": "^1.0.2",
     "bluebird": "^3.5.1",
     "boom": "^7.2.0",

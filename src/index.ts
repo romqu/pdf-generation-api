@@ -6,12 +6,8 @@ import { Stream } from "stream";
 
 import { DefectList } from "./domain/model/document/defectList";
 import * as Server from "./server";
-import { createTestDataFull, createTestDataBasic } from "./util/defectListUtil";
+import { createTestDataFull } from "./util/defectListUtil";
 import { logInfo } from "./util/loggerUtil";
-import { container } from "./ioc/ioc";
-import { TransformToDefectListEntityTask } from "./domain/feature/create_defect_list/transformToDefectListEntityTask";
-import { CreateDefectListManager } from "./domain/feature/create_defect_list/createDefectListManager";
-import { DefectListRepo } from "./data/defect_list/defectListRepo";
 
 Error.stackTraceLimit = Infinity;
 
@@ -129,7 +125,9 @@ async function start(): Promise<any> {
 
     logInfo("server started successful");
 
-    // const r = await container.get(DefectListRepo).test();
+    // const r = await container
+    //   .get(ClientSessionRepo)
+    //   .get({ key: "bc870b2e-2475-4517-81b8-d57463775432" });
 
     // logInfo("r", r.isSuccess ? r.data : r.error);
 

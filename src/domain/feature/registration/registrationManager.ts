@@ -71,6 +71,7 @@ export class RegistrationManager {
       const sessionToken = run(
         await this.createClientSessionTask.execute(
           loginCredentials,
+          false,
           loginCredentialsId
         )
       );

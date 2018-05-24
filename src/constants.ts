@@ -61,3 +61,5 @@ export const enum Folder {
 export const enum FsModeOctal {
   DEFAULT = 0o600
 }
+
+export const guestPathAccessMap = new Map<string, boolean>([["/test", true]]);

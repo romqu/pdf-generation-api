@@ -1,3 +1,4 @@
+import { guestPathAccessMap } from "../../../constants";
 import { ClientSessionRepo } from "../../../data/client_session/clientSessionRepo";
 import { provide } from "../../../ioc/ioc";
 import { callAsync } from "../../../util/failableUtil";
@@ -13,11 +14,19 @@ export class AuthenticateClientManager {
     this.clientSessionRepo = clientSessionRepo;
   }
 
-  public execute(sessionUuid: string): ResponsePromise<boolean> {
+  public execute(sessionUuid: string, path: string): ResponsePromise<boolean> {
     return callAsync(async ({ success, run }) => {
-      run(await this.clientSessionRepo.get({ key: sessionUuid }));
+      const session = run(
+        await this.clientSessionRepo.get({ key: sessionUuid })
+      );
 
-      return success(true);
+      if (session.isGuest) {
+        const hasAccess = guestPathAccessMap.get(path);
+
+        return success(hasAccess ? hasAccess : false);
+      } else {
+        return success(true);
+      }
     });
   }
 }

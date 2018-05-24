@@ -25,8 +25,9 @@ export function loginInToLoginCredentialsEntity(
 
 export function loginCredentialsToClientSessionEntity(
   loginCredentials: LoginIn,
+  isGuest: boolean,
   uuid: string,
   id: number
 ): ClientSessionEntity {
-  return new ClientSessionEntity(uuid, id, loginCredentials.email);
+  return new ClientSessionEntity(uuid, isGuest, id, loginCredentials.email);
 }
