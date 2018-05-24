@@ -101,6 +101,16 @@ export function stringifyParseDeserializeData<T>(
 
 // Serialize
 
+export function serializeStringifyData<T>(
+  data: T,
+  type: SerializableType<T>
+): Response<string> {
+  return failable<string>(
+    { type: "SERIALIZE", code: 106, title: "Serialize Data Error" },
+    () => stringifyData(unsafeSerializeData(data, type))
+  );
+}
+
 export function serializeData<T>(
   data: T,
   type: SerializableType<T>

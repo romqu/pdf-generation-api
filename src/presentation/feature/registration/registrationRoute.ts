@@ -11,7 +11,7 @@ export function registrationRoute(): ServerRoute {
       auth: false,
       validate: {
         payload: {
-          loginCredentials: Joi.object({
+          login_credentials: Joi.object({
             e_mail: Joi.string()
               .trim()
               .email({ minDomainAtoms: 2 })

@@ -1,10 +1,10 @@
 import { ClientRepo } from "../../../data/client/clienRepo";
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
 import { provide } from "../../../ioc/ioc";
-import { LoginModel } from "../../../presentation/model/loginModel";
+import { LoginIn } from "../../../presentation/model/loginIn";
+import { LoginOut } from "../../../presentation/model/loginOut";
 import { callAsync, matchResponse } from "../../../util/failableUtil";
 import { verifyValueArgon2 } from "../../../util/hashUtil";
-import { LoginCredentials } from "../../model/loginCredentials";
 import { ResponsePromise } from "../../model/response";
 import { CreateClientSessionTask } from "../registration/createClientSessionTask";
 
@@ -26,9 +26,7 @@ export class LoginManager {
     this.clientRepo = clientRepo;
   }
 
-  public execute(
-    loginCredentials: LoginCredentials
-  ): ResponsePromise<LoginModel> {
+  public execute(loginCredentials: LoginIn): ResponsePromise<LoginOut> {
     return callAsync(async ({ success, run, failure }) => {
       const loginCredentialsEntityResponse = await this.loginCredentialsRepo.getByEmail(
         loginCredentials.email
@@ -72,7 +70,7 @@ export class LoginManager {
         );
 
         return success(
-          new LoginModel(
+          new LoginOut(
             sessionUuid,
             client.id,
             loginCredentialsEntity.id,

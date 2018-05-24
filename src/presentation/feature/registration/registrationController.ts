@@ -8,6 +8,7 @@ import {
   serializeData,
   unsafeSerializeData
 } from "../../../util/jsonUtil";
+import { logInfo } from "../../../util/loggerUtil";
 import { ErrorOut } from "../../model/errorOut";
 import { Payload } from "../../model/payload";
 import { RegistrationIn } from "../../model/registrationIn";

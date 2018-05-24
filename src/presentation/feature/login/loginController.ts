@@ -1,15 +1,19 @@
-import 'reflect-metadata';
+import "reflect-metadata";
 
-import { JsonObject } from 'cerialize/dist/util';
+import { JsonObject } from "cerialize/dist/util";
 
-import { LoginManager } from '../../../domain/feature/login/loginManager';
-import { LoginCredentials } from '../../../domain/model/loginCredentials';
-import { provide } from '../../../ioc/ioc';
-import { callAsync, matchResponse } from '../../../util/failableUtil';
-import { deserializePayload, serializeData, unsafeSerializeData } from '../../../util/jsonUtil';
-import { ErrorModel } from '../../model/errorModel';
-import { Payload } from '../../model/payload';
-import { ResponseModel } from '../../model/responseModel';
+import { LoginManager } from "../../../domain/feature/login/loginManager";
+import { provide } from "../../../ioc/ioc";
+import { callAsync, matchResponse } from "../../../util/failableUtil";
+import {
+  deserializePayload,
+  serializeData,
+  unsafeSerializeData
+} from "../../../util/jsonUtil";
+import { ErrorOut } from "../../model/errorOut";
+import { LoginIn } from "../../model/loginIn";
+import { Payload } from "../../model/payload";
+import { ResponseModel } from "../../model/responseModel";
 
 @provide(LoginController)
   .inSingletonScope()
@@ -24,7 +28,7 @@ export class LoginController {
   public async execute(payload: Payload): Promise<JsonObject> {
     const response = await callAsync<JsonObject>(async ({ success, run }) => {
       const loginCredentials = run(
-        deserializePayload<LoginCredentials>(payload, LoginCredentials)
+        deserializePayload<LoginIn>(payload, LoginIn)
       );
       const managerResponse = run(await this.manager.execute(loginCredentials));
 
@@ -44,7 +48,7 @@ export class LoginController {
       error =>
         unsafeSerializeData(
           new ResponseModel(false, null, [
-            new ErrorModel("", "", error.type, error.message)
+            new ErrorOut("", "", error.type, error.message)
           ]),
           ResponseModel
         )

@@ -58,6 +58,7 @@ function registerExtEvents(server: Hapi.Server): void {
         ResponseModel
       );
     } else {
+      logInfo("pre", response.source);
       return response.source;
     }
   });

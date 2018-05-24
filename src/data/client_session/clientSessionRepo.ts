@@ -1,7 +1,10 @@
 import { ResponsePromise } from "../../domain/model/response";
 import { provide } from "../../ioc/ioc";
 import { callAsync } from "../../util/failableUtil";
-import { parseDeserializeObject, serializeObject } from "../../util/jsonUtil";
+import {
+  parseDeserializeObject,
+  serializeStringifyData
+} from "../../util/jsonUtil";
 import { MemoryDataSource } from "../memoryDataSource";
 import { ClientSessionEntity } from "./clientSessionEntity";
 
@@ -19,7 +22,9 @@ export class ClientSessionRepo {
     value: ClientSessionEntity;
   }): ResponsePromise<string> {
     return callAsync(async ({ success, run }) => {
-      const data = run(serializeObject(params.value, ClientSessionEntity));
+      const data = run(
+        serializeStringifyData(params.value, ClientSessionEntity)
+      );
 
       run(
         await this.memoryDataSource.insert({

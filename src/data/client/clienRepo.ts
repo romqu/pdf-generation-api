@@ -7,6 +7,7 @@ import {
 } from "../../util/jsonUtil";
 import { DiskDataSource, IReturnedId } from "../diskDataSource";
 import { ClientEntity } from "./clientEntity";
+import { deserializeData } from "../../util/jsonUtil";
 
 @provide(ClientRepo)
   .inSingletonScope()
@@ -67,7 +68,7 @@ export class ClientRepo {
         )
       );
 
-      const entity = run(deserializeObject<ClientEntity>(result, ClientEntity));
+      const entity = run(deserializeData<ClientEntity>(result, ClientEntity));
 
       return success(entity);
     });
