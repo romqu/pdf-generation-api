@@ -208,3 +208,6 @@ CREATE TABLE defect_image(
 --     WHERE
 --         street_address.client_id = ?;
 
+
+
+

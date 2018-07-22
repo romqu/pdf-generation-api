@@ -1,6 +1,7 @@
 import { ClientRepo } from "../../../data/client/clienRepo";
 import { DefectImageEntity } from "../../../data/defect_list/defectImageEntity";
 import { DefectListRepo } from "../../../data/defect_list/defectListRepo";
+import { IReturnedId } from "../../../data/diskDataSource";
 import { provide } from "../../../ioc/ioc";
 import { callAsync } from "../../../util/failableUtil";
 import { getSha256Hash } from "../../../util/hashUtil";
@@ -9,7 +10,6 @@ import { ResponsePromise } from "../../model/response";
 import { CreateDefectImageEntityListTask } from "./createDefectImageEntityListTask";
 import { CreateDefectListFoldersTask } from "./createDefectListFoldersTask";
 import { TransformToDefectListEntityTask } from "./transformToDefectListEntityTask";
-import { IReturnedId } from "../../../data/diskDataSource";
 
 @provide(CreateDefectListManager)
   .inSingletonScope()
