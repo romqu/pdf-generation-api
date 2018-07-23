@@ -1,16 +1,16 @@
 -- CREATE ROLE roman WITH PASSWORD 'roman' LOGIN CREATEDB;
 -- CREATE DATABASE roman OWNER=roman;
 
-CREATE TABLE client_credentials(
+CREATE TABLE IF NOT EXISTS client_credentials(
 
 	id BIGSERIAL,
-	e_mail VARCHAR(100) UNIQUE NOT NULL,
+	e_mail VARCHAR(255) UNIQUE NOT NULL,
 	password TEXT NOT NULL,
 
-	CONSTRAINT login_pk PRIMARY KEY (id)
+	CONSTRAINT client_credentials_pk PRIMARY KEY (id)
 );
 
--- CREATE TABLE client_status(
+-- CREATE TABLE IF NOT EXISTS client_status(
 
 -- 	id BIGSERIAL,
 -- 	session_uuid VARCHAR(36) UNIQUE NOT NULL,
@@ -24,35 +24,39 @@ CREATE TABLE client_credentials(
 
 -- );
 
-CREATE TABLE session(
+CREATE TABLE IF NOT EXISTS session(
 
 	id BIGSERIAL,
 	uuid VARCHAR(36) UNIQUE NOT NULL,
-	type VARCHAR(20) NOT NULL -- Either GUEST or CLIENT
-)
+	type VARCHAR(20) NOT NULL, -- Either GUEST or CLIENT
 
-CREATE TABLE client(
+	CONSTRAINT session_pk PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS client(
 
 	id BIGSERIAL,
 	forename VARCHAR(20) NOT NULL,
 	surname VARCHAR(20) NOT NULL,
 	client_credentials_id BIGINT NOT NULL,
-	session_id BIGINT,
+
+	session_id BIGINT NOT NULL,
 
 	CONSTRAINT client_pk PRIMARY KEY (id),
     CONSTRAINT client_credentials_fk FOREIGN KEY (client_credentials_id)
         REFERENCES client_credentials (id)
-        ON DELETE CASCADE ON UPDATE CASCADE
+        ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT session_fk FOREIGN KEY (session_id)
         REFERENCES session (id)
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE defect_list(
+CREATE TABLE IF NOT EXISTS defect_list(
 
 	id BIGSERIAL,
 	name VARCHAR(255) NOT NULL,
 	creation_date DATE NOT NULL,
+
 	client_id BIGINT NOT NULL,
 
 	CONSTRAINT defect_list_pk PRIMARY KEY (id),
@@ -62,7 +66,7 @@ CREATE TABLE defect_list(
 );
 
 
-CREATE TABLE street_address(
+CREATE TABLE IF NOT EXISTS street_address(
 
 	id BIGSERIAL,
 	city VARCHAR(255) NOT NULL,
@@ -70,6 +74,7 @@ CREATE TABLE street_address(
 	name VARCHAR(255) NOT NULL,
 	number INTEGER NOT NULL,
 	additional VARCHAR(5),
+
 	defect_list_id BIGINT NOT NULL,
 
 	CONSTRAINT street_address_pk PRIMARY KEY (id),
@@ -78,7 +83,7 @@ CREATE TABLE street_address(
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE view_participant(
+CREATE TABLE IF NOT EXISTS view_participant(
 
 	id BIGSERIAL,
 	forename VARCHAR(30) NOT NULL,
@@ -86,6 +91,7 @@ CREATE TABLE view_participant(
 	phone_number INTEGER NOT NULL,
 	e_mail VARCHAR(255) NOT NULL,
 	company_name VARCHAR(255) NOT NULL,
+
 	defect_list_id BIGINT NOT NULL,
 
 	CONSTRAINT participant_pk PRIMARY KEY (id),
@@ -95,10 +101,11 @@ CREATE TABLE view_participant(
 );
 
 
-CREATE TABLE floor(
+CREATE TABLE IF NOT EXISTS floor(
 
 	id BIGSERIAL,
 	name VARCHAR(20) NOT NULL,
+
 	street_address_id BIGINT,
 
 	CONSTRAINT floor_pk PRIMARY KEY (id),
@@ -107,10 +114,11 @@ CREATE TABLE floor(
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE living_unit(
+CREATE TABLE IF NOT EXISTS living_unit(
 
 	id BIGSERIAL,
 	number INTEGER NOT NULL,
+
 	floor_id BIGINT,
 
 	CONSTRAINT living_unit_pk PRIMARY KEY (id),
@@ -119,12 +127,13 @@ CREATE TABLE living_unit(
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE room(
+CREATE TABLE IF NOT EXISTS room(
 
 	id BIGSERIAL,
 	name VARCHAR(30) NOT NULL,
 	number INTEGER NOT NULL,
 	location_description TEXT NOT NULL,
+
 	living_unit_id BIGINT NOT NULL,
 
 	CONSTRAINT room_pk PRIMARY KEY (id),
@@ -134,13 +143,14 @@ CREATE TABLE room(
 );
 
 
-CREATE TABLE defect_info(
+CREATE TABLE IF NOT EXISTS defect_info(
 
 	id BIGSERIAL,
 	description TEXT NOT NULL,
 	measure TEXT NOT NULL,
 	company_in_charge VARCHAR(50) NOT NULL,
 	done_till DATE NOT NULL,
+
 	room_id BIGINT NOT NULL,
 
 	CONSTRAINT defect_pk PRIMARY KEY (id),
@@ -149,11 +159,22 @@ CREATE TABLE defect_info(
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS file (
 
-CREATE TABLE defect_image(
+	id BIGSERIAL,
+	name VARCHAR(255) NOT NULL,
+	original_name VARCHAR(255) NOT NULL,
+	extension VARCHAR(255) NOT NULL,
+	created_at TIMESTAMPTZ NOT NULL,
+
+	CONSTRAINT file_pk PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS defect_image(
 
 	id BIGSERIAL,
 	position SMALLINT NOT NULL,
+
 	defect_info_id BIGINT NOT NULL,
 	file_id BIGINT NOT NULL,
 
@@ -166,26 +187,18 @@ CREATE TABLE defect_image(
         ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-CREATE TABLE floor_plan_image(
+CREATE TABLE IF NOT EXISTS floor_plan_image(
 
 	id BIGSERIAL,
+
 	defect_list_id BIGINT NOT NULL,
 	file_id BIGINT NOT NULL,
 
-	CONSTRAINT defect_image_pk PRIMARY KEY (id),
+	CONSTRAINT floor_plan_pk PRIMARY KEY (id),
     CONSTRAINT defect_list_fk FOREIGN KEY (defect_list_id)
         REFERENCES defect_list (id)
         ON DELETE CASCADE ON UPDATE CASCADE,
 	CONSTRAINT file_fk FOREIGN KEY (file_id)
         REFERENCES file (id)
         ON DELETE CASCADE ON UPDATE CASCADE
-)
-
-CREATE TABLE file (
-
-	id BIGSERIAL,
-	name VARCHAR(255) NOT NULL,
-	original_name VARCHAR(255) NOT NULL,
-	extension VARCHAR(255) NOT NULL,
-	created_at TIMESTAMPTZ NOT NULL
 )
