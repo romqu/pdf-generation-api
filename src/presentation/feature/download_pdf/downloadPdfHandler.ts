@@ -5,7 +5,7 @@ export async function downloadPdfHandler(
   _: Request,
   h: ResponseToolkit
 ): Promise<Lifecycle.ReturnValue> {
-  const channel = new Stream.PassThrough();
+  // const channel = new Stream.PassThrough();
 
   // setInterval(() => {
   //   channel.write("event: message\n");

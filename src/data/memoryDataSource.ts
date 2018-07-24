@@ -1,5 +1,3 @@
-import "reflect-metadata";
-
 import { inject } from "inversify";
 import { RedisClient } from "redis";
 
@@ -10,7 +8,7 @@ import { callAsync } from "../util/failableUtil";
 
 @provideSingleton(MemoryDataSource)
 export class MemoryDataSource {
-  private readonly redis: RedisClient;
+  private readonly redis: /*RedisClient*/ any;
 
   constructor(@inject(TYPES.RedisClient) redis: RedisClient) {
     this.redis = redis;

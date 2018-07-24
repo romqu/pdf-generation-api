@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { Lifecycle, Request, ResponseToolkit } from "hapi";
 
 import { container } from "../../../core/ioc/ioc";

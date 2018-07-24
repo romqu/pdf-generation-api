@@ -1,10 +1,7 @@
 import parse = require("await-busboy");
 import { Lifecycle, Request, ResponseToolkit } from "hapi";
 
-import { container } from "../../../core/ioc/ioc";
-import { CreateDefectListController } from "./createDefectListController";
-
-const controller = container.get(CreateDefectListController);
+// const controller = container.get(CreateDefectListController);
 
 export const createDefectListHandler = async (
   request: Request,

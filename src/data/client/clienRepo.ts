@@ -1,10 +1,7 @@
 import { provideSingleton } from "../../core/ioc/ioc";
 import { ResponsePromise } from "../../domain/model/response";
 import { callAsync } from "../../util/failableUtil";
-import {
-  deserializeData,
-  parseStringifyDeserializeObject
-} from "../../util/jsonUtil";
+import { stringifyParseDeserializeData } from "../../util/jsonUtil";
 import { DiskDataSource, IReturnedId } from "../diskDataSource";
 import { ClientEntity } from "./clientEntity";
 
@@ -46,9 +43,7 @@ export class ClientRepo {
         )
       );
 
-      const entity = run(
-        parseStringifyDeserializeObject<ClientEntity>(result, ClientEntity)
-      );
+      const entity = run(stringifyParseDeserializeData(result, ClientEntity));
 
       return success(entity);
     });
@@ -65,7 +60,9 @@ export class ClientRepo {
         )
       );
 
-      const entity = run(deserializeData<ClientEntity>(result, ClientEntity));
+      const entity = run(
+        stringifyParseDeserializeData<ClientEntity>(result, ClientEntity)
+      );
 
       return success(entity);
     });

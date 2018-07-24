@@ -1,12 +1,6 @@
-import { Serialize } from "cerialize";
-import * as FormData from "form-data";
-import * as fs from "fs-extra";
-import * as Hapi from "hapi";
-import { Stream } from "stream";
+import "reflect-metadata";
 
-import { DefectList } from "./domain/model/document/defectList";
 import * as Server from "./server";
-import { createTestDataFull } from "./util/defectListUtil";
 import { logInfo } from "./util/loggerUtil";
 
 Error.stackTraceLimit = Infinity;

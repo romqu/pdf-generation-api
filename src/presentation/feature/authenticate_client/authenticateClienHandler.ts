@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { container } from "../../../core/ioc/ioc";
 import { AuthenticateClientController } from "./authenticateClientController";
 

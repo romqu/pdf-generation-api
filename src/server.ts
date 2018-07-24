@@ -1,8 +1,8 @@
 import * as Boom from "boom";
 import * as Hapi from "hapi";
-import * as AuthBearer from "hapi-auth-bearer-token";
 
 import { Lifecycle } from "hapi";
+import * as AuthBearer from "hapi-auth-bearer-token";
 import { authenticateClientHandler } from "./presentation/feature/authenticate_client/authenticateClienHandler";
 import { createDefectListRoute } from "./presentation/feature/create_defect_list/createDefectListRoute";
 import { downloadPdfRoute } from "./presentation/feature/download_pdf/downloadPdfRoute";

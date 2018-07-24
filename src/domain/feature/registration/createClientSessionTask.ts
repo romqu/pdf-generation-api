@@ -6,8 +6,6 @@ import { loginCredentialsToClientSessionEntity } from "../../mapper/modelMapper"
 import { ResponsePromise } from "../../model/response";
 
 @provideSingleton(CreateClientSessionTask)
-  .inSingletonScope()
-  .done()
 export class CreateClientSessionTask {
   private readonly clientSessionRepo: ClientSessionRepo;
 
