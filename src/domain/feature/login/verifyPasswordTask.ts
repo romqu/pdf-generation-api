@@ -1,15 +1,13 @@
-import { provide } from "../../../ioc/ioc";
-import { verifyValue } from "../../../util/argon2Util";
+import { provideSingleton } from "../../../core/ioc/ioc";
+import { verifyValueArgon2 } from "../../../util/hashUtil";
 import { ResponsePromise } from "../../model/response";
 
-@provide(VerifyPasswordTask)
-  .inSingletonScope()
-  .done()
+@provideSingleton(VerifyPasswordTask)
 export class VerifyPasswordTask {
   public execute(
     password: string,
     passwordHash: string
   ): ResponsePromise<boolean> {
-    return verifyValue(passwordHash, password);
+    return verifyValueArgon2(passwordHash, password);
   }
 }

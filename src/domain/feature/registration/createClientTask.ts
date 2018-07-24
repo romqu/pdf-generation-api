@@ -1,12 +1,10 @@
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { ClientRepo } from "../../../data/client/clienRepo";
-import { provide } from "../../../ioc/ioc";
 import { ClientIn } from "../../../presentation/model/clientIn";
 import { clientToClientEntity } from "../../mapper/modelMapper";
 import { ResponsePromise } from "../../model/response";
 
-@provide(CreateClientTask)
-  .inSingletonScope()
-  .done()
+@provideSingleton(CreateClientTask)
 export class CreateClientTask {
   private readonly repo: ClientRepo;
 

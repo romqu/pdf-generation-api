@@ -2,8 +2,8 @@ import "reflect-metadata";
 
 import { JsonObject } from "cerialize/dist/util";
 
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { LoginManager } from "../../../domain/feature/login/loginManager";
-import { provide } from "../../../ioc/ioc";
 import { callAsync, matchResponse } from "../../../util/failableUtil";
 import {
   deserializePayload,
@@ -15,9 +15,7 @@ import { LoginIn } from "../../model/loginIn";
 import { Payload } from "../../model/payload";
 import { ResponseModel } from "../../model/responseModel";
 
-@provide(LoginController)
-  .inSingletonScope()
-  .done()
+@provideSingleton(LoginController)
 export class LoginController {
   private readonly manager: LoginManager;
 

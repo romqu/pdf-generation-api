@@ -1,6 +1,6 @@
 import PdfPrinter = require("pdfmake");
 
-import { provide } from "../../../ioc/ioc";
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { call } from "../../../util/failableUtil";
 import { DefectList } from "../../model/document/defectList";
 import { Doc } from "../../model/pdfmake/doc";
@@ -22,9 +22,7 @@ const fonts = {
 const lorem =
   "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.";
 
-@provide(CreatePdfManager)
-  .inSingletonScope()
-  .done()
+@provideSingleton(CreatePdfManager)
 export class CreatePdfManager {
   private readonly createPdfFileTask: CreatePdfFileTask;
 

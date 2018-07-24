@@ -1,12 +1,10 @@
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { DefectImageEntity } from "../../../data/defect_list/defectImageEntity";
-import { provide } from "../../../ioc/ioc";
 import { generateUuidv4 } from "../../../util/uuidv4Util";
 import { DefectImage } from "../../model/document/defectImage";
 import { Response } from "../../model/response";
 
-@provide(CreateDefectImageEntityListTask)
-  .inSingletonScope()
-  .done()
+@provideSingleton(CreateDefectImageEntityListTask)
 export class CreateDefectImageEntityListTask {
   public execute(
     defectImageList: DefectImage[]

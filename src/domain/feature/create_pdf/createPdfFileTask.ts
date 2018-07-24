@@ -1,11 +1,9 @@
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { FileRepo } from "../../../data/file/fileRepo";
-import { provide } from "../../../ioc/ioc";
 import { call } from "../../../util/failableUtil";
 import { Response } from "../../model/response";
 
-@provide(CreatePdfFileTask)
-  .inSingletonScope()
-  .done()
+@provideSingleton(CreatePdfFileTask)
 export class CreatePdfFileTask {
   private readonly fileRepo: FileRepo;
 

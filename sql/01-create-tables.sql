@@ -10,20 +10,6 @@ CREATE TABLE IF NOT EXISTS client_credentials(
 	CONSTRAINT client_credentials_pk PRIMARY KEY (id)
 );
 
--- CREATE TABLE IF NOT EXISTS client_status(
-
--- 	id BIGSERIAL,
--- 	session_uuid VARCHAR(36) UNIQUE NOT NULL,
-
--- 	login_credentials_id BIGINT NOT NULL,
-
--- 	CONSTRAINT login_status_pk PRIMARY KEY (id),
--- 	CONSTRAINT login_credentials_fk FOREIGN KEY (login_credentials_id)
---         REFERENCES login_credentials (id)
---         ON DELETE CASCADE ON UPDATE CASCADE
-
--- );
-
 CREATE TABLE IF NOT EXISTS session(
 
 	id BIGSERIAL,

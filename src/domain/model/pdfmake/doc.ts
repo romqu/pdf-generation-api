@@ -9,7 +9,10 @@ export class Doc implements IDocModel {
     const {
       docHeader = (): object[] => [{}],
       docBody,
-      docFooter = (currentPage: number, pageCount: number): object => ({})
+      docFooter = (
+        /* currentPage */ _: number,
+        /* pageCount*/ __: number
+      ): object => ({})
     } = obj;
 
     this.params = { docHeader, docBody, docFooter };

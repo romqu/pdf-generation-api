@@ -1,15 +1,13 @@
 import { JsonObject } from "cerialize/dist/util";
 
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { CreateGuestSessionManager } from "../../../domain/feature/create_guest_session/createGuestSessionManager";
-import { provide } from "../../../ioc/ioc";
 import { callAsync, matchResponse } from "../../../util/failableUtil";
 import { serializeData, unsafeSerializeData } from "../../../util/jsonUtil";
 import { ErrorOut } from "../../model/errorOut";
 import { ResponseModel } from "../../model/responseModel";
 
-@provide(CreateGuestSessionController)
-  .inSingletonScope()
-  .done()
+@provideSingleton(CreateGuestSessionController)
 export class CreateGuestSessionController {
   private readonly manager: CreateGuestSessionManager;
 

@@ -3,15 +3,13 @@ import "reflect-metadata";
 import { inject } from "inversify";
 import { IDatabase, ITask } from "pg-promise";
 
+import { provideSingleton } from "../core/ioc/ioc";
+import { TYPES } from "../core/ioc/types";
 import { ResponsePromise } from "../domain/model/response";
-import { provide } from "../ioc/ioc";
-import { TYPES } from "../ioc/types";
 import { callAsync } from "../util/failableUtil";
 import { getQueryFile } from "../util/sqlFileUtil";
 
-@provide(DiskDataSource)
-  .inSingletonScope()
-  .done()
+@provideSingleton(DiskDataSource)
 export class DiskDataSource {
   private readonly pgDb: IDatabase<any>;
 

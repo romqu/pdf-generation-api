@@ -1,6 +1,6 @@
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { ClientRepo } from "../../../data/client/clienRepo";
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
-import { provide } from "../../../ioc/ioc";
 import { LoginIn } from "../../../presentation/model/loginIn";
 import { LoginOut } from "../../../presentation/model/loginOut";
 import { callAsync, matchResponse } from "../../../util/failableUtil";
@@ -8,9 +8,7 @@ import { verifyValueArgon2 } from "../../../util/hashUtil";
 import { ResponsePromise } from "../../model/response";
 import { CreateClientSessionTask } from "../registration/createClientSessionTask";
 
-@provide(LoginManager)
-  .inSingletonScope()
-  .done()
+@provideSingleton(LoginManager)
 export class LoginManager {
   private readonly loginCredentialsRepo: LoginCredentialsRepo;
   private readonly clientRepo: ClientRepo;
@@ -59,6 +57,7 @@ export class LoginManager {
         const sessionUuid = run(
           await this.createClientSessionTask.execute(
             loginCredentials,
+            false,
             loginCredentialsEntity.id
           )
         );

@@ -1,6 +1,6 @@
 import { Lifecycle, Request, ResponseToolkit } from "hapi";
 
-import { container } from "../../../ioc/ioc";
+import { container } from "../../../core/ioc/ioc";
 import { LoginController } from "./loginController";
 
 const controller = container.get(LoginController);

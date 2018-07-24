@@ -1,3 +1,4 @@
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { DefectEntity } from "../../../data/defect_list/defectEntity";
 import { DefectImageEntity } from "../../../data/defect_list/defectImageEntity";
 import { DefectListEntity } from "../../../data/defect_list/defectListEntity";
@@ -6,13 +7,10 @@ import { LivingUnitEntity } from "../../../data/defect_list/livingUnitEntity";
 import { RoomEntity } from "../../../data/defect_list/roomEntity";
 import { StreetAddressEntity } from "../../../data/defect_list/streetAddressEntity";
 import { ViewParticipantEntity } from "../../../data/defect_list/viewParticipantEntity";
-import { provide } from "../../../ioc/ioc";
 import { DefectList } from "../../model/document/defectList";
 import { Response } from "../../model/response";
 
-@provide(TransformToDefectListEntityTask)
-  .inSingletonScope()
-  .done()
+@provideSingleton(TransformToDefectListEntityTask)
 export class TransformToDefectListEntityTask {
   public execute(
     defectList: DefectList,

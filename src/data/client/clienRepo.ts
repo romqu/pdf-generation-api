@@ -1,17 +1,14 @@
+import { provideSingleton } from "../../core/ioc/ioc";
 import { ResponsePromise } from "../../domain/model/response";
-import { provide } from "../../ioc/ioc";
 import { callAsync } from "../../util/failableUtil";
 import {
-  deserializeObject,
+  deserializeData,
   parseStringifyDeserializeObject
 } from "../../util/jsonUtil";
 import { DiskDataSource, IReturnedId } from "../diskDataSource";
 import { ClientEntity } from "./clientEntity";
-import { deserializeData } from "../../util/jsonUtil";
 
-@provide(ClientRepo)
-  .inSingletonScope()
-  .done()
+@provideSingleton(ClientRepo)
 export class ClientRepo {
   private readonly disk: DiskDataSource;
 

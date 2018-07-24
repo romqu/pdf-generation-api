@@ -2,13 +2,11 @@ import "reflect-metadata";
 
 import * as fs from "fs-extra";
 
+import { provideSingleton } from "../core/ioc/ioc";
 import { Response, ResponsePromise } from "../domain/model/response";
-import { provide } from "../ioc/ioc";
 import { failable, failableAsync } from "../util/failableUtil";
 
-@provide(FsDataSource)
-  .inSingletonScope()
-  .done()
+@provideSingleton(FsDataSource)
 export class FsDataSource {
   public createDir(path: string): ResponsePromise<void> {
     return failableAsync(

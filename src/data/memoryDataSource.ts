@@ -3,14 +3,12 @@ import "reflect-metadata";
 import { inject } from "inversify";
 import { RedisClient } from "redis";
 
+import { provideSingleton } from "../core/ioc/ioc";
+import { TYPES } from "../core/ioc/types";
 import { ResponsePromise } from "../domain/model/response";
-import { provide } from "../ioc/ioc";
-import { TYPES } from "../ioc/types";
 import { callAsync } from "../util/failableUtil";
 
-@provide(MemoryDataSource)
-  .inSingletonScope()
-  .done()
+@provideSingleton(MemoryDataSource)
 export class MemoryDataSource {
   private readonly redis: RedisClient;
 

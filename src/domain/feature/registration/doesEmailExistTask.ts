@@ -1,10 +1,8 @@
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
-import { provide } from "../../../ioc/ioc";
 import { ResponsePromise } from "../../model/response";
 
-@provide(DoesEmailExistTask)
-  .inSingletonScope()
-  .done()
+@provideSingleton(DoesEmailExistTask)
 export class DoesEmailExistTask {
   private readonly loginCredentialsRepo: LoginCredentialsRepo;
 

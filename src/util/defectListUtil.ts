@@ -1,3 +1,9 @@
+import { DefectEntity } from "../data/defect_list/defectEntity";
+import { DefectImageEntity } from "../data/defect_list/defectImageEntity";
+import { FloorEntity } from "../data/defect_list/floorEntity";
+import { LivingUnitEntity } from "../data/defect_list/livingUnitEntity";
+import { RoomEntity } from "../data/defect_list/roomEntity";
+import { ViewParticipantEntity } from "../data/defect_list/viewParticipantEntity";
 import { Creator } from "../domain/model/document/creator";
 import { Defect } from "../domain/model/document/defect";
 import { DefectImage } from "../domain/model/document/defectImage";
@@ -7,14 +13,6 @@ import { LivingUnit } from "../domain/model/document/livingUnit";
 import { Room } from "../domain/model/document/room";
 import { StreetAddress } from "../domain/model/document/streetAddress";
 import { ViewParticipant } from "../domain/model/document/viewParticipant";
-import { DefectImageEntity } from "../data/defect_list/defectImageEntity";
-import { DefectEntity } from "../data/defect_list/defectEntity";
-import { RoomEntity } from "../data/defect_list/roomEntity";
-import { LivingUnitEntity } from "../data/defect_list/livingUnitEntity";
-import { FloorEntity } from "../data/defect_list/floorEntity";
-import { ViewParticipantEntity } from "../data/defect_list/viewParticipantEntity";
-import { StreetAddressEntity } from "../data/defect_list/streetAddressEntity";
-import { DefectListEntity } from "../data/defect_list/defectListEntity";
 
 const range = (n: number): number[] =>
   Array.from({ length: n }, (_, key) => key);

@@ -1,12 +1,10 @@
 import { guestPathAccessMap } from "../../../constants";
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { ClientSessionRepo } from "../../../data/client_session/clientSessionRepo";
-import { provide } from "../../../ioc/ioc";
 import { callAsync } from "../../../util/failableUtil";
 import { ResponsePromise } from "../../model/response";
 
-@provide(AuthenticateClientManager)
-  .inSingletonScope()
-  .done()
+@provideSingleton(AuthenticateClientManager)
 export class AuthenticateClientManager {
   private readonly clientSessionRepo: ClientSessionRepo;
 

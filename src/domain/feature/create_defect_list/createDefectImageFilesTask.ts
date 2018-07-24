@@ -1,11 +1,9 @@
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { FileRepo } from "../../../data/file/fileRepo";
-import { provide } from "../../../ioc/ioc";
 import { call } from "../../../util/failableUtil";
 import { Response } from "../../model/response";
 
-@provide(CreateDefectImageFilesTask)
-  .inSingletonScope()
-  .done()
+@provideSingleton(CreateDefectImageFilesTask)
 export class CreateDefectImageFilesTask {
   private readonly fileRepo: FileRepo;
 

@@ -1,5 +1,5 @@
+import { provideSingleton } from "../../core/ioc/ioc";
 import { ResponsePromise } from "../../domain/model/response";
-import { provide } from "../../ioc/ioc";
 import { callAsync } from "../../util/failableUtil";
 import {
   parseDeserializeData,
@@ -8,9 +8,7 @@ import {
 import { MemoryDataSource } from "../memoryDataSource";
 import { ClientSessionEntity } from "./clientSessionEntity";
 
-@provide(ClientSessionRepo)
-  .inSingletonScope()
-  .done()
+@provideSingleton(ClientSessionRepo)
 export class ClientSessionRepo {
   private readonly memoryDataSource: MemoryDataSource;
 

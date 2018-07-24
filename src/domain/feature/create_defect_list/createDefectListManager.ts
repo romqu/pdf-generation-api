@@ -1,8 +1,8 @@
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { ClientRepo } from "../../../data/client/clienRepo";
 import { DefectImageEntity } from "../../../data/defect_list/defectImageEntity";
 import { DefectListRepo } from "../../../data/defect_list/defectListRepo";
 import { IReturnedId } from "../../../data/diskDataSource";
-import { provide } from "../../../ioc/ioc";
 import { callAsync } from "../../../util/failableUtil";
 import { getSha256Hash } from "../../../util/hashUtil";
 import { DefectList } from "../../model/document/defectList";
@@ -11,9 +11,7 @@ import { CreateDefectImageEntityListTask } from "./createDefectImageEntityListTa
 import { CreateDefectListFoldersTask } from "./createDefectListFoldersTask";
 import { TransformToDefectListEntityTask } from "./transformToDefectListEntityTask";
 
-@provide(CreateDefectListManager)
-  .inSingletonScope()
-  .done()
+@provideSingleton(CreateDefectListManager)
 export class CreateDefectListManager {
   private readonly clientRepo: ClientRepo;
   private readonly createDefectImageEntityListTask: CreateDefectImageEntityListTask;
@@ -38,7 +36,7 @@ export class CreateDefectListManager {
   public execute(
     defectList: DefectList
   ): ResponsePromise<ICreateDefectListResponse> {
-    return callAsync(async ({ success, run, failure }) => {
+    return callAsync(async ({ success, run }) => {
       const client = run(
         await this.clientRepo.getForAndSurnameById(defectList.creator.clientId)
       );

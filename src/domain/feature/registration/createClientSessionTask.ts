@@ -1,11 +1,11 @@
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { ClientSessionRepo } from "../../../data/client_session/clientSessionRepo";
-import { provide } from "../../../ioc/ioc";
 import { LoginIn } from "../../../presentation/model/loginIn";
 import { generateUuidv4 } from "../../../util/uuidv4Util";
 import { loginCredentialsToClientSessionEntity } from "../../mapper/modelMapper";
 import { ResponsePromise } from "../../model/response";
 
-@provide(CreateClientSessionTask)
+@provideSingleton(CreateClientSessionTask)
   .inSingletonScope()
   .done()
 export class CreateClientSessionTask {

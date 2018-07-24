@@ -1,5 +1,5 @@
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { LoginCredentialsRepo } from "../../../data/login_credentials/loginCredentialsRepo";
-import { provide } from "../../../ioc/ioc";
 import { RegistrationIn } from "../../../presentation/model/registrationIn";
 import { RegistrationOut } from "../../../presentation/model/registrationOut";
 import { callAsync } from "../../../util/failableUtil";
@@ -10,9 +10,7 @@ import { CreateClientTask } from "./createClientTask";
 import { DoesEmailExistTask } from "./doesEmailExistTask";
 import { HashPasswordTask } from "./hashPasswordTask";
 
-@provide(RegistrationManager)
-  .inSingletonScope()
-  .done()
+@provideSingleton(RegistrationManager)
 export class RegistrationManager {
   private readonly doesEmailExistTask: DoesEmailExistTask;
   private readonly hashPasswordTask: HashPasswordTask;

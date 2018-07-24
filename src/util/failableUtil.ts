@@ -1,6 +1,5 @@
 import { IError, IErrorIn } from "../domain/model/error";
 import { Response, ResponsePromise } from "../domain/model/response";
-import { logInfo } from "./loggerUtil";
 
 export async function callAsync<T = never>(
   f: ((

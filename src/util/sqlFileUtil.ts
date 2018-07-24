@@ -1,8 +1,8 @@
 import * as path from "path";
 import { IMain, QueryFile } from "pg-promise";
 
-import { container } from "../ioc/ioc";
-import { TYPES } from "../ioc/types";
+import { container } from "../core/ioc/ioc";
+import { TYPES } from "../core/ioc/types";
 
 const pgpMain = container.get<IMain>(TYPES.PgpMain);
 

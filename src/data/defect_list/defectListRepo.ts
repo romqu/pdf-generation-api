@@ -3,11 +3,12 @@ import "reflect-metadata";
 import { inject } from "inversify";
 import { IDatabase, IMain, ITask } from "pg-promise";
 
+import { provideSingleton } from "../../core/ioc/ioc";
+import { TYPES } from "../../core/ioc/types";
 import { ResponsePromise } from "../../domain/model/response";
-import { provide } from "../../ioc/ioc";
-import { TYPES } from "../../ioc/types";
 import { callAsync, failableAsync } from "../../util/failableUtil";
-import { IReturnedId, DiskDataSource } from "../diskDataSource";
+import { logInfo } from "../../util/loggerUtil";
+import { DiskDataSource, IReturnedId } from "../diskDataSource";
 import { DefectEntity } from "./defectEntity";
 import { DefectImageEntity } from "./defectImageEntity";
 import { DefectListEntity } from "./defectListEntity";
@@ -16,11 +17,8 @@ import { LivingUnitEntity } from "./livingUnitEntity";
 import { RoomEntity } from "./roomEntity";
 import { StreetAddressEntity } from "./streetAddressEntity";
 import { ViewParticipantEntity } from "./viewParticipantEntity";
-import { logInfo } from "../../util/loggerUtil";
 
-@provide(DefectListRepo)
-  .inSingletonScope()
-  .done()
+@provideSingleton(DefectListRepo)
 export class DefectListRepo {
   private readonly pgDb: IDatabase<any>;
   private readonly pgMain: IMain;

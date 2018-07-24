@@ -1,14 +1,11 @@
+import { provideSingleton } from "../../core/ioc/ioc";
 import { ResponsePromise } from "../../domain/model/response";
-import { provide } from "../../ioc/ioc";
 import { callAsync } from "../../util/failableUtil";
-import { deserializeObject, deserializeData } from "../../util/jsonUtil";
+import { deserializeData } from "../../util/jsonUtil";
 import { DiskDataSource, IReturnedId } from "../diskDataSource";
 import { LoginCredentialsEntity } from "./loginCredentialsEntity";
-import { logInfo } from "../../util/loggerUtil";
 
-@provide(LoginCredentialsRepo)
-  .inSingletonScope()
-  .done()
+@provideSingleton(LoginCredentialsRepo)
 export class LoginCredentialsRepo {
   private readonly diskDataSoruce: DiskDataSource;
 

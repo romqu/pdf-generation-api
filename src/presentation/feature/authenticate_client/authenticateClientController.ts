@@ -1,10 +1,9 @@
+import { provide } from "inversify-binding-decorators";
+
 import { AuthenticateClientManager } from "../../../domain/feature/authenticate_client/authenticateClientManager";
-import { provide } from "../../../ioc/ioc";
 import { matchResponse } from "../../../util/failableUtil";
 
 @provide(AuthenticateClientController)
-  .inSingletonScope()
-  .done()
 export class AuthenticateClientController {
   private readonly authenticateClientManager: AuthenticateClientManager;
 

@@ -42,26 +42,27 @@ export async function init(): Promise<Hapi.Server> {
 }
 
 function registerExtEvents(server: Hapi.Server): void {
-  server.ext("onPreResponse", async (request, _): Promise<
-    Lifecycle.ReturnValue
-  > => {
-    const response = request.response;
+  server.ext(
+    "onPreResponse",
+    async (request, _): Promise<Lifecycle.ReturnValue> => {
+      const response = request.response;
 
-    if (response instanceof Boom) {
-      return serializeToJsonObject(
-        boomToResponseModel(response),
-        ResponseModel
-      );
-    } else if (response === null) {
-      return serializeToJsonObject(
-        boomToResponseModel(Boom.internal()),
-        ResponseModel
-      );
-    } else {
-      logInfo("pre", response.source);
-      return response.source;
+      if (response instanceof Boom) {
+        return serializeToJsonObject(
+          boomToResponseModel(response),
+          ResponseModel
+        );
+      } else if (response === null) {
+        return serializeToJsonObject(
+          boomToResponseModel(Boom.internal()),
+          ResponseModel
+        );
+      } else {
+        logInfo("pre", response.source);
+        return response.source;
+      }
     }
-  });
+  );
 }
 
 function registerRoutes(server: Hapi.Server): void {

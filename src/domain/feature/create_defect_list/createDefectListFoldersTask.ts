@@ -1,14 +1,12 @@
 import "reflect-metadata";
 
 import { Folder } from "../../../constants";
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { DirectoryRepo } from "../../../data/directory/directoryRepo";
-import { provide } from "../../../ioc/ioc";
 import { callAsync } from "../../../util/failableUtil";
 import { ResponsePromise } from "../../model/response";
 
-@provide(CreateDefectListFoldersTask)
-  .inSingletonScope()
-  .done()
+@provideSingleton(CreateDefectListFoldersTask)
 export class CreateDefectListFoldersTask {
   private directoryRepo: DirectoryRepo;
 
@@ -18,7 +16,7 @@ export class CreateDefectListFoldersTask {
 
   public execute(
     defectListName: string,
-    defectImageNamesList: string[]
+    /* defectImageNamesList*/ _: string[]
   ): ResponsePromise<string> {
     return callAsync(async ({ success, run }) => {
       const folderPathToCreate = defectListName

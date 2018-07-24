@@ -2,28 +2,28 @@ import { DocMargin } from "./domain/model/pdfmake/docMargin";
 import { DocTableLayout } from "./domain/model/pdfmake/docTableLayout";
 
 export const defaultDocTableLayout: DocTableLayout = new DocTableLayout({
-  hLineWidth: (i: number, node: object): number => {
+  hLineWidth: (_: number, __: object): number => {
     return 0;
   },
-  vLineWidth: (i: number, node: object): number => {
+  vLineWidth: (_: number, __: object): number => {
     return 0;
   },
-  hLineColor: (i: number, node: object): string => {
+  hLineColor: (_: number, __: object): string => {
     return "black";
   },
-  vLineColor: (i: number, node: object): string => {
+  vLineColor: (_: number, __: object): string => {
     return "black";
   },
-  paddingLeft: (i: number, node: object): number => {
+  paddingLeft: (_: number, __: object): number => {
     return 0;
   },
-  paddingRight: (i: number, node: object): number => {
+  paddingRight: (_: number, __: object): number => {
     return 0;
   },
-  paddingTop: (i: number, node: object): number => {
+  paddingTop: (_: number, __: object): number => {
     return 0;
   },
-  paddingBottom: (i: number, node: object): number => {
+  paddingBottom: (_: number, __: object): number => {
     return 0;
   }
 });

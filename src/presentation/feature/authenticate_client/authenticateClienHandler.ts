@@ -1,4 +1,4 @@
-import { container } from "../../../ioc/ioc";
+import { container } from "../../../core/ioc/ioc";
 import { AuthenticateClientController } from "./authenticateClientController";
 
 const controller = container.get(AuthenticateClientController);

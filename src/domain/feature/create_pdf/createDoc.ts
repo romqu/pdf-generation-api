@@ -13,7 +13,7 @@ export class CreateDoc {
     }
   ) {}
 
-  public execute(defectList: DefectList): DocEntry {
+  public execute(/* defectList */ _: DefectList): DocEntry {
     const defects: DefectList = createTestData();
     return this.createDoc({ defectList: defects });
   }

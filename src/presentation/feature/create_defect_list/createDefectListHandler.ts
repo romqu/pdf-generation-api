@@ -1,14 +1,14 @@
 import parse = require("await-busboy");
 import { Lifecycle, Request, ResponseToolkit } from "hapi";
 
-import { container } from "../../../ioc/ioc";
+import { container } from "../../../core/ioc/ioc";
 import { CreateDefectListController } from "./createDefectListController";
 
 const controller = container.get(CreateDefectListController);
 
 export const createDefectListHandler = async (
   request: Request,
-  h: ResponseToolkit
+  _: ResponseToolkit
 ): Promise<Lifecycle.ReturnValue> => {
   const data = request.payload;
 

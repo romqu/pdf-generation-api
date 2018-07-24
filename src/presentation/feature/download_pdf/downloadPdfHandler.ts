@@ -1,9 +1,8 @@
-import * as fs from "fs-extra";
 import { Lifecycle, Request, ResponseToolkit } from "hapi";
 import { Stream } from "stream";
 
 export async function downloadPdfHandler(
-  request: Request,
+  _: Request,
   h: ResponseToolkit
 ): Promise<Lifecycle.ReturnValue> {
   const channel = new Stream.PassThrough();
@@ -17,7 +16,7 @@ export async function downloadPdfHandler(
   const TestStream = class extends Stream.Readable {
     public compressor: any;
 
-    public _read(size?: number): void {
+    public _read(__: number): void {
       this.push("some");
       this.compressor.flush();
 
@@ -25,8 +24,6 @@ export async function downloadPdfHandler(
     }
 
     public setCompressor(compressor: any): void {
-      console.log("HERE");
-
       this.compressor = compressor;
     }
   };

@@ -3,13 +3,11 @@ import "reflect-metadata";
 import { WriteStream } from "fs-extra";
 
 import { FsModeOctal } from "../../constants";
+import { provideSingleton } from "../../core/ioc/ioc";
 import { Response, ResponsePromise } from "../../domain/model/response";
-import { provide } from "../../ioc/ioc";
 import { FsDataSource } from "../fsDataSource";
 
-@provide(FileRepo)
-  .inSingletonScope()
-  .done()
+@provideSingleton(FileRepo)
 export class FileRepo {
   private readonly fsDataSource: FsDataSource;
 

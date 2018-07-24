@@ -1,4 +1,3 @@
-import { logger } from "../../logger";
 import { DocMargin } from "./docMargin";
 import { IDocModel } from "./docModel";
 

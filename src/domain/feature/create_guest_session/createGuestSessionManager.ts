@@ -1,12 +1,10 @@
-import { provide } from "../../../ioc/ioc";
+import { provideSingleton } from "../../../core/ioc/ioc";
 import { LoginIn } from "../../../presentation/model/loginIn";
 import { callAsync } from "../../../util/failableUtil";
 import { ResponsePromise } from "../../model/response";
 import { CreateClientSessionTask } from "../registration/createClientSessionTask";
 
-@provide(CreateGuestSessionManager)
-  .inSingletonScope()
-  .done()
+@provideSingleton(CreateGuestSessionManager)
 export class CreateGuestSessionManager {
   private readonly createClientSessionTask: CreateClientSessionTask;
 

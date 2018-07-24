@@ -1,11 +1,9 @@
 import { FsModeOctal } from "../../constants";
+import { provideSingleton } from "../../core/ioc/ioc";
 import { ResponsePromise } from "../../domain/model/response";
-import { provide } from "../../ioc/ioc";
 import { FsDataSource } from "../fsDataSource";
 
-@provide(DirectoryRepo)
-  .inSingletonScope()
-  .done()
+@provideSingleton(DirectoryRepo)
 export class DirectoryRepo {
   private readonly fsDataSource: FsDataSource;
 
